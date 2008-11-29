@@ -26,7 +26,9 @@
 #include "sqllogictest.h"
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <ctype.h>
+#include <unistd.h>
+#include <string.h>
 
 /*****************************************************************************
 ** Here begins the implementation of the SQLite DbEngine object.
@@ -87,7 +89,7 @@ static int sqliteStatement(
   sqlite3 *db;
 
   db = (sqlite3*)pConn;
-  rc = sqlite3_exec(db, zSql, 0, 0, 0)
+  rc = sqlite3_exec(db, zSql, 0, 0, 0);
   return rc!=SQLITE_OK;
 }
 
@@ -103,21 +105,18 @@ struct ResAccum {
 
 /*
 ** Append a value to a result set.  zValue is copied into memory obtained
-** from malloc.  If zValue==0 then a "<NULL>" string is appended.  If
-** zValue[0]==0 then an "<EMPTY-STRING>" is appended.  Control characters
-** and non-printable characters are converted to "@".
+** from malloc.  Or if zValue is NULL, then a NULL pointer is appended.
 */
 static void appendValue(ResAccum *p, const char *zValue){
   char *z;
-  if( zValue==0 ){
-    zValue = "<NULL>";
-  }else if( zValue[0]==0 ){
-    zValue = "<EMPTY-STRING>";
-  }
-  z = sqlite3_mprintf("%s", zValue);
-  if( z==0 ){
-    fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
-    exit(1);
+  if( zValue ){
+    z = sqlite3_mprintf("%s", zValue);
+    if( z==0 ){
+      fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
+      exit(1);
+    }
+  }else{
+    z = 0;
   }
   if( p->nUsed>=p->nAlloc ){
     char **az;
@@ -130,10 +129,6 @@ static void appendValue(ResAccum *p, const char *zValue){
     p->azValue = az;
   }
   p->azValue[p->nUsed++] = z;
-  while( *z ){
-    if( *z<' ' || *z>'~' ) *z = '@';
-    z++;
-  }
 }
 
 /*
@@ -144,6 +139,9 @@ static void appendValue(ResAccum *p, const char *zValue){
 ** NULL values in the result set should be represented by a string "<NULL>".
 ** Empty strings should be shown as "<EMPTY-STRING>".  Unprintable and
 ** control characters should be rendered as "@".
+**
+** Return 0 on success and 1 if there is an error.  It is not necessary
+** to initialize *pazResult or *pnResult if an error occurs.
 */
 static int sqliteQuery(
   void *pConn,                /* Connection created by xConnect */
@@ -152,10 +150,11 @@ static int sqliteQuery(
   char ***pazResult,          /* RETURN:  Array of result values */
   int *pnResult               /* RETURN:  Number of result values */
 ){
-  sqlite3 *db;
-  sqlite3_stmt *pStmt;
-  ResAccum res;
-  char zBuffer[200];
+  sqlite3 *db;                /* The database connection */
+  sqlite3_stmt *pStmt;        /* Prepared statement */
+  int rc;                     /* Result code from subroutine calls */
+  ResAccum res;               /* query result accumulator */
+  char zBuffer[200];          /* Buffer to render numbers */
 
   memset(&res, 0, sizeof(res));
   db = (sqlite3*)pConn;
@@ -167,28 +166,41 @@ static int sqliteQuery(
   while( sqlite3_step(pStmt)==SQLITE_ROW ){
     int i;
     for(i=0; zType[i]; i++){
-      switch( zType[i] ){
-        case 'S': {
-          char *zValue = sqlite3_column_text(pStmt, i);
-          appendValue(&res, zValue);
-          break;
-        }
-        case 'I': {
-          int ii = sqlite3_column_int(pStmt, i);
-          sqlite3_snprintf(sizeof(zBuffer), zBuffer, "%d", ii);
-          appendValue(&res, zValue);
-          break;
-        }
-        case 'R': {
-          double r = sqlite3_column_double(pStmt, i);
-          sqlite3_snprintf(sizeof(zBuffer), zBuffer, "%.3f", r);
-          appendValue(&res, zValue);
-          break;
-        }
-        default: {
-          sqlite3_finalize(pStmt);
-          fprintf(stderr, "Unknown character in type-string: %c\n", zType[i]);
-          return 1;
+      if( sqlite3_column_type(pStmt, i)==SQLITE_NULL ){
+        appendValue(&res, "<NULL>");
+      }else{
+        switch( zType[i] ){
+          case 'S': {
+            const char *zValue = (const char*)sqlite3_column_text(pStmt, i);
+            char *z;
+            if( zValue[0]==0 ) zValue = "<EMPTY-STRING>";
+            appendValue(&res, zValue);
+
+            /* Convert non-printing and control characters to '@' */
+            z = res.azValue[res.nUsed-1];
+            while( *z ){
+              if( *z<' ' || *z>'~' ){ *z = '@'; }
+              z++;
+            }
+            break;
+          }
+          case 'I': {
+            int ii = sqlite3_column_int(pStmt, i);
+            sqlite3_snprintf(sizeof(zBuffer), zBuffer, "%d", ii);
+            appendValue(&res, zBuffer);
+            break;
+          }
+          case 'R': {
+            double r = sqlite3_column_double(pStmt, i);
+            sqlite3_snprintf(sizeof(zBuffer), zBuffer, "%.3f", r);
+            appendValue(&res, zBuffer);
+            break;
+          }
+          default: {
+            sqlite3_finalize(pStmt);
+            fprintf(stderr, "Unknown character in type-string: %c\n", zType[i]);
+            return 1;
+          }
         }
       }
     }
@@ -196,11 +208,14 @@ static int sqliteQuery(
   sqlite3_finalize(pStmt);
   *pazResult = res.azValue;
   *pnResult = res.nUsed;
+  return 0;
 }
 
 /*
 ** This interface is called to free the memory that was returned
 ** by xQuery.
+**
+** It might be the case that nResult==0 or azResult==0.
 */
 static int sqliteFreeResults(
   void *pConn,                /* Connection created by xConnect */
@@ -212,6 +227,7 @@ static int sqliteFreeResults(
     sqlite3_free(azResult[i]);
   }
   sqlite3_free(azResult);
+  return 0;
 }
 
 /*
@@ -229,6 +245,7 @@ static int sqliteDisconnect(
 ){
   sqlite3 *db = (sqlite3*)pConn;
   sqlite3_close(db);
+  return 0;
 }
 
 /*
@@ -247,7 +264,7 @@ void registerSqlite(void){
      sqliteConnect,        /* xConnect */
      sqliteStatement,      /* xStatement */
      sqliteQuery,          /* xQuery */
-     sqliteFreeResult,     /* xFreeResult */
+     sqliteFreeResults,    /* xFreeResults */
      sqliteDisconnect      /* xDisconnect */
   };
   sqllogictestRegisterEngine(&sqliteDbEngine);
@@ -281,11 +298,140 @@ void sqllogictestRegisterEngine(const DbEngine *p){
 ** Print a usage comment and die
 */
 static void usage(const char *argv0){
-  fprintf(stderr, "Usage: %s [-verify] [-engine ENGINE] [-connect STR] script",
+  fprintf(stderr,
+    "Usage: %s [-verify] [-engine DBENGINE] [-connection STR] script\n",
     argv0);
   exit(1);
 }
 
+/*
+** A structure to keep track of the state of scanning the input script.
+*/
+typedef struct Script Script;
+struct Script {
+  char *zScript;       /* Complete text of the input script */
+  int iCur;            /* Index in zScript of start of current line */
+  char *zStart;        /* Pointer to start of current line */
+  int len;             /* Length of current line */
+  int iNext;           /* index of start of next line */
+  int nLine;           /* line number for the current line */
+  int iEnd;            /* Index in zScript of '\000' at end of script */
+  int startLine;       /* Line number of start of current record */
+  int copyFlag;        /* If true, copy lines to output as they are read */
+  char azToken[3][20]; /* tokenization of a line */
+};
+
+/*
+** Advance the cursor to the start of the next non-comment line of the
+** script.  Make p->zStart point to the start of the line.  Make p->len
+** be the length of the line.  Zero-terminate the line.  Any \r at the
+** end of the line is removed.
+**
+** Return 1 on success.  Return 0 and no-op at end-of-file.
+*/
+static int nextLine(Script *p){
+  int i;
+
+  /* Loop until a non-comment line is found, or until end-of-file */
+  while(1){
+
+    /* When we reach end-of-file, return 0 */
+    if( p->iNext>=p->iEnd ){
+      return 0;
+    }
+
+    /* Advance the cursor to the next line */
+    p->iCur = p->iNext;
+    p->nLine++;
+    p->zStart = &p->zScript[p->iCur];
+    for(i=p->iCur; i<p->iEnd && p->zScript[i]!='\n'; i++){}
+    p->zScript[i] = 0;
+    p->len = i - p->iCur - 1;
+    p->iNext = i+1;
+
+    /* If the current line ends in a \r then remove the \r. */
+    if( p->len>0 && p->zScript[i-1]=='\r' ){
+      p->len--;
+      p->zScript[i-1] = 0;
+    }
+
+    /* If the line consists of all spaces, make it an empty line */
+    for(i=i-2; i>=p->iCur && isspace(p->zScript[i]); i--){}
+    if( i<p->iCur ){
+      p->zStart[0] = 0;
+    }
+
+    /* If the copy flag is set, write the line to standard output */
+    if( p->copyFlag ){
+      printf("%s\n", p->zStart);
+    }
+
+    /* If the line is not a comment line, then we are finished, so break
+    ** out of the loop.  If the line is a comment, the loop will repeat in
+    ** order to skip this line. */
+    if( p->zStart[0]!='#' ) break;
+  }
+  return 1;
+}
+
+/*
+** Advance the cursor to the start of the next record.  To do this,
+** first skip over the tail section of the record in which we are
+** currently located, then skip over blank lines.
+**
+** Return 1 on success.  Return 0 at end-of-file.
+*/
+static int findStartOfNextRecord(Script *p){
+
+  /* Skip over any existing content to find a blank line */
+  while( p->zStart[0] && p->iCur<p->iEnd ){
+    nextLine(p);
+  }
+
+  /* Skip over one or more blank lines to find the first line of the
+  ** new record */
+  while( p->zStart[0]==0 && p->iCur<p->iEnd ){
+    nextLine(p);
+  }
+
+  /* Return 1 if we have not reached end of file. */
+  return p->iCur<p->iEnd;
+}
+
+/*
+** Find a single token in a string.  Return the index of the start
+** of the token and the length of the token.
+*/
+static void findToken(const char *z, int *piStart, int *pLen){
+  int i;
+  int iStart;
+  for(i=0; isspace(z[i]); i++){}
+  *piStart = iStart = i;
+  while( z[i] && !isspace(z[i]) ){ i++; }
+  *pLen = i - iStart;
+}
+
+/*
+** tokenize the current line in up to 3 tokens and store those values
+** into p->azToken[0], p->azToken[1], and p->azToken[2].  Record the
+** current line in p->startLine.
+*/
+static void tokenizeLine(Script *p){
+  int i, j, k;
+  int len, n;
+  for(i=0; i<3; i++) p->azToken[i][0] = 0;
+  for(i=j=0; j<p->len && i<3; i++){
+    findToken(&p->zStart[j], &k, &len);
+    j += k;
+    n = len;
+    if( n>=sizeof(p->azToken[0]) ){
+      n = sizeof(p->azToken[0])-1;
+    }
+    memcpy(p->azToken[i], &p->zStart[j], n);
+    p->azToken[i][n] = 0;
+    j += n+1;
+  }
+}
 
 /*
 ** This is the main routine.  This routine runs first.  It processes
@@ -305,6 +451,8 @@ int main(int argc, char **argv){
   int nErr = 0;                        /* Number of errors */
   int nResult;                         /* Number of query results */
   char **azResult;                     /* Query result vector */
+  Script sScript;                      /* Script parsing status */
+  FILE *in;                            /* For reading script */
   
 
   /* Add calls to the registration procedures for new database engine
@@ -333,7 +481,7 @@ int main(int argc, char **argv){
   /* Check for errors and missing arguments.  Find the database engine
   ** to use for this run.
   */
-  if( zScript==0 ){
+  if( zScriptFile==0 ){
     fprintf(stderr, "%s: no input script specified\n", argv[0]);
     usage(argv[0]);
   }
@@ -356,14 +504,14 @@ int main(int argc, char **argv){
   */
   in = fopen(zScriptFile, "rb");
   if( in==0 ){
-    fprintf(stderr, "%s: cannot open input script %s\n", argv[0], zScriptFile);
+    fprintf(stderr, "%s: cannot open for reading\n", zScriptFile);
     exit(1);
   }
   fseek(in, 0L, SEEK_END);
   nScript = ftell(in);
   zScript = malloc( nScript+1 );
   if( zScript==0 ){
-    fprintf(stderr, "%s: out of memory on %s:%d\n", argv[0], __FILE__,__LINE__);
+    fprintf(stderr, "out of memory at %s:%d\n", __FILE__,__LINE__);
     exit(1);
   }
   fseek(in, 0L, SEEK_SET);
@@ -371,12 +519,167 @@ int main(int argc, char **argv){
   fclose(in);
   zScript[nScript] = 0;
 
+  /* Initialize the sScript structure so that the cursor will be pointing
+  ** to the start of the first line in the file after nextLine() is called
+  ** once. */
+  memset(&sScript, 0, sizeof(sScript));
+  sScript.zScript = zScript;
+  sScript.iEnd = nScript;
+  sScript.copyFlag = !verifyMode;
+
   /* Open the database engine under test
   */
-  rc = pEngine->xConnect(pEngine->pAuxData, zConnectStr, &pConn);
+  rc = pEngine->xConnect(pEngine->pAuxData, zConnection, &pConn);
   if( rc ){
     fprintf(stderr, "%s: unable to connect to database\n", argv[0]);
     exit(1);
+  }
+
+  /* Loop over all records in the file */
+  while( findStartOfNextRecord(&sScript) ){
+
+    /* Tokenizer the first line of the record.  This also records the
+    ** line number of the first record in sScript.startLine */
+    tokenizeLine(&sScript);
+
+    /* Figure out the record type and do appropriate processing */
+    if( strcmp(sScript.azToken[0],"statement")==0 ){
+      int k = 0;
+
+      /* Extract the SQL from second and subsequent lines of the
+      ** record.  Copy the SQL into contiguous memory at the beginning
+      ** of zScript - we are guaranteed to have enough space there. */
+      while( nextLine(&sScript) && sScript.zStart[0] ){
+        if( k>0 ) zScript[k++] = '\n';
+        memmove(&zScript[k], sScript.zStart, sScript.len);
+        k += sScript.len;
+      }
+      zScript[k] = 0;
+
+      /* Run the statement.  Remember the results */
+      rc = pEngine->xStatement(pConn, zScript);
+
+      /* Check to see if we are expecting success or failure */
+      if( strcmp(sScript.azToken[1],"ok")==0 ){
+        /* do nothing if we expect success */
+      }else if( strcmp(sScript.azToken[1],"error")==0 ){
+        /* Invert the result if we expect failure */
+        rc = !rc;
+      }else{
+        fprintf(stderr, "%s:%d: statement argument should be 'ok' or 'error'\n",
+                zScriptFile, sScript.startLine);
+        nErr++;
+        rc = 0;
+      }
+
+      /* Report an error if the results do not match expectation */
+      if( rc ){
+        fprintf(stderr, "%s:%d: statement error\n",
+                zScriptFile, sScript.startLine);
+        nErr++;
+      }
+    }else if( strcmp(sScript.azToken[0],"query")==0 ){
+      int k = 0;
+      int c;
+
+      /* Verify that the type string consists of one or more characters
+      ** from the set "SIR". */
+      for(k=0; (c = sScript.azToken[1][k])!=0; k++){
+        if( c!='S' && c!='I' && c!='R' ){
+          fprintf(stderr, "%s:%d: unknown type character '%c' in type string\n",
+                  zScriptFile, sScript.startLine, c);
+          nErr++;
+          break;
+        }
+      }
+      if( c!=0 ) continue;
+
+      /* Extract the SQL from second and subsequent lines of the record
+      ** until the first "----" line or until end of record.
+      */
+      while( nextLine(&sScript) && sScript.zStart[0]
+             && strcmp(sScript.zStart,"----")!=0 ){
+        if( k>0 ) zScript[k++] = '\n';
+        memmove(&zScript[k], sScript.zStart, sScript.len);
+        k += sScript.len;
+      }
+      zScript[k] = 0;
+
+      /* Run the query */
+      nResult = 0;
+      azResult = 0;
+      rc = pEngine->xQuery(pConn, zScript, sScript.azToken[1],
+                           &azResult, &nResult);
+      if( rc ){
+        fprintf(stderr, "%s:%d: query failed\n",
+                zScriptFile, sScript.startLine);
+        pEngine->xFreeResults(pConn, azResult, nResult);
+        nErr++;
+        continue;
+      }
+
+      /* Do any required sorting of query results */
+      if( sScript.azToken[2][0]==0 || strcmp(sScript.azToken[2],"nosort")==0 ){
+        /* Do no sorting */
+      }else if( strcmp(sScript.azToken[2],"rowsort")==0 ){
+        /* Row-oriented sorting */
+        /*rowsort(azResult, nResult, strlen(sScript.azToken[2]));*/
+      }else if( strcmp(sScript.azToken[2],"valuesort")==0 ){
+        /* Sort all values independently */
+        /*valuesort(azResult, nResult);*/
+      }else{
+        fprintf(stderr, "%s:%d: unknown sort method: '%s'\n",
+                zScriptFile, sScript.startLine, sScript.azToken[2]);
+        nErr++;
+      }
+
+      if( verifyMode ){
+        /* In verify mode, first skip over the ---- line if we are still
+        ** pointing at it. */
+        if( strcmp(sScript.zStart, "----")==0 ) nextLine(&sScript);
+
+        /* Compare subsequent lines of the script against the results
+        ** from the query.  Report an error if any differences are found.
+        */
+        for(i=0; i<nResult && sScript.zStart[0]; nextLine(&sScript), i++){
+          if( strcmp(sScript.zStart, azResult[i])!=0 ){
+            fprintf(stderr,"%s:%d: wrong result\n", zScriptFile,
+                    sScript.nLine);
+            nErr++;
+            break;
+          }
+        }
+      }else{
+        /* In completion mode, first make sure we have output an ---- line.
+        ** Output such a line now if we have not already done so.
+        */
+        if( strcmp(sScript.zStart, "----")!=0 ){
+          printf("----\n");
+        }
+
+        /* Skip over any existing results.  They will be ignored.
+        */
+        sScript.copyFlag = 0;
+        while( sScript.zStart[0]!=0 && sScript.iCur<sScript.iEnd ){
+          nextLine(&sScript);
+        }
+        sScript.copyFlag = 1;
+
+        /* Output the results obtained by running the query
+        */
+        for(i=0; i<nResult; i++){
+          printf("%s\n", azResult[i]);
+        }
+      }
+
+      /* Free the query results */
+      pEngine->xFreeResults(pConn, azResult, nResult);
+    }else{
+      /* An unrecognized record type is an error */
+      fprintf(stderr, "%s:%d: unknown record type: '%s'\n",
+              zScriptFile, sScript.startLine, sScript.azToken[0]);
+      nErr++;
+    }
   }
 
 
