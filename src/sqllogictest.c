@@ -311,7 +311,7 @@ typedef struct Script Script;
 struct Script {
   char *zScript;       /* Complete text of the input script */
   int iCur;            /* Index in zScript of start of current line */
-  char *zStart;        /* Pointer to start of current line */
+  char *zLine;         /* Pointer to start of current line */
   int len;             /* Length of current line */
   int iNext;           /* index of start of next line */
   int nLine;           /* line number for the current line */
@@ -323,7 +323,7 @@ struct Script {
 
 /*
 ** Advance the cursor to the start of the next non-comment line of the
-** script.  Make p->zStart point to the start of the line.  Make p->len
+** script.  Make p->zLine point to the start of the line.  Make p->len
 ** be the length of the line.  Zero-terminate the line.  Any \r at the
 ** end of the line is removed.
 **
@@ -337,41 +337,59 @@ static int nextLine(Script *p){
 
     /* When we reach end-of-file, return 0 */
     if( p->iNext>=p->iEnd ){
+      p->iCur = p->iEnd;
+      p->zLine = &p->zScript[p->iEnd];
+      p->len = 0;
       return 0;
     }
 
     /* Advance the cursor to the next line */
     p->iCur = p->iNext;
     p->nLine++;
-    p->zStart = &p->zScript[p->iCur];
+    p->zLine = &p->zScript[p->iCur];
     for(i=p->iCur; i<p->iEnd && p->zScript[i]!='\n'; i++){}
     p->zScript[i] = 0;
-    p->len = i - p->iCur - 1;
+    p->len = i - p->iCur;
     p->iNext = i+1;
 
     /* If the current line ends in a \r then remove the \r. */
     if( p->len>0 && p->zScript[i-1]=='\r' ){
       p->len--;
+      i--;
       p->zScript[i-1] = 0;
     }
 
     /* If the line consists of all spaces, make it an empty line */
-    for(i=i-2; i>=p->iCur && isspace(p->zScript[i]); i--){}
+    for(i=i-1; i>=p->iCur && isspace(p->zScript[i]); i--){}
     if( i<p->iCur ){
-      p->zStart[0] = 0;
+      p->zLine[0] = 0;
     }
 
     /* If the copy flag is set, write the line to standard output */
     if( p->copyFlag ){
-      printf("%s\n", p->zStart);
+      printf("%s\n", p->zLine);
     }
 
     /* If the line is not a comment line, then we are finished, so break
     ** out of the loop.  If the line is a comment, the loop will repeat in
     ** order to skip this line. */
-    if( p->zStart[0]!='#' ) break;
+    if( p->zLine[0]!='#' ) break;
   }
   return 1;
+}
+
+/*
+** Look ahead to the next line and return TRUE if it is a blank line.
+** But do not advance to the next line yet.
+*/
+static int nextIsBlank(Script *p){
+  int i = p->iNext;
+  if( i>=p->iEnd ) return 1;
+  while( i<p->iEnd && isspace(p->zScript[i]) ){
+    if( p->zScript[i]=='\n' ) return 1;
+    i++;
+  }
+  return 0;
 }
 
 /*
@@ -384,13 +402,17 @@ static int nextLine(Script *p){
 static int findStartOfNextRecord(Script *p){
 
   /* Skip over any existing content to find a blank line */
-  while( p->zStart[0] && p->iCur<p->iEnd ){
+  if( p->iCur>0 ){
+    while( p->zLine[0] && p->iCur<p->iEnd ){
+      nextLine(p);
+    }
+  }else{
     nextLine(p);
   }
 
   /* Skip over one or more blank lines to find the first line of the
   ** new record */
-  while( p->zStart[0]==0 && p->iCur<p->iEnd ){
+  while( p->zLine[0]==0 && p->iCur<p->iEnd ){
     nextLine(p);
   }
 
@@ -420,18 +442,38 @@ static void tokenizeLine(Script *p){
   int i, j, k;
   int len, n;
   for(i=0; i<3; i++) p->azToken[i][0] = 0;
+  p->startLine = p->nLine;
   for(i=j=0; j<p->len && i<3; i++){
-    findToken(&p->zStart[j], &k, &len);
+    findToken(&p->zLine[j], &k, &len);
     j += k;
     n = len;
     if( n>=sizeof(p->azToken[0]) ){
       n = sizeof(p->azToken[0])-1;
     }
-    memcpy(p->azToken[i], &p->zStart[j], n);
+    memcpy(p->azToken[i], &p->zLine[j], n);
     p->azToken[i][n] = 0;
     j += n+1;
   }
 }
+
+/*
+** The number columns in a row of the current result set
+*/
+static int nColumn = 0;
+
+/*
+** Comparison function for sorting the result set.
+*/
+static int rowCompare(const void *pA, const void *pB){
+  const char **azA = (const char**)pA;
+  const char **azB = (const char**)pB;
+  int c = 0, i;
+  for(i=0; c==0 && i<nColumn; i++){
+    c = strcmp(azA[i], azB[i]);
+  }
+  return c;
+}
+
 
 /*
 ** This is the main routine.  This routine runs first.  It processes
@@ -449,6 +491,7 @@ int main(int argc, char **argv){
   void *pConn;                         /* Connection to the database engine */
   int rc;                              /* Result code from subroutine call */
   int nErr = 0;                        /* Number of errors */
+  int nCmd = 0;                        /* Number of SQL statements processed */
   int nResult;                         /* Number of query results */
   char **azResult;                     /* Query result vector */
   Script sScript;                      /* Script parsing status */
@@ -524,6 +567,7 @@ int main(int argc, char **argv){
   ** once. */
   memset(&sScript, 0, sizeof(sScript));
   sScript.zScript = zScript;
+  sScript.zLine = zScript;
   sScript.iEnd = nScript;
   sScript.copyFlag = !verifyMode;
 
@@ -549,15 +593,16 @@ int main(int argc, char **argv){
       /* Extract the SQL from second and subsequent lines of the
       ** record.  Copy the SQL into contiguous memory at the beginning
       ** of zScript - we are guaranteed to have enough space there. */
-      while( nextLine(&sScript) && sScript.zStart[0] ){
+      while( nextLine(&sScript) && sScript.zLine[0] ){
         if( k>0 ) zScript[k++] = '\n';
-        memmove(&zScript[k], sScript.zStart, sScript.len);
+        memmove(&zScript[k], sScript.zLine, sScript.len);
         k += sScript.len;
       }
       zScript[k] = 0;
 
       /* Run the statement.  Remember the results */
       rc = pEngine->xStatement(pConn, zScript);
+      nCmd++;
 
       /* Check to see if we are expecting success or failure */
       if( strcmp(sScript.azToken[1],"ok")==0 ){
@@ -593,14 +638,21 @@ int main(int argc, char **argv){
         }
       }
       if( c!=0 ) continue;
+      if( k<=0 ){
+        fprintf(stderr, "%s:%d: missing type string\n",
+                zScriptFile, sScript.startLine);
+        nErr++;
+        break;
+      }
 
       /* Extract the SQL from second and subsequent lines of the record
       ** until the first "----" line or until end of record.
       */
-      while( nextLine(&sScript) && sScript.zStart[0]
-             && strcmp(sScript.zStart,"----")!=0 ){
+      k = 0;
+      while( !nextIsBlank(&sScript) && nextLine(&sScript) && sScript.zLine[0]
+             && strcmp(sScript.zLine,"----")!=0 ){
         if( k>0 ) zScript[k++] = '\n';
-        memmove(&zScript[k], sScript.zStart, sScript.len);
+        memmove(&zScript[k], sScript.zLine, sScript.len);
         k += sScript.len;
       }
       zScript[k] = 0;
@@ -610,6 +662,7 @@ int main(int argc, char **argv){
       azResult = 0;
       rc = pEngine->xQuery(pConn, zScript, sScript.azToken[1],
                            &azResult, &nResult);
+      nCmd++;
       if( rc ){
         fprintf(stderr, "%s:%d: query failed\n",
                 zScriptFile, sScript.startLine);
@@ -623,10 +676,13 @@ int main(int argc, char **argv){
         /* Do no sorting */
       }else if( strcmp(sScript.azToken[2],"rowsort")==0 ){
         /* Row-oriented sorting */
-        /*rowsort(azResult, nResult, strlen(sScript.azToken[2]));*/
+        nColumn = strlen(sScript.azToken[1]);
+        qsort(azResult, nResult/nColumn, sizeof(azResult[0])*nColumn,
+              rowCompare);
       }else if( strcmp(sScript.azToken[2],"valuesort")==0 ){
         /* Sort all values independently */
-        /*valuesort(azResult, nResult);*/
+        nColumn = 1;
+        qsort(azResult, nResult, sizeof(azResult[0]), rowCompare);
       }else{
         fprintf(stderr, "%s:%d: unknown sort method: '%s'\n",
                 zScriptFile, sScript.startLine, sScript.azToken[2]);
@@ -636,13 +692,13 @@ int main(int argc, char **argv){
       if( verifyMode ){
         /* In verify mode, first skip over the ---- line if we are still
         ** pointing at it. */
-        if( strcmp(sScript.zStart, "----")==0 ) nextLine(&sScript);
+        if( strcmp(sScript.zLine, "----")==0 ) nextLine(&sScript);
 
         /* Compare subsequent lines of the script against the results
         ** from the query.  Report an error if any differences are found.
         */
-        for(i=0; i<nResult && sScript.zStart[0]; nextLine(&sScript), i++){
-          if( strcmp(sScript.zStart, azResult[i])!=0 ){
+        for(i=0; i<nResult && sScript.zLine[0]; nextLine(&sScript), i++){
+          if( strcmp(sScript.zLine, azResult[i])!=0 ){
             fprintf(stderr,"%s:%d: wrong result\n", zScriptFile,
                     sScript.nLine);
             nErr++;
@@ -653,23 +709,24 @@ int main(int argc, char **argv){
         /* In completion mode, first make sure we have output an ---- line.
         ** Output such a line now if we have not already done so.
         */
-        if( strcmp(sScript.zStart, "----")!=0 ){
+        if( strcmp(sScript.zLine, "----")!=0 ){
           printf("----\n");
         }
-
-        /* Skip over any existing results.  They will be ignored.
-        */
-        sScript.copyFlag = 0;
-        while( sScript.zStart[0]!=0 && sScript.iCur<sScript.iEnd ){
-          nextLine(&sScript);
-        }
-        sScript.copyFlag = 1;
 
         /* Output the results obtained by running the query
         */
         for(i=0; i<nResult; i++){
           printf("%s\n", azResult[i]);
         }
+        printf("\n");
+
+        /* Skip over any existing results.  They will be ignored.
+        */
+        sScript.copyFlag = 0;
+        while( sScript.zLine[0]!=0 && sScript.iCur<sScript.iEnd ){
+          nextLine(&sScript);
+        }
+        sScript.copyFlag = 1;
       }
 
       /* Free the query results */
@@ -683,11 +740,19 @@ int main(int argc, char **argv){
   }
 
 
-  /* Finally, shutdown the database connection.  Return the number of errors.
+  /* Shutdown the database connection.
   */
   rc = pEngine->xDisconnect(pConn);
   if( rc ){
     fprintf(stderr, "%s: disconnection from database failed\n", argv[0]);
+    nErr++;
+  }
+
+  /* Report the number of errors and quit.
+  */
+  if( verifyMode ){
+    printf("%s: %d errors out of %d SQL statement\n",
+           zScriptFile, nErr, nCmd);
   }
   return nErr; 
 }
