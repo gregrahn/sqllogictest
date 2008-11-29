@@ -170,7 +170,7 @@ static int sqliteQuery(
         appendValue(&res, "<NULL>");
       }else{
         switch( zType[i] ){
-          case 'S': {
+          case 'T': {
             const char *zValue = (const char*)sqlite3_column_text(pStmt, i);
             char *z;
             if( zValue[0]==0 ) zValue = "<EMPTY-STRING>";
@@ -628,9 +628,9 @@ int main(int argc, char **argv){
       int c;
 
       /* Verify that the type string consists of one or more characters
-      ** from the set "SIR". */
+      ** from the set "TIR". */
       for(k=0; (c = sScript.azToken[1][k])!=0; k++){
-        if( c!='S' && c!='I' && c!='R' ){
+        if( c!='T' && c!='I' && c!='R' ){
           fprintf(stderr, "%s:%d: unknown type character '%c' in type string\n",
                   zScriptFile, sScript.startLine, c);
           nErr++;
@@ -750,9 +750,10 @@ int main(int argc, char **argv){
 
   /* Report the number of errors and quit.
   */
-  if( verifyMode ){
+  if( verifyMode || nErr ){
     printf("%s: %d errors out of %d SQL statement\n",
            zScriptFile, nErr, nCmd);
   }
+  free(zScript);
   return nErr; 
 }

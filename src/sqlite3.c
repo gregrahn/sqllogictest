@@ -29409,6 +29409,8 @@ static int writeJournalHdr(Pager *pPager){
   put32bits(&zHeader[sizeof(aJournalMagic)+8], pPager->dbSize);
   /* The assumed sector size for this process */
   put32bits(&zHeader[sizeof(aJournalMagic)+12], pPager->sectorSize);
+  memset(&zHeader[sizeof(aJournalMagic)+16], 0,
+         nHeader-(sizeof(aJournalMagic)+16));
   if( pPager->journalHdr==0 ){
     /* The page size */
     put32bits(&zHeader[sizeof(aJournalMagic)+16], pPager->pageSize);
