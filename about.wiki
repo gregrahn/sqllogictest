@@ -246,8 +246,12 @@ It is useful to includes some NULL values in the initial data in order to
 test the NULL handling logic.  Be careful, however, in that different
 database engines interpret NULLs in a UNIQUE constraint differently.
 SQLite, PostgreSQL, Oracle, MySQL, and Firebird do it one way.  Informix,
-DB2, and MS-SQL do it another.  So while NULLs are useful test values, it
-will be best to avoid using NULLs in UNIQUE columns.
+DB2, and MS-SQL do it another.  So it is best to avoid using NULLs in
+UNIQUE column. Also, NULLs sort differently on different
+engines.  SQLite sorts NULL values first.  PostgreSQL and MySQL and most
+other database engiens sort NULL values last.  So one should avoid ORDER
+BY and LIMIT clauses and use the "rowsort" or "valuesort" parameter on
+queries that might return NULLs.
 
 One might have a large set of DELETE, INSERT, SELECT, and UPDATE statements
 that are repeated multiple times, but with various CREATE INDEX and
