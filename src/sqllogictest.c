@@ -136,8 +136,8 @@ static void appendValue(ResAccum *p, const char *zValue){
 ** of pointers to strings.  *pazResult is made to point to the resulting
 ** array and *pnResult is set to the number of elements in the array.
 **
-** NULL values in the result set should be represented by a string "<NULL>".
-** Empty strings should be shown as "<EMPTY-STRING>".  Unprintable and
+** NULL values in the result set should be represented by a string "NULL".
+** Empty strings should be shown as "(empty)".  Unprintable and
 ** control characters should be rendered as "@".
 **
 ** Return 0 on success and 1 if there is an error.  It is not necessary
@@ -167,13 +167,13 @@ static int sqliteQuery(
     int i;
     for(i=0; zType[i]; i++){
       if( sqlite3_column_type(pStmt, i)==SQLITE_NULL ){
-        appendValue(&res, "<NULL>");
+        appendValue(&res, "NULL");
       }else{
         switch( zType[i] ){
           case 'T': {
             const char *zValue = (const char*)sqlite3_column_text(pStmt, i);
             char *z;
-            if( zValue[0]==0 ) zValue = "<EMPTY-STRING>";
+            if( zValue[0]==0 ) zValue = "(empty)";
             appendValue(&res, zValue);
 
             /* Convert non-printing and control characters to '@' */
@@ -318,7 +318,7 @@ struct Script {
   int iEnd;            /* Index in zScript of '\000' at end of script */
   int startLine;       /* Line number of start of current record */
   int copyFlag;        /* If true, copy lines to output as they are read */
-  char azToken[3][20]; /* tokenization of a line */
+  char azToken[3][200]; /* tokenization of a line */
 };
 
 /*

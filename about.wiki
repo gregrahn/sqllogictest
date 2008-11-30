@@ -41,13 +41,13 @@ First complete the prototype script using MySQL as the reference database
 engine:
 
 <blockquote><pre>
-sqllogictest -engine MySQL prototype.txt >full.txt
+sqllogictest -engine MySQL prototype.test >full.test
 </pre></blockquote>
 
 Then verify the results using SQLite:
 
 <blockquote><pre>
-sqllogictest -verify -engine SQLite full.txt
+sqllogictest -verify -engine SQLite full.test
 </pre></blockquote>
 
 The second command will display any discrepencies between the output
@@ -60,9 +60,9 @@ The compare the two test scripts using a file comparison utility.
 For example:
 
 <blockquote><pre>
-sqllogictest -engine MySQL prototype.txt >full-1.txt
-sqllogictest -engine SQLite prototype.txt >full-2.txt
-diff full-1.txt full-2.txt
+sqllogictest -engine MySQL prototype.test >full-1.test
+sqllogictest -engine SQLite prototype.test >full-2.test
+diff full-1.test full-2.test
 </pre></blockquote>
 
 Note that in completion mode, the sqllogictest program will ignore any
@@ -71,9 +71,9 @@ safe to pass a full test script into sqllogictest running in completion
 mode.  So the previous test could have been run this way:
 
 <blockquote><pre>
-sqllogictest -engine MySQL prototype.txt >full-1.txt
-sqllogictest -engine SQLite full-1.txt >full-2.txt
-diff full-1.txt full-2.txt
+sqllogictest -engine MySQL prototype.test >full-1.test
+sqllogictest -engine SQLite full-1.test >full-2.test
+diff full-1.test full-2.test
 </pre></blockquote>
 
 The long-term vision of the sqllogictest project is to amass a huge 
@@ -170,6 +170,6 @@ row groupings.  Each individual result value is sorted on its own.
 
 In the results section, integer values are rendered as if by
 printf("%d").  Floating point values are rendered as if by
-printf("%.3f").  NULL values are rendered as "<NULL>".  Empty
-strings are rendered as "<EMPTY-STRING>".  Within non-empty strings,
+printf("%.3f").  NULL values are rendered as "NULL".  Empty
+strings are rendered as "(empty)".  Within non-empty strings,
 all control characters and unprintable characters are rendered as "@".
