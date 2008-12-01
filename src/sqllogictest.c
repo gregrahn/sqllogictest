@@ -260,7 +260,7 @@ int main(int argc, char **argv){
   char **azResult;                     /* Query result vector */
   Script sScript;                      /* Script parsing status */
   FILE *in;                            /* For reading script */
-  int hashThreshold = 0;               /* Hash result if this long or longer */
+  int hashThreshold = 0 ;              /* Hash result if this long or longer */
   
 
   /* Add calls to the registration procedures for new database engine
@@ -412,6 +412,7 @@ int main(int argc, char **argv){
     }else if( strcmp(sScript.azToken[0],"query")==0 ){
       int k = 0;
       int c;
+      char zHash[100];
 
       /* Verify that the type string consists of one or more characters
       ** from the set "TIR". */
@@ -481,6 +482,8 @@ int main(int argc, char **argv){
           md5_add(azResult[i]);
           md5_add("\n");
         }
+        sqlite3_snprintf(sizeof(zHash), zHash,
+                         "%d rows hashing to %s", nResult, md5_finish());
       }
 
       if( verifyMode ){
@@ -501,7 +504,7 @@ int main(int argc, char **argv){
             }
           }
         }else{
-          if( strcmp(sScript.zLine, md5_finish())!=0 ){
+          if( strcmp(sScript.zLine, zHash)!=0 ){
             fprintf(stderr, "%s:%d: wrong result hash\n",
                     zScriptFile, sScript.nLine);
             nErr++;
@@ -522,7 +525,7 @@ int main(int argc, char **argv){
             printf("%s\n", azResult[i]);
           }
         }else{
-          printf("%s\n", md5_finish());
+          printf("%s\n", zHash);
         }
         printf("\n");
 
