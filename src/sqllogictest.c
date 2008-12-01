@@ -246,7 +246,7 @@ static int rowCompare(const void *pA, const void *pB){
 int main(int argc, char **argv){
   int verifyMode = 0;                  /* True if in -verify mode */
   const char *zScriptFile = 0;         /* Input script filename */
-  const char *zDbEngine = NULL;        /* Name of database engine */
+  const char *zDbEngine = "SQLite";    /* Name of database engine */
   const char *zConnection = 0;         /* Connection string on DB engine */
   const DbEngine *pEngine = 0;         /* Pointer to DbEngine object */
   int i;                               /* Loop counter */
@@ -260,13 +260,16 @@ int main(int argc, char **argv){
   char **azResult;                     /* Query result vector */
   Script sScript;                      /* Script parsing status */
   FILE *in;                            /* For reading script */
+  int hashThreshold = 0;               /* Hash result if this long or longer */
   
 
   /* Add calls to the registration procedures for new database engine
   ** interfaces here
   */
   registerSqlite();
+#ifndef OMIT_ODBC
   registerODBC3();
+#endif
 
   /* Report an error if no registered engines
   */
@@ -287,9 +290,14 @@ int main(int argc, char **argv){
     int n = (int)strlen(argv[i]);
     if( strncmp(argv[i], "-verify",n)==0 ){
       verifyMode = 1;
+#if 0  /* Obsolete code */
     }else if( strncmp(argv[i], "-engine",n)==0 ){
       zDbEngine = argv[++i];
     }else if( strncmp(argv[i], "-connection",n)==0 ){
+      zConnection = argv[++i];
+#endif
+    }else if( strncmp(argv[i], "-odbc",n)==0 ){
+      zDbEngine = "ODBC3";
       zConnection = argv[++i];
     }else if( zScriptFile==0 ){
       zScriptFile = argv[i];
@@ -467,6 +475,14 @@ int main(int argc, char **argv){
         nErr++;
       }
 
+      /* Hash the results if we are over the hash threshold */
+      if( hashThreshold>0 && nResult>hashThreshold ){
+        for(i=0; i<nResult; i++){
+          md5_add(azResult[i]);
+          md5_add("\n");
+        }
+      }
+
       if( verifyMode ){
         /* In verify mode, first skip over the ---- line if we are still
         ** pointing at it. */
@@ -475,12 +491,20 @@ int main(int argc, char **argv){
         /* Compare subsequent lines of the script against the results
         ** from the query.  Report an error if any differences are found.
         */
-        for(i=0; i<nResult && sScript.zLine[0]; nextLine(&sScript), i++){
-          if( strcmp(sScript.zLine, azResult[i])!=0 ){
-            fprintf(stderr,"%s:%d: wrong result\n", zScriptFile,
-                    sScript.nLine);
+        if( hashThreshold==0 || nResult<=hashThreshold ){
+          for(i=0; i<nResult && sScript.zLine[0]; nextLine(&sScript), i++){
+            if( strcmp(sScript.zLine, azResult[i])!=0 ){
+              fprintf(stderr,"%s:%d: wrong result\n", zScriptFile,
+                      sScript.nLine);
+              nErr++;
+              break;
+            }
+          }
+        }else{
+          if( strcmp(sScript.zLine, md5_finish())!=0 ){
+            fprintf(stderr, "%s:%d: wrong result hash\n",
+                    zScriptFile, sScript.nLine);
             nErr++;
-            break;
           }
         }
       }else{
@@ -493,8 +517,12 @@ int main(int argc, char **argv){
 
         /* Output the results obtained by running the query
         */
-        for(i=0; i<nResult; i++){
-          printf("%s\n", azResult[i]);
+        if( hashThreshold==0 || nResult<=hashThreshold ){
+          for(i=0; i<nResult; i++){
+            printf("%s\n", azResult[i]);
+          }
+        }else{
+          printf("%s\n", md5_finish());
         }
         printf("\n");
 
@@ -509,11 +537,29 @@ int main(int argc, char **argv){
 
       /* Free the query results */
       pEngine->xFreeResults(pConn, azResult, nResult);
+    }else if( strcmp(sScript.azToken[0],"hash-threshold")==0 ){
+      /* Set the maximum number of result values that will be accepted
+      ** for a query.  If the number of result values exceeds this number,
+      ** then an MD5 hash is computed of all values, and the resulting hash
+      ** is the only result.
+      **
+      ** If the threshold is 0, then hashing is never used.
+      */
+      hashThreshold = atoi(sScript.azToken[1]);
+    }else if( strcmp(sScript.azToken[0],"halt")==0 ){
+      /* Used for debugging.  Stop reading the test script and shut down.
+      ** A "halt" record can be inserted in the middle of a test script in
+      ** to run the script up to a particular point that is giving a
+      ** faulty result, then terminate at that point for analysis.
+      */
+      fprintf(stderr, "%s:%d: halt\n", zScriptFile, sScript.startLine);
+      break;
     }else{
       /* An unrecognized record type is an error */
       fprintf(stderr, "%s:%d: unknown record type: '%s'\n",
               zScriptFile, sScript.startLine, sScript.azToken[0]);
       nErr++;
+      break;
     }
   }
 

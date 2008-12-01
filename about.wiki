@@ -101,8 +101,8 @@ No provision is made for Unicode; the purpose
 of sqllogictest is to test the query and join logic of the database engine, not
 its support for localization and internationalization.
 
-Test scripts consist of zero or more records.  A record represents either a
-single statement or query.  Each record
+Test scripts consist of zero or more records.  A record is a
+single statement or query or a control record.  Each record
 is separated from its neighbors by one or more blank line.  Records
 are evaluated in order, starting from the beginning of the
 script and working toward the end.
@@ -119,7 +119,7 @@ evaluation.  Comments are logically removed from the script by a preprocessor.
 Hence, when we speak of the "first line of a record" we
 really mean the "first non-comment line of a record".
 
-Each record is either a statement or a query.  A statement is an SQL
+Most records are either a statement or a query.  A statement is an SQL
 command that is to be evaluated but from which we do not expect to get
 results (other than success or failure).  A statement might be a
 CREATE TABLE or an INSERT or an UPDATE or a DROP INDEX.  A query is an
@@ -186,6 +186,31 @@ printf("%.3f").  NULL values are rendered as "NULL".  Empty
 strings are rendered as "(empty)".  Within non-empty strings,
 all control characters and unprintable characters are rendered as "@".
 
+<h3>Control Records</h3>
+
+The test script might also contain control records.  A control record is
+one of the following:
+
+<blockquote>
+<tt>halt</tt><br>
+<tt>hash-threshold</td> &lt;max-result-set-size&gt;
+</blockquote>
+
+A "halt" record is intended for debugging use only.  A halt record merely
+causes sqllogictest to ignore the rest of the test script.  A halt record
+can be inserted after a query that is giving an anomalous result, causing
+the database to be left in the state where it gives the unexpected answer.
+After sqllogictest exist, manually debugging can then proceed.
+
+The "hash-threshold" record sets a limit on the number of values that can
+appear in a result set.  If the number of values exceeds this, then instead
+of recording each individual value in the full test script, an MD5 hash of
+all values is computed in stored.  This makes the full test scripts much
+shorter, but at the cost of obscuring the results.  If the hash-threshold
+is 0, then results are never hashed.  A hash-threshold of 10 or 20 is
+recommended.  During debugging, it is advantage to set the hash-threshold
+to zero so that all results can be seen.
+
 <h2>Suggestions For Generating Test-Scripts</h2>
 
 When sqllogictest runs a test script, it begins with a completely
@@ -228,11 +253,12 @@ to have subroutines that compute elements such as the following:
 
   *  Generate a random identifier which is not a keyword.
 
-Use LIMIT and OFFSET clauses to keep results set sizes under control.
-It is recommented that most queries use an ORDER BY clause so that
-the order of values in the output is deterministic.  Of course, it
-is also desirable to have some test cases that omit ORDER BY.  In those
-cases use either the "rowsort" or "valuesort" modifiers at the beginning
+Segregate queries that use LIMIT and OFFSET into separate test scripts
+which are only run on database engines that support LIMIT and OFFSET.
+
+All queries should use either an ORDER BY clause so that
+the order of values in the output is deterministic, or else
+the "rowsort" or "valuesort" modifiers at the beginning
 of the query record to ensure that the output appears in the same order
 on all database engines.
 

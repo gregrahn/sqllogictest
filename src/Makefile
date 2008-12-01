@@ -18,10 +18,14 @@ LIB = $(LDFLAGS)
 ###############################################################################
 #
 OBJ = \
+  md5.o \
   sqlite3.o
 
 sqllogictest$(E):	sqllogictest.c sqllogictest.h $(OBJ)
 	$(CC) -o sqllogictest$(E) sqllogictest.c $(OBJ)
+
+md5.o:	md5.c
+	$(CC) -c md5.c
 
 sqlite3.o:	sqlite3.c sqlite3.h
 	$(CC) -c sqlite3.c -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION

@@ -32,6 +32,8 @@
 ** SLT_DSN and SLT_DB.
 **
 */
+#ifndef OMIT_ODBC  /* Omit this module if OMIT_ODBC is defined */
+
 #ifdef WIN32
 #include <windows.h>
 #endif
@@ -527,3 +529,4 @@ void registerODBC3(void){
 /*
 **************** End of the ODBC3 database engine interface *****************
 *****************************************************************************/
+#endif /* OMIT_ODBC */

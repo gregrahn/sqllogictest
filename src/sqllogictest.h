@@ -46,3 +46,10 @@ struct DbEngine {
 ** to register itself with the main sqllogictest driver.
 */
 void sqllogictestRegisterEngine(const DbEngine*);
+
+
+/*
+** MD5 hashing routines.
+*/
+void md5_add(const char *z);
+const char *md5_finish(void);
