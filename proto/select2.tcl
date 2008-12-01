@@ -30,7 +30,7 @@ for {set i 0} {$i<30} {incr i} {
   set base [expr {$i*5+100}]
   set values {}
   for {set j 0} {$j<5} {incr j} {
-    if {rand()<0.0} {
+    if {rand()<0.1} {
       lappend values NULL
     } else {
       lappend values [expr {$j+$base}]
@@ -70,6 +70,9 @@ set wexpr {
   b>c
   c>d
   d>e
+  {a IS NULL}
+  {b IS NOT NULL}
+  coalesce(a,b,c,d,e)
   {c BETWEEN b-2 AND d+2}
   {d NOT BETWEEN 110 AND 150}
   {e+d BETWEEN a+b-10 AND c+130}
@@ -91,15 +94,7 @@ for {set i 0} {$i<1000} {incr i} {
     set w [lrange [scramble $wexpr] 1 $m]
     append sql "\n WHERE [join $w $op]"
   }
-  incr n -1
-  append sql "\n ORDER BY [join [scramble [lrange $sequence 0 $n]] ,]"
-  # uncomment below to add LIMIT/OFFSET support.   MS SQL Server doesn't 
-  # support this currently.
-  #append sql "\n LIMIT [expr {int(rand()*5)+1}]"
-  #if {rand()>0.5} {
-  # append sql " OFFSET [expr {int(rand()*5)+1}]"
-  #}
-  puts "query [string range $type 0 $n] nosort"
+  puts "query [string range $type 0 $n] rowsort"
   puts "$sql"
   puts ""
 }
