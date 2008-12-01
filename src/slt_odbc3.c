@@ -25,6 +25,11 @@
 ** This DbEngine expects an ODBC3 DSN named 'sqllogictest'
 ** and a database named 'slt' available through that DSN to exist.
 ** The DSN should be accessible to the current user.
+** On connect, it will attempt to "DROP" all existing tables 
+** from the database name 'slt' to reset it to a known status.
+**
+** The DSN name and DB name are controlled by the defines
+** SLT_DSN and SLT_DB.
 **
 */
 #ifdef WIN32
@@ -39,12 +44,13 @@
 #define SLT_DB  "slt"
 
 
-/* forward prototypes */
+/* 
+** Forward prototypes.
+*/
 static int ODBC3Statement(
   void *pConn,                /* Connection created by xConnect */
   const char *zSql            /* SQL statement to evaluate */
 );
-
 
 /*
 ** Structure used to hold handles needed for ODBC3 connection.
@@ -232,8 +238,7 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
 ** The zConnectStr argument is the value of the -connection command-line
 ** option.  This is intended to contain information on how to connect to
 ** the database engine.  The zConnectStr argument will be NULL if there
-** is no -connection on the command-line.  In the case of ODBC3, the
-** zConnectStr is the DSN to open.
+** is no -connection on the command-line.  
 **
 ** An object that describes the newly opened and initialized database
 ** connection is returned by writing into *ppConn.
@@ -253,6 +258,7 @@ static int ODBC3Connect(
   /* Allocate a structure to hold all of our ODBC3 handles */
   pODBC3conn = (ODBC3_Handles *)malloc(sizeof(ODBC3_Handles));
   if( !pODBC3conn ){
+    fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
     return 1;
   }
   pODBC3conn->env = SQL_NULL_HENV;
@@ -352,9 +358,10 @@ static int ODBC3Query(
   char ***pazResult,          /* RETURN:  Array of result values */
   int *pnResult               /* RETURN:  Number of result values */
 ){
-  SQLRETURN ret; /* ODBC API return status */
+  int rc = 0;
+  SQLRETURN ret;              /* ODBC API return status */
   ODBC3_Handles *pODBC3conn = pConn;
-  ODBC3_resAccum res;          /* query result accumulator */
+  ODBC3_resAccum res;         /* query result accumulator */
   char zBuffer[512];          /* Buffer to render numbers */
   SQLSMALLINT columns;        /* number of columns in result-set */
   SQLHSTMT stmt = SQL_NULL_HSTMT;
@@ -372,17 +379,26 @@ static int ODBC3Query(
   ret = SQLExecDirect(stmt, (SQLCHAR *)zSql, SQL_NTS);
   if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
     ODBC3_perror("SQLExecDirect", stmt, SQL_HANDLE_STMT);
-    return 1;
+    rc = 1;
   }
 
-  /* How many columns are there */
-  SQLNumResultCols(stmt, &columns);
-
-  /* Loop through the rows in the result-set */
-  while( SQL_SUCCEEDED(ret = SQLFetch(stmt)) ){
-      SQLUSMALLINT i;
-      /* Loop through the columns */
-      for(i = 1; i <= columns; i++){
+  if( !rc ){
+    /* How many columns are there */
+    ret = SQLNumResultCols(stmt, &columns);
+    if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
+      ODBC3_perror("SQLNumResultCols", stmt, SQL_HANDLE_STMT);
+      rc = 1;
+    }
+  }
+  
+  if( !rc ){
+    /* Loop through the rows in the result-set */
+    do {
+      ret = SQLFetch(stmt);
+      if( SQL_SUCCEEDED(ret) ){
+        SQLUSMALLINT i;
+        /* Loop through the columns */
+        for(i = 1; i <= columns; i++){
           SQLINTEGER indicator;
           /* retrieve column data as a string */
           ret = SQLGetData(stmt, 
@@ -392,27 +408,35 @@ static int ODBC3Query(
                            sizeof(zBuffer), 
                            &indicator);
           if( SQL_SUCCEEDED(ret) ){
-              char *z;
-              /* Handle null columns */
-              if( indicator == SQL_NULL_DATA ){ 
-                strcpy(zBuffer, "NULL");
-              /* Handle empty columns */
-              } else if( *zBuffer == '\0' ) {
-                strcpy(zBuffer, "(empty)");
-              }
-              ODBC3_appendValue(&res, zBuffer);
-              /* Convert non-printing and control characters to '@' */
-              z = res.azValue[res.nUsed-1];
-              while( *z ){
-                if( *z<' ' || *z>'~' ){ *z = '@'; }
-                z++;
-              }
+            char *z;
+            /* Handle null columns */
+            if( indicator == SQL_NULL_DATA ){ 
+              strcpy(zBuffer, "NULL");
+            /* Handle empty columns */
+            } else if( *zBuffer == '\0' ) {
+              strcpy(zBuffer, "(empty)");
+            }
+            ODBC3_appendValue(&res, zBuffer);
+            /* Convert non-printing and control characters to '@' */
+            z = res.azValue[res.nUsed-1];
+            while( *z ){
+              if( *z<' ' || *z>'~' ){ *z = '@'; }
+              z++;
+            }
           }
+        } /* end for i */
       }
+    } while( SQL_SUCCEEDED(ret) );
   }
+  
+  if( stmt != SQL_NULL_HSTMT ){
+    SQLFreeHandle(SQL_HANDLE_STMT, stmt);
+  }
+
   *pazResult = res.azValue;
   *pnResult = res.nUsed;
-  return 0;
+
+  return rc;
 }
 
 
@@ -454,6 +478,7 @@ static int ODBC3Disconnect(
   ODBC3_Handles *pODBC3conn = pConn;
   
   if ( !pODBC3conn ){
+    fprintf(stderr, "invalid ODBC3 connection object\n");
     return 1;
   }
 

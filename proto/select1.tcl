@@ -91,10 +91,12 @@ for {set i 0} {$i<1000} {incr i} {
   }
   incr n -1
   append sql "\n ORDER BY [join [scramble [lrange $sequence 0 $n]] ,]"
-  append sql "\n LIMIT [expr {int(rand()*5)+1}]"
-  if {rand()>0.5} {
-   append sql " OFFSET [expr {int(rand()*5)+1}]"
-  }
+  # uncomment below to add LIMIT/OFFSET support.   MS SQL Server doesn't 
+  # support this currently.
+  #append sql "\n LIMIT [expr {int(rand()*5)+1}]"
+  #if {rand()>0.5} {
+  # append sql " OFFSET [expr {int(rand()*5)+1}]"
+  #}
   puts "query [string range $type 0 $n] nosort"
   puts "$sql"
   puts ""
