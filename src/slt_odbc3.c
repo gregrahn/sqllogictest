@@ -322,6 +322,8 @@ static int ODBC3Connect(
   }
   
   if( !rc ){
+    SQLSMALLINT outStrLen;
+
     /* Build the connection string.   If a DSN or DATABASE
     ** is not specified, use the defaults.
     */
@@ -344,7 +346,7 @@ static int ODBC3Connect(
                            SQL_NTS,
                            pODBC3conn->zConnStr, 
                            1024 * sizeof(SQLCHAR), 
-                           NULL,
+                           &outStrLen,
                            SQL_DRIVER_COMPLETE);
     if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
       ODBC3_perror("SQLDriverConnect", pODBC3conn->dbc, SQL_HANDLE_DBC);
