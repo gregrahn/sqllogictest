@@ -23,7 +23,7 @@
 **
 ** This main driver for the sqllogictest program.
 */
-#if WIN32
+#ifdef WIN32
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
@@ -62,9 +62,15 @@ void sqllogictestRegisterEngine(const DbEngine *p){
 ** Print a usage comment and die
 */
 static void usage(const char *argv0){
+#if 0  /* Obsolete code */
   fprintf(stderr,
     "Usage: %s [-verify] [-engine DBENGINE] [-connection STR] script\n",
     argv0);
+#else
+  fprintf(stderr,
+    "Usage: %s [-verify] [-odbc STR] script\n",
+    argv0);
+#endif
   exit(1);
 }
 
@@ -329,7 +335,7 @@ int main(int argc, char **argv){
   }
 
   /*
-  ** Read the entire script file content into memory
+  ** Read the entire script file contents into memory
   */
   in = fopen(zScriptFile, "rb");
   if( in==0 ){
