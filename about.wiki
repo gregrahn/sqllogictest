@@ -45,17 +45,19 @@ in the full script to validate the output of the database engine.
 
 For example, to verify that SQLite gets the same answer as MySQL on
 a particular set of queries, one might execute commands as follows.
-First complete the prototype script using MySQL as the reference database
-engine:
+First complete the prototype script using MySQL accessed through ODBC
+as the reference database engine:
 
 <blockquote><pre>
-sqllogictest -engine MySQL prototype.test >full.test
+sqllogictest -odbc DSN=mysqlslt MySQL prototype.test >full.test
 </pre></blockquote>
 
-Then verify the results using SQLite:
+In the command above, you would, of course, substitute whatever DSN
+string is appropriate for your installation.
+Afterwards, verify the results using the built-in copy of SQLite:
 
 <blockquote><pre>
-sqllogictest -verify -engine SQLite full.test
+sqllogictest -verify full.test
 </pre></blockquote>
 
 The second command will display any discrepencies between the output
@@ -70,8 +72,8 @@ Then compare the two test scripts using a file comparison utility.
 For example:
 
 <blockquote><pre>
-sqllogictest -engine MySQL prototype.test >full-1.test
-sqllogictest -engine SQLite prototype.test >full-2.test
+sqllogictest -odbc DSN=mysqlslt prototype.test >full-1.test
+sqllogictest prototype.test >full-2.test
 diff full-1.test full-2.test
 </pre></blockquote>
 
@@ -81,8 +83,8 @@ safe to pass a full test script into sqllogictest running in completion
 mode.  So the previous test could have been run this way:
 
 <blockquote><pre>
-sqllogictest -engine MySQL prototype.test >full-1.test
-sqllogictest -engine SQLite full-1.test >full-2.test
+sqllogictest -odbc DSN=mysqlslt MySQL prototype.test >full-1.test
+sqllogictest full-1.test >full-2.test
 diff full-1.test full-2.test
 </pre></blockquote>
 
@@ -147,7 +149,7 @@ constraint might fail.
 A query record begins with a line of the following form:
 
 <blockquote>
-<tt>query</tt> <i>&lt;type-string&gt; &lt;sort-mode&gt;</i>
+<tt>query</tt> <i>&lt;type-string&gt; &lt;sort-mode&gt; &lt;label&gt;</i>
 </blockquote>
 
 The SQL for the query is found on second an subsequent lines of the 
@@ -179,6 +181,13 @@ the client side.  Sort comparisons use strcmp() on the rendered ASCII
 text representation of the values.  Hence, "9" sorts after "10", not before.
 The "valuesort" mode works like rowsort except that it does not honor
 row groupings.  Each individual result value is sorted on its own.
+
+The &lt;label&gt; argument is also optional.  If included, sqllogictest
+stores a hash of the results of this query under the given label.  If
+the label is reused, then sqllogictest verifies that the results are the
+same.  This can be used to verify that two or more queries in the
+same test script that are logically equivalent always generate the same
+output.
 
 In the results section, integer values are rendered as if by
 printf("%d").  Floating point values are rendered as if by
