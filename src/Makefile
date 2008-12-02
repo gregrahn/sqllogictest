@@ -21,7 +21,11 @@ OBJ = \
   md5.o \
   sqlite3.o
 
-sqllogictest$(E):	sqllogictest.c sqllogictest.h $(OBJ)
+INC = \
+  slt_sqlite.c \
+  slt_odbc3.c
+
+sqllogictest$(E):	sqllogictest.c sqllogictest.h $(OBJ) $(INC)
 	$(CC) -o sqllogictest$(E) sqllogictest.c $(OBJ)
 
 md5.o:	md5.c

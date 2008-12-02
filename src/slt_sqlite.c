@@ -156,6 +156,11 @@ static int sqliteQuery(
     sqlite3_finalize(pStmt);
     return 1;
   }
+  if( strlen(zType)!=sqlite3_column_count(pStmt) ){
+    fprintf(stderr, "Wrong number of result columns: Expected %d but got %d\n",
+            strlen(zType), sqlite3_column_count(pStmt));
+    return 1;
+  }
   while( sqlite3_step(pStmt)==SQLITE_ROW ){
     int i;
     for(i=0; zType[i]; i++){

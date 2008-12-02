@@ -94,7 +94,7 @@ for {set i 0} {$i<1000} {incr i} {
     set w [lrange [scramble $wexpr] 1 $m]
     append sql "\n WHERE [join $w $op]"
   }
-  puts "query [string range $type 0 $n] rowsort"
+  puts "query [string range $type 1 $n] rowsort"
   puts "$sql"
   puts ""
 }
