@@ -61,6 +61,7 @@ typedef struct ODBC3_Handles ODBC3_Handles;
 struct ODBC3_Handles {
   SQLHENV env;
   SQLHDBC dbc;
+  SQLCHAR *zConnStr;
 };
 
 /*
@@ -93,7 +94,7 @@ static void ODBC3_perror(char *fn,
               "%s:%s:%ld:%ld:%s\n", fn, state, (long)i, (long)native, text);
     }
   }
-  while( ret == SQL_SUCCESS );
+  while( SQL_SUCCEEDED(ret) );
 }
 
 /*
@@ -164,6 +165,7 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
   }
 
   /* Retrieve a list of tables */
+  /* TBD:  do we need to drop views, triggers, etc. here? */
   ret = SQLTables(stmt, NULL, 0, NULL, 0, NULL, 0, "TABLE", SQL_NTS);
   if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
     ODBC3_perror("SQLTables", stmt, SQL_HANDLE_STMT);
@@ -219,10 +221,25 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
   }
 
   if( !rc ){
+  
+    /* Find the name of the database (defaults to SLT_DB).
+    ** When looping through the tables to delete, only delete
+    ** tables from that database.
+    */
+    char zDbName[512] = SLT_DB;
+    char *pc1 = zDbName;
+    char *pc2 = strstr(pODBC3conn->zConnStr, "DATABASE=");
+    if( pc2 ){
+      pc2 += 9;
+      while( *pc2 && (*pc2!=';') ) *pc1++ = *pc2++;
+      *pc1 = '\0';
+    }
+  
     /* for each valid table found, drop it */
     for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
-      if(    (0 == strcmp(res.azValue[i], SLT_DB))
+      if(    (0 == strcmp(res.azValue[i], zDbName))
           && (0 == strcmp(res.azValue[i+1], "dbo"))
+          && (strlen(res.azValue[i+2])>0)
           && (0 == strcmp(res.azValue[i+3], "TABLE"))
           && (0 == strcmp(res.azValue[i+4], "NULL")) ){
         sprintf(zSql, "DROP TABLE %s", res.azValue[i+2]);
@@ -237,10 +254,10 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
 
 /*
 ** This routine is called to open a connection to a new, empty database.
-** The zConnectStr argument is the value of the -connection command-line
+** The zConnectStr argument is the value of the -odbc command-line
 ** option.  This is intended to contain information on how to connect to
 ** the database engine.  The zConnectStr argument will be NULL if there
-** is no -connection on the command-line.  
+** is no -odbc on the command-line.  
 **
 ** An object that describes the newly opened and initialized database
 ** connection is returned by writing into *ppConn.
@@ -255,7 +272,7 @@ static int ODBC3Connect(
   int rc = 0;
   SQLRETURN ret; /* ODBC API return status */
   ODBC3_Handles *pODBC3conn = NULL;
-  char szSqlConnStr[512];
+  char szConnStrIn[512] = "";
 
   /* Allocate a structure to hold all of our ODBC3 handles */
   pODBC3conn = (ODBC3_Handles *)malloc(sizeof(ODBC3_Handles));
@@ -265,35 +282,80 @@ static int ODBC3Connect(
   }
   pODBC3conn->env = SQL_NULL_HENV;
   pODBC3conn->dbc = SQL_NULL_HDBC;
+  pODBC3conn->zConnStr = NULL;
 
   /* Allocate an environment handle */
-  SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &pODBC3conn->env);
-  /* We want ODBC 3 support */
-  SQLSetEnvAttr(pODBC3conn->env, SQL_ATTR_ODBC_VERSION, (void *) SQL_OV_ODBC3, 0);
-  /* Allocate a connection handle */
-  SQLAllocHandle(SQL_HANDLE_DBC, pODBC3conn->env, &pODBC3conn->dbc);
-  /* TBD: check all of the above for failures */
-
-  /* Build the connection string.
-  */
-  sprintf(szSqlConnStr, "DSN=" SLT_DSN ";DATABASE=" SLT_DB ";%s", ( zConnectStr ) ? zConnectStr : "");
-
-  /* Open a connection to the new database.
-  */
-  /* TBD: should we use SQLConnect() here? */
-  ret = SQLDriverConnect(pODBC3conn->dbc, 
-                         NULL, 
-                         (SQLCHAR *)szSqlConnStr, 
-                         SQL_NTS,
-                         NULL, 
-                         0, 
-                         NULL,
-                         SQL_DRIVER_COMPLETE);
-  if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
-    ODBC3_perror("SQLDriverConnect", pODBC3conn->dbc, SQL_HANDLE_DBC);
+  ret = SQLAllocHandle(SQL_HANDLE_ENV, SQL_NULL_HANDLE, &pODBC3conn->env);
+  if( !SQL_SUCCEEDED(ret) ){
+    ODBC3_perror("SQLAllocHandle", pODBC3conn->env, SQL_HANDLE_ENV);
     rc = 1;
   }
   
+  /* We want ODBC 3 support */
+  if( !rc ){
+    ret = SQLSetEnvAttr(pODBC3conn->env, SQL_ATTR_ODBC_VERSION, (void *) SQL_OV_ODBC3, 0);
+    if( !SQL_SUCCEEDED(ret) ){
+      ODBC3_perror("SQLSetEnvAttr", pODBC3conn->env, SQL_HANDLE_ENV);
+      rc = 1;
+    }
+  }
+  
+  /* Allocate a database connection (dbc) handle */
+  if( !rc ){
+    ret = SQLAllocHandle(SQL_HANDLE_DBC, pODBC3conn->env, &pODBC3conn->dbc);
+    if( !SQL_SUCCEEDED(ret) ){
+      ODBC3_perror("SQLAllocHandle", pODBC3conn->env, SQL_HANDLE_ENV);
+      rc = 1;
+    }
+  }
+  
+  /* Allocate storage space for the returned connection information.
+  */
+  if( !rc ){
+    pODBC3conn->zConnStr = (SQLCHAR *)malloc(1024 * sizeof(SQLCHAR));
+    if( !pODBC3conn->zConnStr ){
+      fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
+      rc = 1;
+    }
+  }
+  
+  if( !rc ){
+    /* Build the connection string.   If a DSN or DATABASE
+    ** is not specified, use the defaults.
+    */
+    if( !zConnectStr || !strstr(zConnectStr, "DSN=") ){
+      strcat(szConnStrIn, "DSN=" SLT_DSN ";");
+    }
+    if( !zConnectStr || !strstr(zConnectStr, "DATABASE=") ){
+      strcat(szConnStrIn, "DATABASE=" SLT_DB ";");
+    }
+    if( zConnectStr ){
+      strcat(szConnStrIn, zConnectStr);
+    }
+
+    /* Open a connection to the new database.
+    */
+    /* TBD: should we use SQLConnect() here? */
+    ret = SQLDriverConnect(pODBC3conn->dbc, 
+                           NULL, 
+                           (SQLCHAR *)szConnStrIn, 
+                           SQL_NTS,
+                           pODBC3conn->zConnStr, 
+                           1024 * sizeof(SQLCHAR), 
+                           NULL,
+                           SQL_DRIVER_COMPLETE);
+    if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
+      ODBC3_perror("SQLDriverConnect", pODBC3conn->dbc, SQL_HANDLE_DBC);
+      rc = 1;
+    }
+  }
+  
+  /* TBD:  should we call CREATE DATABASE 'slt'?
+  ** This would require removing any DATABASE name from 
+  ** the connection string, connecting to the DSN only,
+  ** creating the db, then reconnecting the DSN with the
+  ** the database name specified. */
+
   /* Loop over all tables, etc. available in the database and drop them,
   ** thus resetting it to an empty database.  */
   if( !rc ){
@@ -302,6 +364,8 @@ static int ODBC3Connect(
   
   /* TBD: is there a way to specify synchronous=OFF or equivalent */
 
+  /* TBD: should we free up anything allocated on error? */
+  
   /* store connection info */
   *ppConn = (void*)pODBC3conn;
 
@@ -484,12 +548,14 @@ static int ODBC3Disconnect(
     return 1;
   }
 
-  ret = SQLDisconnect(pODBC3conn->dbc);   /* disconnect from driver */
-  if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
-    ODBC3_perror("SQLDisconnect", pODBC3conn->dbc, SQL_HANDLE_DBC);
-    rc = 1;
+  if( pODBC3conn->dbc != SQL_NULL_HDBC ){
+    ret = SQLDisconnect(pODBC3conn->dbc);   /* disconnect from driver */
+    if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
+      ODBC3_perror("SQLDisconnect", pODBC3conn->dbc, SQL_HANDLE_DBC);
+      rc = 1;
+    }
   }
-  
+
   if( pODBC3conn->dbc != SQL_NULL_HDBC ){
     SQLFreeHandle(SQL_HANDLE_DBC, pODBC3conn->dbc);
   }
@@ -497,9 +563,14 @@ static int ODBC3Disconnect(
     SQLFreeHandle(SQL_HANDLE_ENV, pODBC3conn->env);
   }
 
+  if( pODBC3conn->zConnStr ){
+    free(pODBC3conn->zConnStr);
+  }
+
   pODBC3conn->env = SQL_NULL_HENV;
   pODBC3conn->dbc = SQL_NULL_HDBC;
-
+  pODBC3conn->zConnStr = NULL;
+  
   free(pODBC3conn);
   return rc;
 }
