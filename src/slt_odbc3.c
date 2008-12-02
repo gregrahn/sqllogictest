@@ -237,13 +237,11 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
   
     /* for each valid table found, drop it */
     for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
-      if(    (0 == strcmp(res.azValue[i], zDbName))
-          && (   (0 == strcmp(res.azValue[i+1], "dbo"))
-              || (0 == strcmp(res.azValue[i+1], "(empty)")) ) /* MySQL */
+      if(    (0 == strcmp(res.azValue[i], zDbName)
+               || 0 == strcmp(res.azValue[i], "NULL"))
           && (strlen(res.azValue[i+2])>0)
           && (0 == strcmp(res.azValue[i+3], "TABLE"))
-          && (   (0 == strcmp(res.azValue[i+4], "NULL")) 
-              || (0 == strcmp(res.azValue[i+1], "(empty)")) ) ){ /* MySQL */
+      ){
         sprintf(zSql, "DROP TABLE %s", res.azValue[i+2]);
         rc = ODBC3Statement(pODBC3conn, zSql);
       }
