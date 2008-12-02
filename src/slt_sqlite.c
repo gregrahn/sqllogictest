@@ -105,7 +105,7 @@ static void appendValue(ResAccum *p, const char *zValue){
   if( zValue ){
     z = sqlite3_mprintf("%s", zValue);
     if( z==0 ){
-      fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
+      fprintf(stderr, "Out of memory at %s:%d\n", __FILE__, __LINE__);
       exit(1);
     }
   }else{
@@ -116,7 +116,7 @@ static void appendValue(ResAccum *p, const char *zValue){
     p->nAlloc += 200;
     az = sqlite3_realloc(p->azValue, p->nAlloc*sizeof(p->azValue[0]));
     if( az==0 ){
-      fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
+      fprintf(stderr, "Out of memory at %s:%d\n", __FILE__, __LINE__);
       exit(1);
     }
     p->azValue = az;
@@ -158,7 +158,7 @@ static int sqliteQuery(
   }
   if( strlen(zType)!=sqlite3_column_count(pStmt) ){
     fprintf(stderr, "Wrong number of result columns: Expected %d but got %d\n",
-            strlen(zType), sqlite3_column_count(pStmt));
+            (int)strlen(zType), sqlite3_column_count(pStmt));
     return 1;
   }
   while( sqlite3_step(pStmt)==SQLITE_ROW ){
