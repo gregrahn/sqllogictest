@@ -552,7 +552,7 @@ int main(int argc, char **argv){
           md5_add("\n");
         }
         sqlite3_snprintf(sizeof(zHash), zHash,
-                         "%d rows hashing to %s", nResult, md5_finish());
+                         "%d values hashing to %s", nResult, md5_finish());
         sScript.azToken[3][20] = 0;
         if( sScript.azToken[3][0]
          && checkValue(sScript.azToken[3], md5_finish())

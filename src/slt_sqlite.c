@@ -51,6 +51,7 @@ static int sqliteConnect(
   ** then delete the database before we start, thus resetting it to an
   ** empty database.
   */
+  zConnectStr = "test.db";
   if( zConnectStr ){
 #ifndef WIN32
     unlink(zConnectStr);

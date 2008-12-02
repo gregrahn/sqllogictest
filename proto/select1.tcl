@@ -3,6 +3,10 @@
 # Run this script to generate a larger prototype test script for
 # sqllogictest.
 #
+# This is the original test script generator.  It generates a single
+# table T1(a,b,c,d,e) with all INTEGER columns and 30 rows of non-NULL
+# data, then does various queries against that table.
+#
 expr {srand(0)}
 
 # Scramble the $inlist into a random order.
@@ -20,8 +24,6 @@ proc scramble {inlist} {
   return $outlist
 }
 
-puts {hash-threshold 8}
-puts {}
 puts {statement ok}
 puts {CREATE TABLE t1(a INTEGER, b INTEGER, c INTEGER, d INTEGER, e INTEGER)}
 puts {}
@@ -93,12 +95,6 @@ for {set i 0} {$i<1000} {incr i} {
   }
   incr n -1
   append sql "\n ORDER BY [join [scramble [lrange $sequence 0 $n]] ,]"
-  # uncomment below to add LIMIT/OFFSET support.   MS SQL Server doesn't 
-  # support this currently.
-  #append sql "\n LIMIT [expr {int(rand()*5)+1}]"
-  #if {rand()>0.5} {
-  # append sql " OFFSET [expr {int(rand()*5)+1}]"
-  #}
   puts "query [string range $type 0 $n] nosort"
   puts "$sql"
   puts ""
