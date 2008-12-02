@@ -467,68 +467,67 @@ static int ODBC3Query(
       if( SQL_SUCCEEDED(ret) ){
         /* Loop through the columns */
         for(i = 1; !rc && (i <= columns); i++){
-          SQLINTEGER indicator;
-          ret = SQLGetData(stmt, 
-                           i, 
-                           SQL_C_CHAR,
-                           NULL, 
-                           0, 
-                           &indicator);
-          if( SQL_SUCCEEDED(ret) && (indicator == SQL_NULL_DATA) ){
-            ODBC3_appendValue(&res, "NULL");
-          } else {
-            switch( zType[i-1] ){
-              case 'T': {
-                /* retrieve column data as a string */
-                ret = SQLGetData(stmt, 
-                                 i, 
-                                 SQL_C_CHAR,
-                                 zBuffer, 
-                                 sizeof(zBuffer), 
-                                 NULL);
-                if( SQL_SUCCEEDED(ret) ){
-                  char *z;
-                  if( zBuffer[0]==0 ) strcpy(zBuffer, "(empty)");
-                  ODBC3_appendValue(&res, zBuffer);
-                  /* Convert non-printing and control characters to '@' */
-                  z = res.azValue[res.nUsed-1];
-                  while( *z ){
-                    if( *z<' ' || *z>'~' ){ *z = '@'; }
-                    z++;
-                  }
+          SQLINTEGER indicator = 0;
+          switch( zType[i-1] ){
+            case 'T': {
+              /* retrieve column data as a string */
+              ret = SQLGetData(stmt, 
+                               i, 
+                               SQL_C_CHAR,
+                               zBuffer, 
+                               sizeof(zBuffer), 
+                               &indicator);
+              if( SQL_SUCCEEDED(ret) ){
+                char *z;
+                if( indicator == SQL_NULL_DATA ) strcpy(zBuffer, "NULL");
+                if( zBuffer[0]==0 ) strcpy(zBuffer, "(empty)");
+                ODBC3_appendValue(&res, zBuffer);
+                /* Convert non-printing and control characters to '@' */
+                z = res.azValue[res.nUsed-1];
+                while( *z ){
+                  if( *z<' ' || *z>'~' ){ *z = '@'; }
+                  z++;
                 }
-                break;
               }
-              case 'I': {
-                long int li = 0L;
-                SQLGetData(stmt, 
-                           i, 
-                           SQL_C_SLONG,
-                           &li, 
-                           sizeof(li), 
-                           NULL);
+              break;
+            }
+            case 'I': {
+              long int li = 0L;
+              SQLGetData(stmt, 
+                         i, 
+                         SQL_C_SLONG,
+                         &li, 
+                         sizeof(li), 
+                         &indicator);
+              if( indicator == SQL_NULL_DATA ){
+                strcpy(zBuffer, "NULL");
+              }else{
                 sprintf(zBuffer, "%ld", li);
-                ODBC3_appendValue(&res, zBuffer);
-                break;
               }
-              case 'R': {
-                double r = 0.0f;
-                SQLGetData(stmt, 
-                           i, 
-                           SQL_C_DOUBLE,
-                           &r, 
-                           sizeof(r), 
-                           NULL);
+              ODBC3_appendValue(&res, zBuffer);
+              break;
+            }
+            case 'R': {
+              double r = 0.0f;
+              SQLGetData(stmt, 
+                         i, 
+                         SQL_C_DOUBLE,
+                         &r, 
+                         sizeof(r), 
+                         &indicator);
+              if( indicator == SQL_NULL_DATA ){
+                strcpy(zBuffer, "NULL");
+              }else{
                 sprintf(zBuffer, "%.3f", r);
-                ODBC3_appendValue(&res, zBuffer);
-                break;
               }
-              default: {
-                fprintf(stderr, "Unknown character in type-string: %c\n", zType[i-1]);
-                rc = 1;
-              }
-            } /* end switch */
-          }
+              ODBC3_appendValue(&res, zBuffer);
+              break;
+            }
+            default: {
+              fprintf(stderr, "Unknown character in type-string: %c\n", zType[i-1]);
+              rc = 1;
+            }
+          } /* end switch */
         } /* end for i */
       }
     } while( !rc && SQL_SUCCEEDED(ret) );
