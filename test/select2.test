@@ -118,7 +118,7 @@ SELECT abs(b-c),
        b,
        a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (a>b-2 AND a<b+2)
 ----
 32 rows hashing to 025a6b7e32aedd7939350be5fb8823fc
@@ -183,7 +183,7 @@ SELECT c,
        abs(a)
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND c>d
 ----
 40 rows hashing to eb117f901e05c7c460440a0692def0ea
@@ -213,7 +213,7 @@ SELECT e,
        (a+b+c+d+e)/5
   FROM t1
  WHERE b IS NOT NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 216 rows hashing to f5a4e844e230bd4f6708fb389b6c0873
 
@@ -252,7 +252,7 @@ SELECT d-e,
        c-d,
        (a+b+c+d+e)/5
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b>c
     OR b IS NOT NULL
 ----
@@ -278,7 +278,7 @@ SELECT a+b*2+c*3+d*4+e*5,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        e
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b>c
     OR a>b
 ----
@@ -383,7 +383,7 @@ SELECT a-b,
        a
   FROM t1
  WHERE b>c
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND (e>a AND e<b)
 ----
 12 rows hashing to 2b9db039357a68ddabe9394ed708d9fb
@@ -488,7 +488,7 @@ SELECT a+b*2+c*3,
        c-d
   FROM t1
  WHERE b IS NOT NULL
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR d NOT BETWEEN 110 AND 150
 ----
 90 rows hashing to 285102df0931d7d70eff29f3ebe8a297
@@ -588,7 +588,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
  WHERE e+d BETWEEN a+b-10 AND c+130
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 240 rows hashing to 0592dee07a49db8c5b461fe26f8b200c
 
@@ -671,7 +671,7 @@ SELECT a+b*2,
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
    AND c BETWEEN b-2 AND d+2
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 42 rows hashing to 2a287cef89f9fb3bb64b833bb177c6af
 
@@ -867,7 +867,7 @@ query II rowsort
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END
   FROM t1
  WHERE a>b
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 34 rows hashing to 1d1922d9ad4b8c3e149b95b2c0490fcd
 
@@ -1081,7 +1081,7 @@ query II rowsort
 SELECT d-e
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND c BETWEEN b-2 AND d+2
 ----
 28 rows hashing to 0ec15d7e5c4100b8297417453e1e8530
@@ -1271,7 +1271,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        abs(a),
        c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND c BETWEEN b-2 AND d+2
 ----
 90 rows hashing to b06973ab5039b723d438480ab03c0726
@@ -1296,7 +1296,7 @@ SELECT d-e,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 210 rows hashing to 717f6763680160672bf30191369517b2
 
@@ -1324,7 +1324,7 @@ SELECT a+b*2+c*3,
        d-e,
        (a+b+c+d+e)/5
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
    AND e+d BETWEEN a+b-10 AND c+130
 ----
@@ -1462,7 +1462,7 @@ SELECT d-e,
        a+b*2,
        a-b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 180 rows hashing to 1304a4cdbb818ff04c73e0d15fbe8962
 
@@ -1544,7 +1544,7 @@ SELECT a+b*2+c*3+d*4,
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
     OR d>e
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 180 rows hashing to fd7c9da94f5782711d4c236ae6ee1ac7
 
@@ -1630,7 +1630,7 @@ SELECT a-b,
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
    AND d>e
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 54 rows hashing to 23bfc93eb55a3bfe7e33dc649d63512c
 
@@ -1675,7 +1675,7 @@ SELECT a+b*2+c*3+d*4+e*5,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        a-b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d>e
    AND d NOT BETWEEN 110 AND 150
 ----
@@ -1735,7 +1735,7 @@ SELECT c-d,
   FROM t1
  WHERE d>e
    AND b IS NOT NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 88 rows hashing to 3ec6c7924bb81c8deaa4a2922cb6500b
 
@@ -1968,7 +1968,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        b,
        c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 180 rows hashing to 3f2d08ae330050737aefa652957bdf37
 
@@ -1979,7 +1979,7 @@ SELECT (a+b+c+d+e)/5,
        abs(b-c)
   FROM t1
  WHERE (e>c OR e<d)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
 150 rows hashing to 8650b08f7717e2eb8ff1e3c8241e5141
@@ -2101,7 +2101,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
 query II rowsort
 SELECT a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d>e
 ----
 22 rows hashing to 6a347b6450b268052fe22a5576742303
@@ -2115,7 +2115,7 @@ SELECT d-e,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR c BETWEEN b-2 AND d+2
     OR (c<=d-2 OR c>=d+2)
 ----
@@ -2206,7 +2206,7 @@ SELECT a+b*2+c*3+d*4
 query II rowsort
 SELECT c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 60 rows hashing to c6c1930c970e40a57ef80b57f942798a
 
@@ -2355,7 +2355,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
        d,
        c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 210 rows hashing to 21fdb07d3cf4bcba7aac1afd23fcb2d9
 
@@ -2572,7 +2572,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
   FROM t1
  WHERE b>c
    AND a>b
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 18 rows hashing to bda73c8062b345810b7fde9335fb325f
 
@@ -2795,7 +2795,7 @@ SELECT b,
        (a+b+c+d+e)/5,
        a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>a AND e<b)
 ----
 18 rows hashing to 51b5e5c0325bcbefb4dbeebf09fe0d91
@@ -2847,7 +2847,7 @@ SELECT a+b*2+c*3+d*4+e*5,
        a+b*2+c*3+d*4,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 120 rows hashing to a7ba6b729a82b5a1e73bc6896203522a
 
@@ -2884,7 +2884,7 @@ query III rowsort
 SELECT d,
        (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 90 rows hashing to 5f0dc82a619a93a13bedd19c050e6904
 
@@ -3238,7 +3238,7 @@ SELECT b-c,
        (a+b+c+d+e)/5,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 180 rows hashing to bb4e8025264976476bbf6271bba5e815
 
@@ -3266,7 +3266,7 @@ SELECT a+b*2+c*3+d*4+e*5,
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
    AND d>e
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 56 rows hashing to 528662c8b6daa25e9727cf37cbf6e78d
 
@@ -3326,7 +3326,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
   FROM t1
  WHERE d>e
     OR (e>c OR e<d)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 120 rows hashing to 56cdcb086796566c0ec5222a9ecd5993
 
@@ -3371,7 +3371,7 @@ SELECT (a+b+c+d+e)/5,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 180 rows hashing to dc966bfe6197622c09a51c1c613545d2
 
@@ -3395,7 +3395,7 @@ SELECT (a+b+c+d+e)/5,
        abs(b-c),
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
 ----
 147 rows hashing to 56b09c6c4f82fabf9a2d49eff04532ed
@@ -3441,7 +3441,7 @@ SELECT abs(b-c),
        b-c
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
 ----
 39 rows hashing to 43d03993c53dee3c5c2698b0ea7bf439
@@ -3553,7 +3553,7 @@ query II rowsort
 SELECT e
   FROM t1
  WHERE c>d
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND a>b
 ----
 10 rows hashing to 507082f0101ef7f1571a735aedc6032c
@@ -3578,7 +3578,7 @@ SELECT abs(a),
        e
   FROM t1
  WHERE (a>b-2 AND a<b+2)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 150 rows hashing to 590f157cbaa00e040ed87fde1b89d058
 
@@ -3820,7 +3820,7 @@ SELECT c,
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND e+d BETWEEN a+b-10 AND c+130
 ----
 106
@@ -3934,7 +3934,7 @@ SELECT abs(b-c),
        c-d
   FROM t1
  WHERE (e>c OR e<d)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 180 rows hashing to 55ae480f5fa3fcca0c944f6f3fecf5d4
 
@@ -4057,7 +4057,7 @@ SELECT a+b*2+c*3,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END
   FROM t1
  WHERE d>e
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 44 rows hashing to 624a9963516ea99f49179743d6f022d7
 
@@ -4103,7 +4103,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
   FROM t1
  WHERE d>e
     OR e+d BETWEEN a+b-10 AND c+130
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 120 rows hashing to eb9a0ec0c86a66579999e5f2abb11684
 
@@ -4295,7 +4295,7 @@ SELECT a+b*2+c*3,
        a+b*2+c*3+d*4+e*5
   FROM t1
  WHERE a IS NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND (c<=d-2 OR c>=d+2)
 ----
 
@@ -4348,7 +4348,7 @@ SELECT d,
        a+b*2,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b>c
     OR a>b
 ----
@@ -4444,7 +4444,7 @@ SELECT d,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND c>d
 ----
 91 rows hashing to 3555d0c6ccb191ca5727c51a6a4e3584
@@ -4452,7 +4452,7 @@ SELECT d,
 query II rowsort
 SELECT a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 60 rows hashing to 03ba2f9092f7f43aa14f81919945ea01
 
@@ -4476,7 +4476,7 @@ SELECT b-c,
        abs(b-c),
        a-b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 120 rows hashing to be23f2ab93ab0c1965d7ff2438427644
 
@@ -4500,7 +4500,7 @@ SELECT abs(b-c),
        b-c
   FROM t1
  WHERE a IS NULL
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR b>c
 ----
 150 rows hashing to c1ae7733af22e7d3625f9ed22fdff519
@@ -5165,7 +5165,7 @@ SELECT abs(b-c),
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE (e>c OR e<d)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND e+d BETWEEN a+b-10 AND c+130
 ----
 16 rows hashing to 454628121147b6655d8fe6579847b3ad
@@ -5176,7 +5176,7 @@ SELECT e,
        abs(b-c),
        a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (a>b-2 AND a<b+2)
 ----
 40 rows hashing to 123ca3b0460d12c48a02d1f456d79b45
@@ -5185,7 +5185,7 @@ query III rowsort
 SELECT b-c,
        a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (e>c OR e<d)
     OR a IS NULL
 ----
@@ -5214,7 +5214,7 @@ SELECT e,
   FROM t1
  WHERE b>c
    AND d NOT BETWEEN 110 AND 150
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 30 rows hashing to f699f0b086bd6f10c2cb4d9f63844fce
 
@@ -5235,7 +5235,7 @@ SELECT d-e
 query II rowsort
 SELECT (a+b+c+d+e)/5
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>a AND e<b)
    AND b IS NOT NULL
 ----
@@ -5254,7 +5254,7 @@ SELECT abs(b-c),
        b-c
   FROM t1
  WHERE (a>b-2 AND a<b+2)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 48 rows hashing to 0ab4ec5798a0c29f24ef9a2b42dcc8de
 
@@ -5397,7 +5397,7 @@ SELECT abs(b-c),
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE b IS NOT NULL
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR a IS NULL
 ----
 90 rows hashing to 58a0b183699a8df4b3ebf733cdf87349
@@ -5623,7 +5623,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d NOT BETWEEN 110 AND 150
 ----
 68 rows hashing to 0160da795781bfa7d948b8b8a9789602
@@ -5661,7 +5661,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE b>c
    AND (e>c OR e<d)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 18 rows hashing to 38b5527574156eccf3f49dcc7e6a50e9
 
@@ -5717,7 +5717,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
   FROM t1
  WHERE d>e
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 180 rows hashing to 433781127cffb3a8e59b341941a781ec
 
@@ -5917,7 +5917,7 @@ SELECT b-c,
        a+b*2,
        a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR a IS NULL
     OR d NOT BETWEEN 110 AND 150
 ----
@@ -6032,7 +6032,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        c,
        abs(a)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND c>d
    AND (c<=d-2 OR c>=d+2)
 ----
@@ -6088,7 +6088,7 @@ SELECT abs(a),
 query II rowsort
 SELECT d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d NOT BETWEEN 110 AND 150
 ----
 34 rows hashing to 66d4b02983fea087dabfca56f55112a8
@@ -6208,7 +6208,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
        c-d
   FROM t1
  WHERE (e>a AND e<b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 150 rows hashing to 81b9f5e9cdcb8cd0f9604c2e56e581c4
 
@@ -6266,7 +6266,7 @@ SELECT b-c,
   FROM t1
  WHERE d>e
    AND c>d
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 30 rows hashing to 312608049475efce0800639b36459b3d
 
@@ -6445,7 +6445,7 @@ query III rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
        a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 90 rows hashing to 9515d3fc275ac0595d863c1193af332f
 
@@ -6642,7 +6642,7 @@ SELECT c-d,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        b-c
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
 ----
 147 rows hashing to 7500c6cac024324a36f17f024d05e91c
@@ -6700,7 +6700,7 @@ SELECT a+b*2+c*3+d*4,
        a-b,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d>e
 ----
 66 rows hashing to e9831ce2876dc506a6f1eeb3645cd3c7
@@ -7001,7 +7001,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d NOT BETWEEN 110 AND 150
    AND b IS NOT NULL
 ----
@@ -7015,7 +7015,7 @@ SELECT a+b*2+c*3,
        c-d,
        (a+b+c+d+e)/5
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 210 rows hashing to 8139e10e11262c20fc7e146e107df467
 
@@ -7076,7 +7076,7 @@ SELECT d,
   FROM t1
  WHERE b>c
    AND d>e
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 16 rows hashing to 390f7f8cd161726a065ca922dee12527
 
@@ -7415,7 +7415,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
 query II rowsort
 SELECT a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR a IS NULL
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
@@ -7521,7 +7521,7 @@ query II rowsort
 SELECT a+b*2+c*3
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR (e>c OR e<d)
 ----
 60 rows hashing to 03ba2f9092f7f43aa14f81919945ea01
@@ -7573,7 +7573,7 @@ SELECT a+b*2+c*3+d*4,
        b,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 150 rows hashing to 67b313096e1dac4e9ee1b78a8074281c
 
@@ -7598,7 +7598,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
        a+b*2+c*3,
        a+b*2
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND a>b
    AND b IS NOT NULL
 ----
@@ -7708,7 +7708,7 @@ SELECT c-d,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 210 rows hashing to e963c6daeca01761678e16f64ce77c48
 
@@ -7927,7 +7927,7 @@ SELECT abs(b-c),
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
    AND (a>b-2 AND a<b+2)
 ----
@@ -7964,7 +7964,7 @@ SELECT abs(a),
        a+b*2+c*3,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (a>b-2 AND a<b+2)
 ----
 32 rows hashing to ca5773a904d62d5d60e714d5654baea7
@@ -8023,7 +8023,7 @@ SELECT abs(a),
 query II rowsort
 SELECT c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 60 rows hashing to c6c1930c970e40a57ef80b57f942798a
 
@@ -8035,7 +8035,7 @@ SELECT b,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END
   FROM t1
  WHERE b IS NOT NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 162 rows hashing to 760c01c70a9ba2befcddbd9d860cc1be
 
@@ -8066,7 +8066,7 @@ SELECT abs(a),
        a+b*2+c*3+d*4,
        a+b*2
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 150 rows hashing to 4e14419bcb444e82b8d1414dd27eb8a4
 
@@ -8168,7 +8168,7 @@ query II rowsort
 SELECT e
   FROM t1
  WHERE a>b
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 60 rows hashing to a4a1b214fd50e1bc44d81a8496377024
 
@@ -8357,7 +8357,7 @@ SELECT (a+b+c+d+e)/5,
        a+b*2,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b IS NOT NULL
 ----
 150 rows hashing to 56cf9741b1fdc0a8cf1ec9afa22f1793
@@ -8391,7 +8391,7 @@ SELECT a,
        abs(b-c)
   FROM t1
  WHERE a IS NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 12 rows hashing to 47c5d2348a68975a56e7dd6a58b2cc82
 
@@ -8482,7 +8482,7 @@ query II rowsort
 SELECT abs(a)
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND a IS NULL
 ----
 NULL
@@ -8731,7 +8731,7 @@ query II rowsort
 SELECT a+b*2
   FROM t1
  WHERE a>b
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND a IS NULL
 ----
 
@@ -8755,7 +8755,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR (a>b-2 AND a<b+2)
 ----
 180 rows hashing to f3744b28ca450e4637231ad974c8eb5d
@@ -8847,7 +8847,7 @@ SELECT c,
        a,
        c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND b IS NOT NULL
 ----
 216 rows hashing to 7deabd2b13c808314d54153ee632db70
@@ -8979,7 +8979,7 @@ SELECT a,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (c<=d-2 OR c>=d+2)
 ----
 60 rows hashing to 9cfbd23949df9490b608142ef9602978
@@ -9003,7 +9003,7 @@ SELECT a+b*2,
         WHEN a<b+3 THEN 333 ELSE 444 END,
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND e+d BETWEEN a+b-10 AND c+130
 ----
 12 rows hashing to 702b2b5bf973b2f6b051c399b6c6597c
@@ -9016,7 +9016,7 @@ SELECT a+b*2+c*3+d*4+e*5,
         WHEN a<b+3 THEN 333 ELSE 444 END,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (c<=d-2 OR c>=d+2)
 ----
 180 rows hashing to 2da70c79893788bd4e4c671e3633b7d2
@@ -9073,7 +9073,7 @@ SELECT abs(a),
        c,
        e
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
 150 rows hashing to c16752ac5215a2d42a7f11024a56ac97
@@ -9256,7 +9256,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR c>d
 ----
 120 rows hashing to 4820ea15ef2a5d3fcb461965ffe3e938
@@ -9406,7 +9406,7 @@ SELECT d,
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 90 rows hashing to 02257627f30b0c5e92fdac7f28339161
 
@@ -9475,7 +9475,7 @@ SELECT c,
        a+b*2+c*3
   FROM t1
  WHERE b>c
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 52 rows hashing to 317121e20ca9421c7b32a614fe686715
 
@@ -9613,7 +9613,7 @@ SELECT c-d,
 query II rowsort
 SELECT d-e
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND e+d BETWEEN a+b-10 AND c+130
    AND a IS NULL
 ----
@@ -9851,7 +9851,7 @@ SELECT b,
        a+b*2+c*3
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 150 rows hashing to 39b91b109dbf30f8593667e9bef16b71
 
@@ -9948,7 +9948,7 @@ SELECT a+b*2+c*3+d*4,
        CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b>c
 ----
 180 rows hashing to 9ac5632ff366782741d62fa08423ae0e
@@ -10184,7 +10184,7 @@ query III rowsort
 SELECT c-d,
        e
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 90 rows hashing to 82f682db24dd8265911460bb9bdeb577
 
@@ -10201,7 +10201,7 @@ SELECT a+b*2+c*3+d*4,
 query II rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (c<=d-2 OR c>=d+2)
 ----
 60 rows hashing to f3c76fbeab48e64d411c132783ecfdc5
@@ -10311,7 +10311,7 @@ SELECT a,
        (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 210 rows hashing to 0e6f04f4e28a70752e2a6cd89dfdaf84
 
@@ -10804,7 +10804,7 @@ SELECT abs(b-c),
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
  WHERE a IS NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 16 rows hashing to 06a602995bba5fb7d974817e0e82aacb
 
@@ -10812,7 +10812,7 @@ query III rowsort
 SELECT b-c,
        abs(a)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (e>a AND e<b)
 ----
 90 rows hashing to 4d869afbbfdc77cb017812d2480a9202
@@ -10822,7 +10822,7 @@ SELECT b-c
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
     OR (e>a AND e<b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 60 rows hashing to 504dc6e913c0a97b0769910f9d5ddaac
 
@@ -10842,7 +10842,7 @@ SELECT a+b*2+c*3
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
    AND a IS NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 ----
 NULL
 NULL
@@ -10936,7 +10936,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        abs(a),
        a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 ----
 120 rows hashing to 3d60d00b7f7b6e39f8280f743a45df8b
 
@@ -11039,7 +11039,7 @@ SELECT a-b,
        (a+b+c+d+e)/5,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (c<=d-2 OR c>=d+2)
 ----
 240 rows hashing to cede201dc084b520a53d6a91b96f16e6
@@ -11051,7 +11051,7 @@ SELECT abs(b-c),
        a+b*2+c*3+d*4+e*5,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR c>d
     OR d>e
 ----
@@ -11079,7 +11079,7 @@ SELECT a+b*2,
        b
   FROM t1
  WHERE (e>a AND e<b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 ----
 150 rows hashing to c7082b96b4870d3638c25563fac70c63
 
@@ -11129,7 +11129,7 @@ SELECT a-b,
 query II rowsort
 SELECT abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND b IS NOT NULL
 ----
 54 rows hashing to 34f5295a19064896b21225120f0e19f2
@@ -11159,7 +11159,7 @@ SELECT (a+b+c+d+e)/5,
        a-b
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR a IS NULL
 ----
 210 rows hashing to 1227690263dbb9efe9bdb025d12061f2

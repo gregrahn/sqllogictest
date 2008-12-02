@@ -114,7 +114,7 @@ SELECT abs(b-c),
        b,
        a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (a>b-2 AND a<b+2)
 
 query IIIII rowsort
@@ -167,7 +167,7 @@ SELECT c,
        abs(a)
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND c>d
 
 query IIIIIIII rowsort
@@ -193,7 +193,7 @@ SELECT e,
        (a+b+c+d+e)/5
   FROM t1
  WHERE b IS NOT NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -224,7 +224,7 @@ SELECT d-e,
        c-d,
        (a+b+c+d+e)/5
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b>c
     OR b IS NOT NULL
 
@@ -246,7 +246,7 @@ SELECT a+b*2+c*3+d*4+e*5,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        e
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b>c
     OR a>b
 
@@ -333,7 +333,7 @@ SELECT a-b,
        a
   FROM t1
  WHERE b>c
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND (e>a AND e<b)
 
 query IIIIIII rowsort
@@ -406,7 +406,7 @@ SELECT a+b*2+c*3,
        c-d
   FROM t1
  WHERE b IS NOT NULL
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR d NOT BETWEEN 110 AND 150
 
 query IIIII rowsort
@@ -483,7 +483,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
  WHERE e+d BETWEEN a+b-10 AND c+130
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIII rowsort
 SELECT (a+b+c+d+e)/5,
@@ -547,7 +547,7 @@ SELECT a+b*2,
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
    AND c BETWEEN b-2 AND d+2
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIII rowsort
 SELECT a+b*2+c*3,
@@ -700,7 +700,7 @@ query II rowsort
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END
   FROM t1
  WHERE a>b
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIII rowsort
 SELECT a+b*2+c*3+d*4+e*5,
@@ -877,7 +877,7 @@ query II rowsort
 SELECT d-e
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND c BETWEEN b-2 AND d+2
 
 query IIIIIIII rowsort
@@ -1031,7 +1031,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        abs(a),
        c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND c BETWEEN b-2 AND d+2
 
 query IIII rowsort
@@ -1052,7 +1052,7 @@ SELECT d-e,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query II rowsort
 SELECT a
@@ -1074,7 +1074,7 @@ SELECT a+b*2+c*3,
        d-e,
        (a+b+c+d+e)/5
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
    AND e+d BETWEEN a+b-10 AND c+130
 
@@ -1180,7 +1180,7 @@ SELECT d-e,
        a+b*2,
        a-b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT a+b*2+c*3+d*4,
@@ -1246,7 +1246,7 @@ SELECT a+b*2+c*3+d*4,
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
     OR d>e
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT a+b*2+c*3+d*4,
@@ -1318,7 +1318,7 @@ SELECT a-b,
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
    AND d>e
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query III rowsort
 SELECT a+b*2+c*3+d*4,
@@ -1355,7 +1355,7 @@ SELECT a+b*2+c*3+d*4+e*5,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        a-b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d>e
    AND d NOT BETWEEN 110 AND 150
 
@@ -1403,7 +1403,7 @@ SELECT c-d,
   FROM t1
  WHERE d>e
    AND b IS NOT NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT a,
@@ -1588,7 +1588,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        b,
        c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT (a+b+c+d+e)/5,
@@ -1597,7 +1597,7 @@ SELECT (a+b+c+d+e)/5,
        abs(b-c)
   FROM t1
  WHERE (e>c OR e<d)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 
 query IIIIII rowsort
@@ -1695,7 +1695,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
 query II rowsort
 SELECT a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d>e
 
 query IIIIIII rowsort
@@ -1707,7 +1707,7 @@ SELECT d-e,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR c BETWEEN b-2 AND d+2
     OR (c<=d-2 OR c>=d+2)
 
@@ -1782,7 +1782,7 @@ SELECT a+b*2+c*3+d*4
 query II rowsort
 SELECT c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIIII rowsort
 SELECT a+b*2+c*3+d*4,
@@ -1905,7 +1905,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
        d,
        c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT c,
@@ -2084,7 +2084,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
   FROM t1
  WHERE b>c
    AND a>b
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIIIIII rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -2259,7 +2259,7 @@ SELECT b,
        (a+b+c+d+e)/5,
        a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>a AND e<b)
 
 query IIIIII rowsort
@@ -2302,7 +2302,7 @@ SELECT a+b*2+c*3+d*4+e*5,
        a+b*2+c*3+d*4,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query II rowsort
 SELECT c-d
@@ -2331,7 +2331,7 @@ query III rowsort
 SELECT d,
        (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIII rowsort
 SELECT a,
@@ -2612,7 +2612,7 @@ SELECT b-c,
        (a+b+c+d+e)/5,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIIII rowsort
 SELECT b,
@@ -2636,7 +2636,7 @@ SELECT a+b*2+c*3+d*4+e*5,
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
    AND d>e
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIIIIII rowsort
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -2685,7 +2685,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
   FROM t1
  WHERE d>e
     OR (e>c OR e<d)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query II rowsort
 SELECT a-b
@@ -2717,7 +2717,7 @@ SELECT (a+b+c+d+e)/5,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIII rowsort
 SELECT e,
@@ -2737,7 +2737,7 @@ SELECT (a+b+c+d+e)/5,
        abs(b-c),
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
 
 query II rowsort
@@ -2776,7 +2776,7 @@ SELECT abs(b-c),
        b-c
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
 
 query III rowsort
@@ -2863,7 +2863,7 @@ query II rowsort
 SELECT e
   FROM t1
  WHERE c>d
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND a>b
 
 query IIIIIII rowsort
@@ -2884,7 +2884,7 @@ SELECT abs(a),
        e
   FROM t1
  WHERE (a>b-2 AND a<b+2)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIII rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -3074,7 +3074,7 @@ SELECT c,
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND e+d BETWEEN a+b-10 AND c+130
 
 query IIIIIIII rowsort
@@ -3163,7 +3163,7 @@ SELECT abs(b-c),
        c-d
   FROM t1
  WHERE (e>c OR e<d)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIIIIII rowsort
 SELECT b,
@@ -3261,7 +3261,7 @@ SELECT a+b*2+c*3,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END
   FROM t1
  WHERE d>e
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIIIII rowsort
 SELECT e,
@@ -3299,7 +3299,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
   FROM t1
  WHERE d>e
     OR e+d BETWEEN a+b-10 AND c+130
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT c-d,
@@ -3445,7 +3445,7 @@ SELECT a+b*2+c*3,
        a+b*2+c*3+d*4+e*5
   FROM t1
  WHERE a IS NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND (c<=d-2 OR c>=d+2)
 
 query IIIIIII rowsort
@@ -3491,7 +3491,7 @@ SELECT d,
        a+b*2,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b>c
     OR a>b
 
@@ -3571,13 +3571,13 @@ SELECT d,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND c>d
 
 query II rowsort
 SELECT a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIIIII rowsort
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -3597,7 +3597,7 @@ SELECT b-c,
        abs(b-c),
        a-b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIII rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -3617,7 +3617,7 @@ SELECT abs(b-c),
        b-c
   FROM t1
  WHERE a IS NULL
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR b>c
 
 query III rowsort
@@ -4134,7 +4134,7 @@ SELECT abs(b-c),
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE (e>c OR e<d)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND e+d BETWEEN a+b-10 AND c+130
 
 query IIIII rowsort
@@ -4143,14 +4143,14 @@ SELECT e,
        abs(b-c),
        a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (a>b-2 AND a<b+2)
 
 query III rowsort
 SELECT b-c,
        a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (e>c OR e<d)
     OR a IS NULL
 
@@ -4173,7 +4173,7 @@ SELECT e,
   FROM t1
  WHERE b>c
    AND d NOT BETWEEN 110 AND 150
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query II rowsort
 SELECT a+b*2
@@ -4188,7 +4188,7 @@ SELECT d-e
 query II rowsort
 SELECT (a+b+c+d+e)/5
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>a AND e<b)
    AND b IS NOT NULL
 
@@ -4200,7 +4200,7 @@ SELECT abs(b-c),
        b-c
   FROM t1
  WHERE (a>b-2 AND a<b+2)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query III rowsort
 SELECT a+b*2,
@@ -4312,7 +4312,7 @@ SELECT abs(b-c),
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE b IS NOT NULL
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR a IS NULL
 
 query IIIIIII rowsort
@@ -4486,7 +4486,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d NOT BETWEEN 110 AND 150
 
 query II rowsort
@@ -4516,7 +4516,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE b>c
    AND (e>c OR e<d)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIIIII rowsort
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -4562,7 +4562,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
   FROM t1
  WHERE d>e
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -4720,7 +4720,7 @@ SELECT b-c,
        a+b*2,
        a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR a IS NULL
     OR d NOT BETWEEN 110 AND 150
 
@@ -4810,7 +4810,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        c,
        abs(a)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND c>d
    AND (c<=d-2 OR c>=d+2)
 
@@ -4856,7 +4856,7 @@ SELECT abs(a),
 query II rowsort
 SELECT d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d NOT BETWEEN 110 AND 150
 
 query III rowsort
@@ -4944,7 +4944,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
        c-d
   FROM t1
  WHERE (e>a AND e<b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIIIII rowsort
 SELECT d,
@@ -4992,7 +4992,7 @@ SELECT b-c,
   FROM t1
  WHERE d>e
    AND c>d
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIIIII rowsort
 SELECT b,
@@ -5134,7 +5134,7 @@ query III rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
        a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIII rowsort
 SELECT b,
@@ -5288,7 +5288,7 @@ SELECT c-d,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        b-c
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
 
 query IIIIII rowsort
@@ -5336,7 +5336,7 @@ SELECT a+b*2+c*3+d*4,
        a-b,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d>e
 
 query IIIIIIII rowsort
@@ -5583,7 +5583,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND d NOT BETWEEN 110 AND 150
    AND b IS NOT NULL
 
@@ -5595,7 +5595,7 @@ SELECT a+b*2+c*3,
        c-d,
        (a+b+c+d+e)/5
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIII rowsort
 SELECT a+b*2+c*3+d*4+e*5,
@@ -5644,7 +5644,7 @@ SELECT d,
   FROM t1
  WHERE b>c
    AND d>e
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIIIIII rowsort
 SELECT d-e,
@@ -5918,7 +5918,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
 query II rowsort
 SELECT a+b*2+c*3+d*4
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR a IS NULL
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 
@@ -6001,7 +6001,7 @@ query II rowsort
 SELECT a+b*2+c*3
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR (e>c OR e<d)
 
 query IIII rowsort
@@ -6042,7 +6042,7 @@ SELECT a+b*2+c*3+d*4,
        b,
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query II rowsort
 SELECT a
@@ -6061,7 +6061,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
        a+b*2+c*3,
        a+b*2
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND a>b
    AND b IS NOT NULL
 
@@ -6152,7 +6152,7 @@ SELECT c-d,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query II rowsort
 SELECT a+b*2
@@ -6320,7 +6320,7 @@ SELECT abs(b-c),
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (e>c OR e<d)
    AND (a>b-2 AND a<b+2)
 
@@ -6351,7 +6351,7 @@ SELECT abs(a),
        a+b*2+c*3,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (a>b-2 AND a<b+2)
 
 query IIIIIIII rowsort
@@ -6398,7 +6398,7 @@ SELECT abs(a),
 query II rowsort
 SELECT c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIII rowsort
 SELECT b,
@@ -6408,7 +6408,7 @@ SELECT b,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END
   FROM t1
  WHERE b IS NOT NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query II rowsort
 SELECT e
@@ -6433,7 +6433,7 @@ SELECT abs(a),
        a+b*2+c*3+d*4,
        a+b*2
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIII rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -6517,7 +6517,7 @@ query II rowsort
 SELECT e
   FROM t1
  WHERE a>b
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT a+b*2+c*3+d*4,
@@ -6669,7 +6669,7 @@ SELECT (a+b+c+d+e)/5,
        a+b*2,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b IS NOT NULL
 
 query IIIII rowsort
@@ -6697,7 +6697,7 @@ SELECT a,
        abs(b-c)
   FROM t1
  WHERE a IS NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIIIII rowsort
 SELECT b,
@@ -6770,7 +6770,7 @@ query II rowsort
 SELECT abs(a)
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND a IS NULL
 
 query IIIIIIII rowsort
@@ -6974,7 +6974,7 @@ query II rowsort
 SELECT a+b*2
   FROM t1
  WHERE a>b
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
    AND a IS NULL
 
 query IIIII rowsort
@@ -6995,7 +6995,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR (a>b-2 AND a<b+2)
 
 query III rowsort
@@ -7070,7 +7070,7 @@ SELECT c,
        a,
        c-d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND b IS NOT NULL
 
 query IIIIIII rowsort
@@ -7174,7 +7174,7 @@ SELECT a,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND (c<=d-2 OR c>=d+2)
 
 query IIIII rowsort
@@ -7194,7 +7194,7 @@ SELECT a+b*2,
         WHEN a<b+3 THEN 333 ELSE 444 END,
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND e+d BETWEEN a+b-10 AND c+130
 
 query IIIIII rowsort
@@ -7205,7 +7205,7 @@ SELECT a+b*2+c*3+d*4+e*5,
         WHEN a<b+3 THEN 333 ELSE 444 END,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (c<=d-2 OR c>=d+2)
 
 query IIIIII rowsort
@@ -7252,7 +7252,7 @@ SELECT abs(a),
        c,
        e
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 
 query IIIIII rowsort
@@ -7399,7 +7399,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        b
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR c>d
 
 query IIIIII rowsort
@@ -7518,7 +7518,7 @@ SELECT d,
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIIIII rowsort
 SELECT a+b*2+c*3+d*4+e*5,
@@ -7573,7 +7573,7 @@ SELECT c,
        a+b*2+c*3
   FROM t1
  WHERE b>c
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query II rowsort
 SELECT a
@@ -7682,7 +7682,7 @@ SELECT c-d,
 query II rowsort
 SELECT d-e
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND e+d BETWEEN a+b-10 AND c+130
    AND a IS NULL
 
@@ -7875,7 +7875,7 @@ SELECT b,
        a+b*2+c*3
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT abs(a),
@@ -7955,7 +7955,7 @@ SELECT a+b*2+c*3+d*4,
        CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR b>c
 
 query IIIIIIII rowsort
@@ -8139,7 +8139,7 @@ query III rowsort
 SELECT c-d,
        e
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIII rowsort
 SELECT a+b*2+c*3+d*4,
@@ -8152,7 +8152,7 @@ SELECT a+b*2+c*3+d*4,
 query II rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (c<=d-2 OR c>=d+2)
 
 query IIIIIII rowsort
@@ -8241,7 +8241,7 @@ SELECT a,
        (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
        abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIIIII rowsort
 SELECT abs(b-c),
@@ -8648,13 +8648,13 @@ SELECT abs(b-c),
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
  WHERE a IS NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query III rowsort
 SELECT b-c,
        abs(a)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (e>a AND e<b)
 
 query II rowsort
@@ -8662,7 +8662,7 @@ SELECT b-c
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
     OR (e>a AND e<b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT a+b*2+c*3+d*4+e*5,
@@ -8678,7 +8678,7 @@ SELECT a+b*2+c*3
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
    AND a IS NULL
-   AND coalesce(a,b,c,d,e)
+   AND coalesce(a,b,c,d,e)<>0
 
 query IIIIII rowsort
 SELECT e,
@@ -8751,7 +8751,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        abs(a),
        a+b*2+c*3
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
 
 query IIIIII rowsort
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -8840,7 +8840,7 @@ SELECT a-b,
        (a+b+c+d+e)/5,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR (c<=d-2 OR c>=d+2)
 
 query IIIIII rowsort
@@ -8850,7 +8850,7 @@ SELECT abs(b-c),
        a+b*2+c*3+d*4+e*5,
        d
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
     OR c>d
     OR d>e
 
@@ -8874,7 +8874,7 @@ SELECT a+b*2,
        b
   FROM t1
  WHERE (e>a AND e<b)
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
 
 query IIIII rowsort
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -8913,7 +8913,7 @@ SELECT a-b,
 query II rowsort
 SELECT abs(b-c)
   FROM t1
- WHERE coalesce(a,b,c,d,e)
+ WHERE coalesce(a,b,c,d,e)<>0
    AND b IS NOT NULL
 
 query III rowsort
@@ -8934,7 +8934,7 @@ SELECT (a+b+c+d+e)/5,
        a-b
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
-    OR coalesce(a,b,c,d,e)
+    OR coalesce(a,b,c,d,e)<>0
     OR a IS NULL
 
 query III rowsort

@@ -72,7 +72,7 @@ set wexpr {
   d>e
   {a IS NULL}
   {b IS NOT NULL}
-  coalesce(a,b,c,d,e)
+  coalesce(a,b,c,d,e)<>0
   {c BETWEEN b-2 AND d+2}
   {d NOT BETWEEN 110 AND 150}
   {e+d BETWEEN a+b-10 AND c+130}
