@@ -181,7 +181,7 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
       ** error and force them to fix this by hand. 
       ** We don't want to accidentally delete something important. */
       fprintf(stderr, 
-              "result set of tables has wrong number of columns: %ld\n",
+              "Result set of tables has wrong number of columns: %ld\n",
               (long)columns);
       rc = 1;
     }
@@ -279,7 +279,7 @@ static int ODBC3Connect(
   /* Allocate a structure to hold all of our ODBC3 handles */
   pODBC3conn = (ODBC3_Handles *)malloc(sizeof(ODBC3_Handles));
   if( !pODBC3conn ){
-    fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
+    fprintf(stderr, "Out of memory at %s:%d\n", __FILE__, __LINE__);
     return 1;
   }
   pODBC3conn->env = SQL_NULL_HENV;
@@ -316,7 +316,7 @@ static int ODBC3Connect(
   if( !rc ){
     pODBC3conn->zConnStr = (SQLCHAR *)malloc(1024 * sizeof(SQLCHAR));
     if( !pODBC3conn->zConnStr ){
-      fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
+      fprintf(stderr, "Out of memory at %s:%d\n", __FILE__, __LINE__);
       rc = 1;
     }
   }
@@ -458,8 +458,13 @@ static int ODBC3Query(
       ODBC3_perror("SQLNumResultCols", stmt, SQL_HANDLE_STMT);
       rc = 1;
     }
+    if( strlen(zType)!=columns ){
+      fprintf(stderr, "Wrong number of result columns: Expected %d but got %d\n",
+              (int)strlen(zType), (int)columns);
+      rc = 1;
+    }
   }
-  
+
   if( !rc ){
     /* Loop through the rows in the result-set */
     do {
@@ -582,7 +587,7 @@ static int ODBC3Disconnect(
   ODBC3_Handles *pODBC3conn = pConn;
   
   if ( !pODBC3conn ){
-    fprintf(stderr, "invalid ODBC3 connection object\n");
+    fprintf(stderr, "Invalid ODBC3 connection object\n");
     return 1;
   }
 
