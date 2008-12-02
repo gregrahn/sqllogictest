@@ -88,7 +88,7 @@ struct Script {
   int iEnd;            /* Index in zScript of '\000' at end of script */
   int startLine;       /* Line number of start of current record */
   int copyFlag;        /* If true, copy lines to output as they are read */
-  char azToken[3][200]; /* tokenization of a line */
+  char azToken[4][200]; /* tokenization of a line */
 };
 
 /*
@@ -203,6 +203,8 @@ static void findToken(const char *z, int *piStart, int *pLen){
   *pLen = i - iStart;
 }
 
+#define count(X)  (sizeof(X)/sizeof(X[0]))
+
 /*
 ** tokenize the current line in up to 3 tokens and store those values
 ** into p->azToken[0], p->azToken[1], and p->azToken[2].  Record the
@@ -211,9 +213,9 @@ static void findToken(const char *z, int *piStart, int *pLen){
 static void tokenizeLine(Script *p){
   int i, j, k;
   int len, n;
-  for(i=0; i<3; i++) p->azToken[i][0] = 0;
+  for(i=0; i<count(p->azToken); i++) p->azToken[i][0] = 0;
   p->startLine = p->nLine;
-  for(i=j=0; j<p->len && i<3; i++){
+  for(i=j=0; j<p->len && i<count(p->azToken); i++){
     findToken(&p->zLine[j], &k, &len);
     j += k;
     n = len;
@@ -242,6 +244,58 @@ static int rowCompare(const void *pA, const void *pB){
     c = strcmp(azA[i], azB[i]);
   }
   return c;
+}
+
+/*
+** Entry in a hash table of prior results
+*/
+typedef struct HashEntry HashEntry;
+struct HashEntry {
+  char zKey[24];      /* The search key */
+  char zHash[33];     /* The hash value stored */
+  HashEntry *pNext;   /* Next with same hash */
+  HashEntry *pAll;    /* Next overall */
+};
+
+/*
+** The hash table
+*/
+#define NHASH 1009
+static HashEntry *aHash[NHASH];
+static HashEntry *pAll;
+
+/*
+** Try to look up the value zKey in the hash table.  If the value
+** does not exist, create it and return 0.  If the value does already
+** exist return 0 if hash matches and 1 if the hash is different.
+*/
+static int checkValue(const char *zKey, const char *zHash){
+  unsigned int h;
+  HashEntry *p;
+  unsigned int i;
+
+  h = 0;
+  for(i=0; zKey[i] && i<sizeof(p->zKey); i++){ h = h<<3 ^ h ^ zKey[i]; }
+  h = h % NHASH;
+  for(p = aHash[h]; p; p=p->pNext){
+    if( strcmp(p->zKey, zKey)==0 ){
+      return strcmp(p->zHash,zHash)!=0;
+    }
+  }
+  p = malloc( sizeof(*p) );
+  if( p==0 ){
+    fprintf(stderr, "malloc failed on line %d\n", __LINE__);
+    exit(1);
+  }
+  for(i=0; zKey[i] && i<sizeof(p->zKey)-1; i++){ p->zKey[i] = zKey[i]; }
+  p->zKey[i] = 0;
+  for(i=0; zHash[i] && i<sizeof(p->zHash)-1; i++){ p->zHash[i] = zHash[i]; }
+  p->zHash[i] = 0;
+  p->pAll = pAll;
+  pAll = p;
+  p->pNext = aHash[h];
+  aHash[h] = p;
+  return 0;
 }
 
 
@@ -482,14 +536,26 @@ int main(int argc, char **argv){
         nErr++;
       }
 
-      /* Hash the results if we are over the hash threshold */
-      if( hashThreshold>0 && nResult>hashThreshold ){
+      /* Hash the results if we are over the hash threshold or if we 
+      ** there is a hash label */
+      if( sScript.azToken[3][0]
+       || (hashThreshold>0 && nResult>hashThreshold)
+      ){
         for(i=0; i<nResult; i++){
           md5_add(azResult[i]);
           md5_add("\n");
         }
         sqlite3_snprintf(sizeof(zHash), zHash,
                          "%d rows hashing to %s", nResult, md5_finish());
+        sScript.azToken[3][20] = 0;
+        if( sScript.azToken[3][0]
+         && checkValue(sScript.azToken[3], md5_finish())
+        ){
+          fprintf(stderr, "%s:%d: labeled result [%s] does not agree with "
+                          "previous values\n", zScriptFile, 
+                          sScript.startLine, sScript.azToken[3]);
+          nErr++;
+        }
       }
 
       if( verifyMode ){
