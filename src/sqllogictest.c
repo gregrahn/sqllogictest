@@ -39,6 +39,8 @@
 #include "slt_sqlite.c"
 #include "slt_odbc3.c"
 
+#define DEFAULT_HASH_THRESHOLD 8
+
 /*
 ** An array of registered database engines
 */
@@ -64,11 +66,11 @@ void sqllogictestRegisterEngine(const DbEngine *p){
 static void usage(const char *argv0){
 #if 0  /* Obsolete code */
   fprintf(stderr,
-    "Usage: %s [-verify] [-engine DBENGINE] [-connection STR] script\n",
+    "Usage: %s [-verify] [-engine DBENGINE] [-connection STR] [-ht NUM] script\n",
     argv0);
 #else
   fprintf(stderr,
-    "Usage: %s [-verify] [-odbc STR] script\n",
+    "Usage: %s [-verify] [-odbc STR] [-ht NUM] script\n",
     argv0);
 #endif
   exit(1);
@@ -320,8 +322,9 @@ int main(int argc, char **argv){
   char **azResult;                     /* Query result vector */
   Script sScript;                      /* Script parsing status */
   FILE *in;                            /* For reading script */
-  int hashThreshold = 0 ;              /* Hash result if this long or longer */
-  
+  int hashThreshold = DEFAULT_HASH_THRESHOLD;  /* Hash result if this long or longer */
+  int bHt = 0;                         /* Non-zero if a hash threshold option was */
+                                       /* given on the command line. */
 
   /* Add calls to the registration procedures for new database engine
   ** interfaces here
@@ -359,6 +362,9 @@ int main(int argc, char **argv){
     }else if( strncmp(argv[i], "-odbc",n)==0 ){
       zDbEngine = "ODBC3";
       zConnection = argv[++i];
+    }else if( strncmp(argv[i], "-ht",n)==0 ){
+      hashThreshold = atoi(argv[++i]);
+      bHt = -1;
     }else if( zScriptFile==0 ){
       zScriptFile = argv[i];
     }else{
@@ -619,8 +625,13 @@ int main(int argc, char **argv){
       ** is the only result.
       **
       ** If the threshold is 0, then hashing is never used.
+      **
+      ** If a threshold was specified on the command line, ignore 
+      ** any specifed in the script.
       */
-      hashThreshold = atoi(sScript.azToken[1]);
+      if( !bHt ){
+        hashThreshold = atoi(sScript.azToken[1]);
+      }
     }else if( strcmp(sScript.azToken[0],"halt")==0 ){
       /* Used for debugging.  Stop reading the test script and shut down.
       ** A "halt" record can be inserted in the middle of a test script in
