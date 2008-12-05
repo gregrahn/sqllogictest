@@ -90,7 +90,7 @@ static void ODBC3_perror(char *fn,
                         &len );
     if (SQL_SUCCEEDED(ret))
     {
-      fprintf(stderr,
+      fprintf(stdout,
               "%s:%s:%ld:%ld:%s\n", fn, state, (long)i, (long)native, text);
     }
   }
@@ -120,7 +120,7 @@ static void ODBC3_appendValue(ODBC3_resAccum *p, const char *zValue){
     z = strdup(zValue);
 #endif
     if( z==0 ){
-      fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
+      fprintf(stderr, "out of memory at %s:%d\n", __FILE__,__LINE__);
       exit(1);
     }
   }else{
@@ -131,7 +131,7 @@ static void ODBC3_appendValue(ODBC3_resAccum *p, const char *zValue){
     p->nAlloc += 200;
     az = realloc(p->azValue, p->nAlloc*sizeof(p->azValue[0]));
     if( az==0 ){
-      fprintf(stderr, "out of memory at %s:%d\n", __FILE__, __LINE__);
+      fprintf(stderr, "out of memory at %s:%d\n", __FILE__,__LINE__);
       exit(1);
     }
     p->azValue = az;
@@ -180,8 +180,8 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
       ** driver, or we're looking at wrong DB.  Return an 
       ** error and force them to fix this by hand. 
       ** We don't want to accidentally delete something important. */
-      fprintf(stderr, 
-              "Result set of tables has wrong number of columns: %ld\n",
+      fprintf(stdout, 
+              "result set of tables has wrong number of columns: %ld\n",
               (long)columns);
       rc = 1;
     }
@@ -277,7 +277,7 @@ static int ODBC3Connect(
   /* Allocate a structure to hold all of our ODBC3 handles */
   pODBC3conn = (ODBC3_Handles *)malloc(sizeof(ODBC3_Handles));
   if( !pODBC3conn ){
-    fprintf(stderr, "Out of memory at %s:%d\n", __FILE__, __LINE__);
+    fprintf(stderr, "out of memory at %s:%d\n", __FILE__,__LINE__);
     return 1;
   }
   pODBC3conn->env = SQL_NULL_HENV;
@@ -314,7 +314,7 @@ static int ODBC3Connect(
   if( !rc ){
     pODBC3conn->zConnStr = (SQLCHAR *)malloc(1024 * sizeof(SQLCHAR));
     if( !pODBC3conn->zConnStr ){
-      fprintf(stderr, "Out of memory at %s:%d\n", __FILE__, __LINE__);
+      fprintf(stderr, "out of memory at %s:%d\n", __FILE__,__LINE__);
       rc = 1;
     }
   }
@@ -459,7 +459,7 @@ static int ODBC3Query(
       rc = 1;
     }
     if( strlen(zType)!=columns ){
-      fprintf(stderr, "Wrong number of result columns: Expected %d but got %d\n",
+      fprintf(stderr, "wrong number of result columns: expected %d but got %d\n",
               (int)strlen(zType), (int)columns);
       rc = 1;
     }
@@ -529,7 +529,7 @@ static int ODBC3Query(
               break;
             }
             default: {
-              fprintf(stderr, "Unknown character in type-string: %c\n", zType[i-1]);
+              fprintf(stderr, "unknown character in type-string: %c\n", zType[i-1]);
               rc = 1;
             }
           } /* end switch */
@@ -587,7 +587,7 @@ static int ODBC3Disconnect(
   ODBC3_Handles *pODBC3conn = pConn;
   
   if ( !pODBC3conn ){
-    fprintf(stderr, "Invalid ODBC3 connection object\n");
+    fprintf(stderr, "invalid ODBC3 connection object\n");
     return 1;
   }
 
@@ -619,6 +619,40 @@ static int ODBC3Disconnect(
 }
 
 /*
+** This routine is called to return the name of the DB engine
+** used by the connection pConn.  This name may or may not
+** be the same as specified in the DbEngine structure.
+**
+** Then returned DB name does not have to be freed by the called.
+**
+** This routine should be called only after a valid connection
+** has been establihed with xConnect.
+**
+** For ODBC connections, the engine name is resolved by the 
+** driver manager after a connection is made.
+*/
+static int ODBC3GetEngineName(
+  void *pConn,                /* Connection created by xConnect */
+  const char **zName          /* SQL statement to evaluate */
+){
+  SQLRETURN ret; /* ODBC API return status */
+  ODBC3_Handles *pODBC3conn = pConn;
+  SQLSMALLINT outLen;
+  static char zDmbsName[512] = "";
+
+  ret = SQLGetInfo(pODBC3conn->dbc,
+                   SQL_DBMS_NAME,
+                   zDmbsName,
+                   sizeof(zDmbsName),
+                   &outLen);
+  if( SQL_SUCCEEDED(ret) || (ret == SQL_SUCCESS_WITH_INFO) ){
+    *zName = zDmbsName;
+    return 0;
+  }
+  return 1;
+}
+
+/*
 ** This routine registers the ODBC3 database engine with the main
 ** driver.  New database engine interfaces should have a single
 ** routine similar to this one.  The main() function below should be
@@ -630,8 +664,9 @@ void registerODBC3(void){
   */
   static const DbEngine ODBC3DbEngine = {
      "ODBC3",             /* zName */
-     0,                    /* pAuxData */
+     0,                   /* pAuxData */
      ODBC3Connect,        /* xConnect */
+     ODBC3GetEngineName,  /* xGetEngineName */
      ODBC3Statement,      /* xStatement */
      ODBC3Query,          /* xQuery */
      ODBC3FreeResults,    /* xFreeResults */

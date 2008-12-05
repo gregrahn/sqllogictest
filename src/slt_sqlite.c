@@ -106,7 +106,7 @@ static void appendValue(ResAccum *p, const char *zValue){
   if( zValue ){
     z = sqlite3_mprintf("%s", zValue);
     if( z==0 ){
-      fprintf(stderr, "Out of memory at %s:%d\n", __FILE__, __LINE__);
+      fprintf(stderr, "out of memory at %s:%d\n", __FILE__,__LINE__);
       exit(1);
     }
   }else{
@@ -117,7 +117,7 @@ static void appendValue(ResAccum *p, const char *zValue){
     p->nAlloc += 200;
     az = sqlite3_realloc(p->azValue, p->nAlloc*sizeof(p->azValue[0]));
     if( az==0 ){
-      fprintf(stderr, "Out of memory at %s:%d\n", __FILE__, __LINE__);
+      fprintf(stderr, "out of memory at %s:%d\n", __FILE__,__LINE__);
       exit(1);
     }
     p->azValue = az;
@@ -158,7 +158,7 @@ static int sqliteQuery(
     return 1;
   }
   if( strlen(zType)!=sqlite3_column_count(pStmt) ){
-    fprintf(stderr, "Wrong number of result columns: Expected %d but got %d\n",
+    fprintf(stderr, "wrong number of result columns: expected %d but got %d\n",
             (int)strlen(zType), sqlite3_column_count(pStmt));
     return 1;
   }
@@ -197,7 +197,7 @@ static int sqliteQuery(
           }
           default: {
             sqlite3_finalize(pStmt);
-            fprintf(stderr, "Unknown character in type-string: %c\n", zType[i]);
+            fprintf(stderr, "unknown character in type-string: %c\n", zType[i]);
             return 1;
           }
         }
@@ -248,6 +248,28 @@ static int sqliteDisconnect(
 }
 
 /*
+** This routine is called to return the name of the DB engine
+** used by the connection pConn.  This name may or may not
+** be the same as specified in the DbEngine structure.
+**
+** Then returned DB name does not have to be freed by the called.
+**
+** This routine should be called only after a valid connection
+** has been establihed with xConnect.
+**
+** For ODBC connections, the engine name is resolved by the 
+** driver manager after a connection is made.
+*/
+static int sqliteGetEngineName(
+  void *pConn,                /* Connection created by xConnect */
+  const char **zName          /* SQL statement to evaluate */
+){
+  static char *zDmbsName = "SQLite";
+  *zName = zDmbsName;
+  return 0;
+}
+
+/*
 ** This routine registers the SQLite database engine with the main
 ** driver.  New database engine interfaces should have a single
 ** routine similar to this one.  The main() function below should be
@@ -261,6 +283,7 @@ void registerSqlite(void){
      "SQLite",             /* zName */
      0,                    /* pAuxData */
      sqliteConnect,        /* xConnect */
+     sqliteGetEngineName,  /* xGetEngineName */
      sqliteStatement,      /* xStatement */
      sqliteQuery,          /* xQuery */
      sqliteFreeResults,    /* xFreeResults */

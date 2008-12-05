@@ -54,7 +54,7 @@ void sqllogictestRegisterEngine(const DbEngine *p){
   nEngine++;
   apEngine = realloc(apEngine, nEngine*sizeof(apEngine[0]));
   if( apEngine==0 ){
-    fprintf(stderr, "out or memory - line %d\n", __LINE__);
+    fprintf(stderr, "out of memory at %s:%d\n", __FILE__,__LINE__);
     exit(1);
   }
   apEngine[nEngine-1] = (DbEngine *)p;
@@ -65,11 +65,11 @@ void sqllogictestRegisterEngine(const DbEngine *p){
 */
 static void usage(const char *argv0){
 #if 0  /* Obsolete code */
-  fprintf(stderr,
+  fprintf(stdout,
     "Usage: %s [-verify] [-engine DBENGINE] [-connection STR] [-ht NUM] script\n",
     argv0);
 #else
-  fprintf(stderr,
+  fprintf(stdout,
     "Usage: %s [-verify] [-odbc STR] [-ht NUM] script\n",
     argv0);
 #endif
@@ -286,7 +286,7 @@ static int checkValue(const char *zKey, const char *zHash){
   }
   p = malloc( sizeof(*p) );
   if( p==0 ){
-    fprintf(stderr, "malloc failed on line %d\n", __LINE__);
+    fprintf(stderr, "out of memory at %s:%d\n", __FILE__,__LINE__);
     exit(1);
   }
   for(i=0; zKey[i] && i<sizeof(p->zKey)-1; i++){ p->zKey[i] = zKey[i]; }
@@ -318,6 +318,7 @@ int main(int argc, char **argv){
   int rc;                              /* Result code from subroutine call */
   int nErr = 0;                        /* Number of errors */
   int nCmd = 0;                        /* Number of SQL statements processed */
+  int nSkipped = 0;                    /* Number of SQL statements skipped */
   int nResult;                         /* Number of query results */
   char **azResult;                     /* Query result vector */
   Script sScript;                      /* Script parsing status */
@@ -337,7 +338,7 @@ int main(int argc, char **argv){
   /* Report an error if no registered engines
   */
   if( nEngine == 0 ){
-    fprintf(stderr, "%s: no registered database engines\n", argv[0]);
+    fprintf(stderr, "%s: No registered database engines\n", argv[0]);
     usage(argv[0]);
   }
 
@@ -381,16 +382,16 @@ int main(int argc, char **argv){
     usage(argv[0]);
   }
   for(i=0; i<nEngine; i++){
-    if( strcmp(zDbEngine, apEngine[i]->zName)==0 ){
+    if( stricmp(zDbEngine, apEngine[i]->zName)==0 ){
       pEngine = apEngine[i];
       break;
     }
   }
   if( pEngine==0 ){
     fprintf(stderr, "%s: unknown database engine: %s\n", argv[0], zDbEngine);
-    fprintf(stderr, "Choices are:");
-    for(i=0; i<nEngine; i++) fprintf(stderr, " %s", apEngine[i]->zName);
-    fprintf(stderr, "\n");
+    fprintf(stdout, "Choices are:");
+    for(i=0; i<nEngine; i++) fprintf(stdout, " %s", apEngine[i]->zName);
+    fprintf(stdout, "\n");
     exit(1);
   }
 
@@ -431,12 +432,45 @@ int main(int argc, char **argv){
     exit(1);
   }
 
+  /* Get the "real" db name
+  */
+  rc = pEngine->xGetEngineName(pConn, &zDbEngine);
+  if( rc ){
+    fprintf(stderr, "%s: unable to get DB name from connection\n", argv[0]);
+    exit(1);
+  }
+
   /* Loop over all records in the file */
   while( findStartOfNextRecord(&sScript) ){
+    int bSkip = 0; /* True if we should skip the current record. */
 
     /* Tokenizer the first line of the record.  This also records the
     ** line number of the first record in sScript.startLine */
     tokenizeLine(&sScript);
+
+    bSkip = 0;
+    while( strcmp(sScript.azToken[0],"skipif")==0 ){
+      /* This allows skipping a statement or query record for a 
+      ** particular database engine.  In this way, SQL features
+      ** implmented by a majority of the engines can be tested 
+      ** without causing spurious errors for engines that don't
+      ** support it.
+      **
+      ** Once this record is encountered, an the current selected
+      ** db interface matches the db engine specified in the record,
+      ** the we skip this rest of this record.
+      */
+      if( stricmp(sScript.azToken[1], zDbEngine)==0 ){
+        bSkip = -1;
+        break;
+      }
+      nextLine(&sScript);
+      tokenizeLine(&sScript);
+    }
+    if( bSkip ) {
+      nSkipped++;
+      continue;
+    }
 
     /* Figure out the record type and do appropriate processing */
     if( strcmp(sScript.azToken[0],"statement")==0 ){
@@ -468,7 +502,7 @@ int main(int argc, char **argv){
         nErr++;
         rc = 0;
       }
-
+    
       /* Report an error if the results do not match expectation */
       if( rc ){
         fprintf(stderr, "%s:%d: statement error\n",
@@ -563,7 +597,7 @@ int main(int argc, char **argv){
           nErr++;
         }
       }
-
+      
       if( verifyMode ){
         /* In verify mode, first skip over the ---- line if we are still
         ** pointing at it. */
@@ -575,7 +609,7 @@ int main(int argc, char **argv){
         if( hashThreshold==0 || nResult<=hashThreshold ){
           for(i=0; i<nResult && sScript.zLine[0]; nextLine(&sScript), i++){
             if( strcmp(sScript.zLine, azResult[i])!=0 ){
-              fprintf(stderr,"%s:%d: wrong result\n", zScriptFile,
+              fprintf(stdout,"%s:%d: wrong result\n", zScriptFile,
                       sScript.nLine);
               nErr++;
               break;
@@ -638,7 +672,7 @@ int main(int argc, char **argv){
       ** to run the script up to a particular point that is giving a
       ** faulty result, then terminate at that point for analysis.
       */
-      fprintf(stderr, "%s:%d: halt\n", zScriptFile, sScript.startLine);
+      fprintf(stdout, "%s:%d: halt\n", zScriptFile, sScript.startLine);
       break;
     }else{
       /* An unrecognized record type is an error */
@@ -660,9 +694,9 @@ int main(int argc, char **argv){
 
   /* Report the number of errors and quit.
   */
-  if( verifyMode || nErr ){
-    printf("%s: %d errors out of %d SQL statement\n",
-           zScriptFile, nErr, nCmd);
+  if( verifyMode || nErr || nSkipped){
+    printf("%s: %d errors out of %d SQL statement.  %d skipped.\n",
+           zScriptFile, nErr, nCmd, nSkipped);
   }
   free(zScript);
   return nErr; 
