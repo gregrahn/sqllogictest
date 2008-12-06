@@ -220,6 +220,69 @@ is 0, then results are never hashed.  A hash-threshold of 10 or 20 is
 recommended.  During debugging, it is advantage to set the hash-threshold
 to zero so that all results can be seen.
 
+<h3>Conditional Records</h3>
+
+Statement and query records can be prefixed with zero or more conditionals
+of the following form:
+
+<blockquote>
+<tt>skipif</tt>  &lt;database-name&gt;<br>
+<tt>onlyif</tt>  &lt;database-name&gt;
+</blockquote>
+
+The statement or query is not evaluated if a skipif record for the
+target database engine is seen in the prefix.  The statement or query
+is also skipped if an onlyif record for a different database engine
+is seen.
+
+When a skipif or onlyif causes a statement or query to be skipped,
+it is still transferred unchanged to standard output in completion
+mode.  In validation mode, if the record is a query with &lt;label&gt;
+argument, then the result found in the input script is still checked
+against the results of other queries with the same label, even though
+the SQL is not run.
+
+The skipif and onlyif prefixes can be used to implement test cases where
+the SQL syntax varies from one database engine to another.  For example,
+PostgreSQL has the syntax quirk that the AS keyword is required prior to
+alias names in the Select-list items section of a query.  On all other
+database engines, and in the SQL standard, the AS keyword is optional.
+The way to work around this is as follows:
+
+<verbatim>
+     query III rowsort label-xyzzy
+     SELECT a AS x, b AS y, c AS z FROM t1
+
+     skipif postgresql
+     query III rowsort label-xyzzy
+     SELECT a x, b y, c z FROM t1
+</verbatim>
+
+Thus, there are two queries that are identical in every way except that
+the second omits the AS keywords.  The second query is omitted from
+PostgreSQL runs.  We use the label-xyzzy on both queries
+in order to verify that they yield identical results.
+
+Another example is MySQL in which the "/" operator is always floating-point
+division even when both operands are integers.  To get integer division in
+MySQL you have to use the "DIV" operator.  To test this behavior, one
+could do something like the following:
+
+<verbatim>
+     skipif mysql
+     query I rowsort label-plover
+     SELECT a/b FROM t1
+
+     onlyif mysql
+     query I rowsort label-plover
+     SELECT a DIV b FROM t1
+</verbatim>
+
+Once completion runs are made on all database engines, the query label
+will operate on subsequent validation runs to
+ensure that the same results are obtained from all database engines, 
+even though the query syntax is slightly different.
+
 <h2>Suggestions For Generating Test-Scripts</h2>
 
 When sqllogictest runs a test script, it begins with a completely
