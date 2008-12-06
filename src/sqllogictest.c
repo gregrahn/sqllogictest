@@ -33,6 +33,7 @@
 #include <ctype.h>
 #ifndef WIN32
 #include <unistd.h>
+#define stricmp strcasecmp
 #endif
 #include <string.h>
 
@@ -323,9 +324,9 @@ int main(int argc, char **argv){
   char **azResult;                     /* Query result vector */
   Script sScript;                      /* Script parsing status */
   FILE *in;                            /* For reading script */
-  int hashThreshold = DEFAULT_HASH_THRESHOLD;  /* Hash result if this long or longer */
-  int bHt = 0;                         /* Non-zero if a hash threshold option was */
-                                       /* given on the command line. */
+  char zHash[100];                     /* Storage space for hash results */
+  int hashThreshold = DEFAULT_HASH_THRESHOLD;  /* Threshold for hashing res */
+  int bHt = 0;                         /* True if -ht command-line option */
 
   /* Add calls to the registration procedures for new database engine
   ** interfaces here
@@ -449,26 +450,64 @@ int main(int argc, char **argv){
     tokenizeLine(&sScript);
 
     bSkip = 0;
-    while( strcmp(sScript.azToken[0],"skipif")==0 ){
-      /* This allows skipping a statement or query record for a 
-      ** particular database engine.  In this way, SQL features
-      ** implmented by a majority of the engines can be tested 
-      ** without causing spurious errors for engines that don't
-      ** support it.
+    while( strcmp(sScript.azToken[0],"skipif")==0 
+        || strcmp(sScript.azToken[0],"onlyif")==0
+    ){
+      int bMatch;
+      /* The "skipif" and "onlyif" modifiers allow skipping or using
+      ** statement or query record for a particular database engine.
+      ** In this way, SQL features implmented by a majority of the
+      ** engines can be tested without causing spurious errors for
+      ** engines that don't support it.
       **
       ** Once this record is encountered, an the current selected
       ** db interface matches the db engine specified in the record,
-      ** the we skip this rest of this record.
+      ** the we skip this rest of this record for "skipif" or for
+      ** "onlyif" we skip the record if the record does not match.
       */
-      if( stricmp(sScript.azToken[1], zDbEngine)==0 ){
-        bSkip = -1;
-        break;
+      bMatch = stricmp(sScript.azToken[1], zDbEngine)==0;
+      if( sScript.azToken[0][0]=='s' ){
+        if( bMatch ) bSkip = -1;
+      }else{
+        if( !bMatch ) bSkip = -1;
       }
       nextLine(&sScript);
       tokenizeLine(&sScript);
     }
     if( bSkip ) {
+      int n;
       nSkipped++;
+      if( !verifyMode ) continue;
+      if( strcmp(sScript.azToken[0],"query")!=0 ) continue;
+      if( sScript.azToken[3][0]==0 ) continue;
+
+      /* We are skipping this record.  But we observe that it is a query
+      ** with a named hash value and we are in verify mode.  Even though 
+      ** we are going to skip the SQL evaluation, we might as well check
+      ** the hash of the result.
+      */
+      while( !nextIsBlank(&sScript) && nextLine(&sScript)
+             && strcmp(sScript.zLine,"----")!=0 ){
+        /* Skip over the SQL text */
+      }
+      if( strcmp(sScript.zLine, "----")==0 ) nextLine(&sScript);
+      if( sScript.zLine[0]==0 ) continue;
+      n = sscanf(sScript.zLine, "%*d values hashing to %32s", zHash);
+      if( n!=1 ){
+        md5_add(sScript.zLine);
+        md5_add("\n");
+        while( !nextIsBlank(&sScript) && nextLine(&sScript) ){
+          md5_add(sScript.zLine);
+          md5_add("\n");
+        }
+        strcpy(zHash, md5_finish());
+      }
+      if( checkValue(sScript.azToken[3], zHash) ){
+        fprintf(stderr, "%s:%d: labeled result [%s] does not agree with "
+                        "previous values\n", zScriptFile, 
+                        sScript.startLine, sScript.azToken[3]);
+        nErr++;
+      }
       continue;
     }
 
@@ -512,7 +551,6 @@ int main(int argc, char **argv){
     }else if( strcmp(sScript.azToken[0],"query")==0 ){
       int k = 0;
       int c;
-      char zHash[100];
 
       /* Verify that the type string consists of one or more characters
       ** from the set "TIR". */
