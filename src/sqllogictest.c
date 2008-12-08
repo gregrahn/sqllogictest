@@ -733,7 +733,7 @@ int main(int argc, char **argv){
   /* Report the number of errors and quit.
   */
   if( verifyMode || nErr || nSkipped){
-    printf("%s: %d errors out of %d SQL statement.  %d skipped.\n",
+    fprintf(stderr, "%s: %d errors out of %d SQL statement.  %d skipped.\n",
            zScriptFile, nErr, nCmd, nSkipped);
   }
   free(zScript);
