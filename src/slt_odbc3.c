@@ -90,7 +90,7 @@ static void ODBC3_perror(char *fn,
                         &len );
     if (SQL_SUCCEEDED(ret))
     {
-      fprintf(stdout,
+      fprintf(stderr,
               "%s:%s:%ld:%ld:%s\n", fn, state, (long)i, (long)native, text);
     }
   }
