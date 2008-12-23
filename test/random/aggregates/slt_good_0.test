@@ -23378,6 +23378,7 @@ SELECT - + 52 / - COUNT( * ) * - - ( + SUM( ALL - + col0 ) ) AS col2 FROM tab0 W
 NULL
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query I rowsort label-2573
 SELECT - + 52 / - COUNT ( * ) * - - ( + SUM ( ALL - + col0 ) ) AS col2 FROM tab0 WHERE NULL <> - 41
 ----
@@ -32693,6 +32694,7 @@ SELECT col0 / col1 AS col2, + 78 * 68 / - 0 AS col2 FROM tab1 AS cor0 WHERE NOT 
 ----
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query II rowsort label-3594
 SELECT col0 / col1 AS col2, + 78 * 68 / - 0 AS col2 FROM tab1 AS cor0 WHERE NOT NULL > + col2 + CAST ( NULL AS INTEGER )
 ----

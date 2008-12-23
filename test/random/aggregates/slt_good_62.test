@@ -22430,6 +22430,7 @@ SELECT ALL COUNT( col0 ) / - - COUNT( * ) * - + SUM( DISTINCT - ( col1 ) ) + 13 
 NULL
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query I rowsort label-2429
 SELECT ALL COUNT ( col0 ) / - - COUNT ( * ) * - + SUM ( DISTINCT - ( col1 ) ) + 13 AS col1 FROM tab0 WHERE NOT - col1 IS NOT NULL
 ----

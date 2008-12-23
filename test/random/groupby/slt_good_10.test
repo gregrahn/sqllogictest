@@ -317,6 +317,7 @@ query I rowsort
 SELECT col0 AS col1 FROM tab2 WHERE NOT NULL BETWEEN NULL AND NULL GROUP BY col0
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT - col2 AS col1 FROM tab1 GROUP BY col2 HAVING NOT NULL BETWEEN + col2 AND AVG ( ALL col1 ) + - col1
 ----
@@ -1180,6 +1181,7 @@ SELECT ALL col1 + + col1 AS col0 FROM tab1 GROUP BY col1 HAVING NULL IS NULL
 12
 88
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col0 col0, col0 FROM tab2 GROUP BY col1, col0
 ----
@@ -1252,6 +1254,7 @@ SELECT DISTINCT + + col0 AS col1 FROM tab0 AS cor0 GROUP BY col0
 43
 83
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL col1 AS col2 FROM tab1 GROUP BY col1 HAVING NULL NOT BETWEEN ( + col1 + + col1 ) AND ( + col2 )
 ----
@@ -1560,6 +1563,7 @@ SELECT + col2 col1 FROM tab1 AS cor0 GROUP BY col2, col2
 71
 8
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT col1 AS col2 FROM tab1 AS cor0 GROUP BY col1 HAVING NULL BETWEEN + col2 AND NULL
 ----
@@ -1605,6 +1609,7 @@ query I rowsort
 SELECT DISTINCT + col2 + col2 * col2 FROM tab1 GROUP BY col2 HAVING ( NULL ) IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col2 col2, col2 AS col1 FROM tab0 GROUP BY col2
 ----
@@ -2152,6 +2157,7 @@ SELECT ALL + - col0 AS col2 FROM tab2 AS cor0 GROUP BY col0
 -91
 -92
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL col2 AS col0 FROM tab2 cor0 GROUP BY col2 HAVING NULL < - col0
 ----
@@ -2500,6 +2506,7 @@ SELECT DISTINCT + col2 AS col2 FROM tab2 GROUP BY col1, col2
 79
 87
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT - col1 col0, col1 FROM tab2 AS cor0 GROUP BY col1 HAVING NULL = NULL
 ----
@@ -2856,6 +2863,7 @@ SELECT DISTINCT - - col0 AS col2 FROM tab0 AS cor0 GROUP BY col0
 43
 83
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col0 col0, - col0 FROM tab2 AS cor0 GROUP BY col1, col0
 ----
@@ -3457,6 +3465,7 @@ SELECT col0 AS col0 FROM tab2 GROUP BY col2, col1, col0
 91
 92
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col2 + + col2 col2, col2 FROM tab2 AS cor0 GROUP BY col2
 ----
@@ -3685,6 +3694,7 @@ SELECT ALL + col2 AS col0 FROM tab2 GROUP BY col2 HAVING NOT NULL IS NOT NULL
 79
 87
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + - col2 AS col0 FROM tab0 cor0 GROUP BY col2, col2 HAVING NOT NULL NOT BETWEEN - col0 AND NULL
 ----
@@ -4139,6 +4149,7 @@ SELECT - col0 + - - col0 AS col1 FROM tab0 GROUP BY col0, col0
 0
 0
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - col1 + col1 col2, col1 * AVG ( ALL + col1 ) FROM tab1 GROUP BY col1, col1 HAVING NOT NULL BETWEEN NULL AND NULL
 ----
@@ -6773,6 +6784,7 @@ SELECT + col2 - - col2 + - col1 FROM tab1 GROUP BY col2, col1
 33
 98
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT col2 AS col1 FROM tab1 AS cor0 GROUP BY col0, col2, col0 HAVING NOT NULL BETWEEN NULL AND + col0 - col1
 ----
@@ -7214,6 +7226,7 @@ SELECT col2 + - col2 col1 FROM tab2 GROUP BY col2, col1
 0
 0
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 col0, + col2 FROM tab2 GROUP BY col2
 ----
@@ -7263,6 +7276,7 @@ SELECT + col2 AS col1 FROM tab2 GROUP BY col0, col2 HAVING NOT NULL IS NOT NULL
 79
 87
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col0 col2, col0 + - col0 AS col1 FROM tab1 GROUP BY col0
 ----
@@ -7609,6 +7623,7 @@ SELECT - col1 * + - col1 + + col1 FROM tab2 GROUP BY col1
 3540
 3782
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT col2 AS col1 FROM tab1 GROUP BY col2 HAVING + col1 > NULL
 ----
@@ -7698,6 +7713,7 @@ query I rowsort
 SELECT - col2 AS col0 FROM tab0 GROUP BY col2, col1 HAVING NULL <= NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col2 col1, - col2 FROM tab0 AS cor0 GROUP BY col2
 ----
@@ -8579,6 +8595,7 @@ SELECT - - col1 / + col1 AS col0 FROM tab1 AS cor0 GROUP BY col1
 1
 1
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col1 col0, col2 FROM tab1 GROUP BY col1, col2
 ----
@@ -8677,6 +8694,7 @@ query I rowsort
 SELECT DISTINCT + col1 FROM tab1 GROUP BY col1, col2 HAVING NOT NULL >= NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col2 col2, col2 AS col0 FROM tab1 GROUP BY col2
 ----
@@ -9075,6 +9093,7 @@ SELECT col1 FROM tab1 AS cor0 GROUP BY col1, col1, col1
 57
 6
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - - col2 col1, col2 FROM tab2 AS cor0 GROUP BY col2
 ----
@@ -9089,6 +9108,7 @@ query I rowsort
 SELECT + col1 AS col1 FROM tab0 cor0 WHERE ( NOT NULL <> NULL ) OR ( NULL ) > NULL GROUP BY col1, col0 HAVING NOT ( - col1 ) IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT - col2 AS col0 FROM tab2 GROUP BY col2 HAVING + - col0 < NULL
 ----
@@ -11136,6 +11156,7 @@ SELECT col0 AS col1 FROM tab0 AS cor0 WHERE NOT + col1 IS NULL GROUP BY col0
 43
 83
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL - col0 AS col2 FROM tab1 GROUP BY col0 HAVING NOT + - col2 <> NULL
 ----
@@ -12043,6 +12064,7 @@ SELECT + col0 * col0 FROM tab1 GROUP BY col0
 6724
 784
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + + col2 AS col1 FROM tab2 WHERE - + col1 IS NOT NULL GROUP BY col2 HAVING ( NULL ) <> col1
 ----
@@ -12967,6 +12989,7 @@ query I rowsort
 SELECT DISTINCT + col0 FROM tab2 AS cor0 WHERE NOT ( NULL ) >= NULL GROUP BY col0
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col1 col1, col0 FROM tab2 GROUP BY col0, col2, col1
 ----
@@ -13186,6 +13209,7 @@ SELECT ALL col0 * + col0 FROM tab1 GROUP BY col0
 6724
 784
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + + col1 AS col2 FROM tab1 AS cor0 GROUP BY col1 HAVING NOT + col2 < NULL
 ----
@@ -13208,6 +13232,7 @@ SELECT col0 FROM tab1 GROUP BY col1, col1, col0
 28
 82
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col0 col0, + col0 FROM tab0 GROUP BY col0 HAVING NULL IS NOT NULL
 ----
@@ -13478,6 +13503,7 @@ SELECT DISTINCT col0 * col0 col0 FROM tab0 GROUP BY col0
 676
 6889
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT col0 AS col1 FROM tab2 GROUP BY col0 HAVING NOT ( ( NOT NULL <> + col1 ) )
 ----
@@ -14444,6 +14470,7 @@ query I rowsort
 SELECT ALL - col1 FROM tab0 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT - col1 AS col0 FROM tab0 GROUP BY col1 HAVING NOT ( NOT col0 BETWEEN NULL AND NULL )
 ----
@@ -14868,6 +14895,7 @@ SELECT ALL + col1 * col2 FROM tab2 AS cor0 GROUP BY col1, col2
 4661
 5307
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query II rowsort
 SELECT + col1 AS col1, col1 AS col2 FROM tab1 GROUP BY col1 HAVING ( NULL ) = col2
 ----
@@ -14890,6 +14918,7 @@ query I rowsort
 SELECT - col1 * - + col1 FROM tab0 GROUP BY col1, col0 HAVING ( - col1 ) > NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col1 col1, - col1 AS col0 FROM tab1 AS cor0 GROUP BY col1
 ----
@@ -17930,6 +17959,7 @@ SELECT col0 FROM tab2 AS cor0 GROUP BY col1, col0, col0
 91
 92
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT - col1 AS col0 FROM tab1 GROUP BY col1 HAVING - col0 <= NULL
 ----
@@ -19572,6 +19602,7 @@ SELECT DISTINCT + col1 / - col2 FROM tab2 AS cor0 GROUP BY col2, col1
 ----
 0
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT + col1 AS col2 FROM tab1 AS cor0 GROUP BY col1 HAVING NOT col2 < NULL
 ----
@@ -19805,6 +19836,7 @@ SELECT - col2 AS col1 FROM tab2 GROUP BY col2, col2, col0
 -79
 -87
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col1 col1, + col2 FROM tab1 AS cor0 WHERE NULL IS NULL GROUP BY col1, col2
 ----
@@ -20233,6 +20265,7 @@ SELECT DISTINCT - col2 * col2 FROM tab2 AS cor0 GROUP BY col2, col1
 -6241
 -7569
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL + col0 AS col2 FROM tab0 WHERE NULL IS NOT NULL GROUP BY col0 HAVING NULL > + col2
 ----
@@ -21679,6 +21712,7 @@ SELECT - col0 AS col2 FROM tab2 GROUP BY col0, col0
 -91
 -92
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT - col2 * + - col1 AS col0 FROM tab0 GROUP BY col2, col1 HAVING NULL NOT BETWEEN col0 AND - col0
 ----
@@ -22972,6 +23006,7 @@ SELECT ALL - - col2 AS col2 FROM tab1 AS cor0 GROUP BY col2, col2, col2
 71
 8
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT col1 AS col0 FROM tab1 AS cor0 GROUP BY col1, col1 HAVING + col0 = NULL
 ----
@@ -23551,6 +23586,7 @@ SELECT - col2 + - col2 FROM tab2 GROUP BY col2, col0 HAVING NOT - col0 IS NULL
 -158
 -174
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + + col0 + - - col0 col2, - col0 FROM tab0 AS cor0 GROUP BY col0
 ----
@@ -24849,6 +24885,7 @@ SELECT + - col2 col0 FROM tab0 AS cor0 GROUP BY col2 HAVING ( NULL ) IS NULL
 -38
 -79
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col0 col2, + col0 AS col0 FROM tab2 GROUP BY col0, col0
 ----
@@ -25042,6 +25079,7 @@ query I rowsort
 SELECT DISTINCT - + col2 FROM tab0 AS cor0 GROUP BY col2 HAVING NOT AVG ( col0 ) < NULL
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL col0 AS col1 FROM tab1 GROUP BY col0 HAVING NULL BETWEEN ( - + col0 ) AND + col1
 ----
@@ -25373,6 +25411,7 @@ query I rowsort
 SELECT ALL + col2 FROM tab0 GROUP BY col2 HAVING NOT NULL BETWEEN NULL AND ( col2 )
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT col0 AS col2 FROM tab2 GROUP BY col0, col0 HAVING NOT NULL < col2 + col0
 ----
@@ -25854,6 +25893,7 @@ query I rowsort
 SELECT DISTINCT AVG ( col2 ) AS col1 FROM tab0 AS cor0 WHERE NOT col1 <= ( NULL ) GROUP BY col2
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT col2 AS col0 FROM tab1 GROUP BY col2 HAVING NULL <= - col0
 ----
@@ -25896,6 +25936,7 @@ SELECT + col2 * col0 AS col1 FROM tab2 GROUP BY col2, col0
 5336
 7189
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col0 col2, - col0 AS col1 FROM tab0 AS cor0 GROUP BY col0, col0 HAVING NOT NULL >= NULL
 ----
@@ -28577,6 +28618,7 @@ SELECT ALL + col1 FROM tab0 GROUP BY col1, col2 HAVING NOT NULL IS NOT NULL
 0
 81
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col0 col1, + col2 FROM tab1 GROUP BY col0, col2
 ----
@@ -28940,6 +28982,7 @@ SELECT ALL - col2 AS col0 FROM tab0 WHERE NOT NULL IS NOT NULL GROUP BY col0, co
 -38
 -79
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT col2 AS col0 FROM tab1 GROUP BY col2 HAVING NOT NULL BETWEEN ( - col2 ) AND ( col0 )
 ----
@@ -29084,6 +29127,7 @@ SELECT ALL - col1 * - col1 AS col2 FROM tab1 GROUP BY col1
 3249
 36
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT col0 AS col2 FROM tab0 GROUP BY col0 HAVING NULL >= col2
 ----
@@ -29624,6 +29668,7 @@ SELECT - + col0 - + col0 FROM tab0 AS cor0 GROUP BY col0
 -52
 -86
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 col1, col2 FROM tab0 AS cor0 WHERE NOT - col0 IS NULL GROUP BY col2
 ----
@@ -34690,6 +34735,7 @@ SELECT col0 + - col0 AS col1 FROM tab2 AS cor0 GROUP BY col0
 0
 0
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col1 col1, col1 AS col0 FROM tab0 AS cor0 GROUP BY col1
 ----
@@ -36294,6 +36340,7 @@ SELECT ALL + + col0 FROM tab0 AS cor0 GROUP BY col0, col0
 43
 83
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL AVG ( ALL - col2 ) AS col0 FROM tab0 WHERE NOT ( - col2 ) BETWEEN ( NULL ) AND NULL GROUP BY col2 HAVING NULL BETWEEN + col0 AND ( NULL )
 ----
@@ -36532,6 +36579,7 @@ query I rowsort
 SELECT col1 FROM tab2 AS cor0 GROUP BY col1, col2, col1 HAVING NOT + col2 IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL - col2 AS col0 FROM tab1 AS cor0 GROUP BY col1, col2 HAVING NOT NULL <= - - col0
 ----
@@ -37763,6 +37811,7 @@ query I rowsort
 SELECT col2 AS col1 FROM tab0 AS cor0 GROUP BY col2 HAVING NOT - col2 IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + col0 col0, col0 AS col2 FROM tab2 AS cor0 GROUP BY col0, col1
 ----
@@ -39118,6 +39167,7 @@ SELECT ALL col2 col0 FROM tab2 cor0 GROUP BY col2 HAVING NULL IS NULL
 79
 87
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 col2, col2 AS col2 FROM tab2 GROUP BY col2
 ----
@@ -39264,6 +39314,7 @@ SELECT DISTINCT - - col0 AS col1 FROM tab1 cor0 GROUP BY col0
 28
 82
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT col0 AS col2 FROM tab2 cor0 GROUP BY col0 HAVING NULL <> ( + col2 )
 ----
@@ -41637,6 +41688,7 @@ query I rowsort
 SELECT ALL + col0 FROM tab0 cor0 WHERE NOT NULL >= NULL GROUP BY col1, col0, col1
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + col1 col1, col1 AS col0 FROM tab2 AS cor0 GROUP BY col1
 ----
@@ -41937,6 +41989,7 @@ SELECT col1 AS col2 FROM tab1 GROUP BY col1, col2, col2
 57
 6
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT - col0 AS col2 FROM tab2 AS cor0 GROUP BY col0, col0 HAVING NOT - col2 <= NULL
 ----
@@ -42044,6 +42097,7 @@ query I rowsort
 SELECT - col0 AS col2 FROM tab2 GROUP BY col0, col1 HAVING NULL IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col2 col1, col2 AS col1 FROM tab2 AS cor0 GROUP BY col0, col2
 ----
@@ -42092,6 +42146,7 @@ SELECT DISTINCT - col1 * - col1 + - col1 * - - col1 AS col0 FROM tab1 AS cor0 GR
 ----
 0
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + col1 AS col2 FROM tab1 AS cor0 GROUP BY col1 HAVING + col2 > NULL
 ----
@@ -42112,6 +42167,7 @@ query I rowsort
 SELECT - col2 FROM tab2 GROUP BY col0, col2 HAVING NULL IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL + - col0 AS col1 FROM tab2 AS cor0 GROUP BY col0, col0 HAVING NULL > ( col1 )
 ----
@@ -42520,6 +42576,7 @@ SELECT DISTINCT col1 - col1 - col1 FROM tab0 AS cor0 GROUP BY col1, col1
 -81
 0
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL col0 AS col2 FROM tab0 AS cor0 GROUP BY col0 HAVING NOT col2 / - col2 + + col0 <> NULL
 ----
@@ -42599,6 +42656,7 @@ SELECT col2 AS col2 FROM tab2 GROUP BY col1, col0, col2
 79
 87
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL - AVG ( ALL col2 ) AS col1 FROM tab1 GROUP BY col2, col2 HAVING ( NULL ) BETWEEN NULL AND ( col1 )
 ----
@@ -42741,6 +42799,7 @@ SELECT DISTINCT + col0, col0 * col0 / + col0 FROM tab1 AS cor0 GROUP BY col0, co
 82
 82
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT + col1 * col2 + - - col1 + - + col2 AS col0 FROM tab2 AS cor0 GROUP BY col1, col2 HAVING - + col0 <> NULL
 ----
@@ -43869,6 +43928,7 @@ query I rowsort
 SELECT DISTINCT - col0 FROM tab0 AS cor0 GROUP BY col0, col0 HAVING NOT + col0 IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + + col0 * + - col0 col1, - col0 FROM tab1 AS cor0 GROUP BY col0
 ----
@@ -44142,6 +44202,7 @@ query I rowsort
 SELECT - col0 AS col2 FROM tab2 AS cor0 WHERE NOT + col1 IS NOT NULL GROUP BY col0
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + AVG ( - + col0 ) * col0 AS col1 FROM tab2 GROUP BY col0 HAVING NOT NULL = - - col1 + - AVG ( ALL col0 )
 ----
@@ -44351,6 +44412,7 @@ SELECT ALL col0 AS col1 FROM tab1 cor0 GROUP BY col0, col0, col0
 28
 82
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT col0 AS col1 FROM tab0 AS cor0 GROUP BY col0, col0 HAVING - col1 * col1 * - col0 = NULL
 ----
@@ -44687,6 +44749,7 @@ SELECT ALL - col2 * + - col2 AS col0 FROM tab2 GROUP BY col2 HAVING NULL IS NULL
 6241
 7569
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col2 col2, col2 AS col0 FROM tab0 AS cor0 WHERE NOT NULL IS NOT NULL GROUP BY col2
 ----
@@ -45666,6 +45729,7 @@ SELECT DISTINCT col1 + + col1 FROM tab0 cor0 GROUP BY col1
 0
 162
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL + col1 AS col0 FROM tab1 AS cor0 GROUP BY col1 HAVING NOT col0 <= NULL
 ----
@@ -46489,6 +46553,7 @@ SELECT ALL - + col2 FROM tab2 cor0 GROUP BY col0, col2
 -79
 -87
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL col2 AS col1 FROM tab2 GROUP BY col2, col0 HAVING NULL NOT BETWEEN NULL AND + col1
 ----
@@ -47112,6 +47177,7 @@ SELECT DISTINCT + col1 FROM tab2 GROUP BY col1 HAVING NULL IS NULL
 59
 61
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col2 col2, + col2 * + + col2 AS col0 FROM tab1 AS cor0 GROUP BY col2, col2 HAVING + col0 < NULL
 ----
@@ -48396,6 +48462,7 @@ query I rowsort
 SELECT - - col1 AS col0 FROM tab2 AS cor0 WHERE col1 NOT BETWEEN NULL AND NULL GROUP BY col1
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 col2, col2 AS col2 FROM tab2 AS cor0 GROUP BY col2, col1
 ----
@@ -50084,6 +50151,7 @@ query I rowsort
 SELECT - col0 - - col0 FROM tab2 GROUP BY col0 HAVING NOT NULL <= NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col1 col2, - col1 AS col2 FROM tab0 AS cor0 GROUP BY col1
 ----
@@ -50096,6 +50164,7 @@ query I rowsort
 SELECT - col2 FROM tab0 AS cor0 GROUP BY col2, col2 HAVING NULL IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT AVG ( ALL + col0 ) * - AVG ( DISTINCT col0 ) AS col1 FROM tab1 GROUP BY col0 HAVING ( col1 ) <> NULL
 ----
@@ -50320,6 +50389,7 @@ query I rowsort
 SELECT ALL + col0 FROM tab1 GROUP BY col0, col0, col2 HAVING NOT NULL IS NULL
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT - col2 - col2 * - col0 AS col1 FROM tab2 AS cor0 GROUP BY col2, col0 HAVING NOT + + col1 >= NULL
 ----
@@ -51333,6 +51403,7 @@ SELECT DISTINCT col0, - col0 col0 FROM tab1 GROUP BY col0
 82
 -82
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT - + col2 AS col1 FROM tab2 AS cor0 GROUP BY col2 HAVING NULL >= - col1
 ----
@@ -51416,6 +51487,7 @@ SELECT + col1 col0 FROM tab1 GROUP BY col2, col1
 57
 6
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + col2 AS col0 FROM tab0 GROUP BY col2, col2, col2 HAVING NULL < col0
 ----
@@ -51731,6 +51803,7 @@ query I rowsort
 SELECT - + col2 col1 FROM tab1 AS cor0 GROUP BY col2 HAVING NOT NULL <> NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col0 col1, col0 AS col1 FROM tab2 AS cor0 GROUP BY col0
 ----
@@ -52729,6 +52802,7 @@ query I rowsort
 SELECT ALL + col2 AS col0 FROM tab2 WHERE NOT ( ( NOT col1 * - col0 IS NULL ) ) GROUP BY col2, col1
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + col2 col1, - col1 AS col0 FROM tab1 GROUP BY col2, col1
 ----
@@ -53330,6 +53404,7 @@ SELECT DISTINCT col0 * col0 FROM tab2 GROUP BY col0
 8281
 8464
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col0 col1, col0 FROM tab2 AS cor0 GROUP BY col0, col0
 ----
@@ -53519,6 +53594,7 @@ SELECT ALL - col0 col0 FROM tab2 GROUP BY col2, col0
 -91
 -92
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT col1 AS col2 FROM tab1 cor0 GROUP BY col1, col1 HAVING - col2 < NULL
 ----
@@ -53766,6 +53842,7 @@ SELECT - + col1 AS col0 FROM tab2 WHERE NOT - col1 IS NULL GROUP BY col1, col1
 -59
 -61
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col1 col2, - col1 AS col0 FROM tab2 GROUP BY col1
 ----
@@ -54107,6 +54184,7 @@ SELECT DISTINCT + col0 col0 FROM tab1 AS cor0 WHERE - col2 IS NOT NULL GROUP BY 
 28
 82
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT - col2 AS col1 FROM tab0 GROUP BY col2, col2 HAVING NOT NULL BETWEEN NULL AND - - col2 / - col1
 ----
@@ -54848,6 +54926,7 @@ SELECT + + col0 - col0 + col2, + col0 FROM tab0 AS cor0 GROUP BY col0, col2
 79
 26
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + col0 col2, col1 * - col1 AS col0 FROM tab2 GROUP BY col0, col1
 ----
@@ -55019,6 +55098,7 @@ query I rowsort
 SELECT ALL col0 / + col0 AS col0 FROM tab2 GROUP BY col2, col0 HAVING NOT NULL IS NULL
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query II rowsort
 SELECT ALL + col0 AS col1, col0 AS col2 FROM tab1 GROUP BY col0 HAVING NOT + col2 BETWEEN NULL AND NULL
 ----
@@ -55168,6 +55248,7 @@ SELECT ALL + col2 - - + col2 + - - col2 FROM tab2 AS cor0 GROUP BY col2
 237
 261
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + col1 AS col2 FROM tab1 GROUP BY col1 HAVING NOT NULL <> - col2
 ----
@@ -55692,6 +55773,7 @@ query I rowsort
 SELECT ALL - col2 col2 FROM tab2 WHERE ( NULL ) NOT IN ( col1 ) GROUP BY col2
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query III rowsort
 SELECT - col2 col2, col2, col2 AS col1 FROM tab2 GROUP BY col2
 ----
@@ -56413,6 +56495,7 @@ query I rowsort
 SELECT DISTINCT - + col1 FROM tab1 AS cor0 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + col0 AS col2 FROM tab0 AS cor0 WHERE - col2 >= + col0 GROUP BY col0 HAVING + col2 > NULL
 ----
@@ -56552,6 +56635,7 @@ SELECT col2 + col2 AS col0 FROM tab1 GROUP BY col1, col2
 16
 90
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT AVG ( + - col0 ) AS col1 FROM tab0 cor0 GROUP BY col2, col0 HAVING + col1 + col2 BETWEEN NULL AND NULL
 ----
@@ -57395,6 +57479,7 @@ query I rowsort
 SELECT + col2 FROM tab0 AS cor0 WHERE ( NULL ) >= NULL GROUP BY col2
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT - col1 col1, col1 + col1 * + col1 AS col0 FROM tab1 GROUP BY col2, col1
 ----
@@ -58436,6 +58521,7 @@ query I rowsort
 SELECT ALL + col2 FROM tab0 AS cor0 WHERE NULL IS NOT NULL GROUP BY col2
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col0 col2, col0 FROM tab2 GROUP BY col0, col1
 ----
@@ -58852,6 +58938,7 @@ SELECT ALL + - col1 - - + col1 AS col0 FROM tab2 AS cor0 GROUP BY col1 HAVING ( 
 0
 0
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT - col0 AS col2 FROM tab1 AS cor0 GROUP BY col0 HAVING col2 * col0 <> ( NULL )
 ----
@@ -58953,6 +59040,7 @@ SELECT DISTINCT + - col1 FROM tab2 WHERE NULL IS NULL GROUP BY col1, col1
 -59
 -61
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT col1 AS col2 FROM tab2 GROUP BY col1 HAVING NOT ( col2 ) BETWEEN NULL AND NULL
 ----
@@ -59505,6 +59593,7 @@ SELECT DISTINCT col1, + col1 FROM tab0 GROUP BY col1
 81
 81
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL - col2 col2, col2 AS col0 FROM tab2 GROUP BY col2
 ----
@@ -59610,6 +59699,7 @@ query I rowsort
 SELECT DISTINCT col2 AS col2 FROM tab2 GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col1 col2, col1 AS col1 FROM tab1 AS cor0 GROUP BY col1
 ----
@@ -61431,6 +61521,7 @@ SELECT DISTINCT - col2 AS col0 FROM tab1 cor0 GROUP BY col0, col2
 -71
 -8
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - col1 col2, col1 AS col1 FROM tab2 WHERE NOT ( + col1 ) IS NOT NULL GROUP BY col1, col1
 ----
@@ -61675,6 +61766,7 @@ SELECT - col0 - col0 FROM tab1 AS cor0 GROUP BY col0
 -44
 -56
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - col2 col1, col2 AS col1 FROM tab2 GROUP BY col2
 ----
@@ -62501,6 +62593,7 @@ SELECT - col0 AS col2 FROM tab1 cor0 GROUP BY col0, col2
 -28
 -82
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 + - col2 col1, col2 FROM tab1 GROUP BY col2 HAVING NOT ( NULL ) NOT BETWEEN NULL AND NULL
 ----
@@ -62883,6 +62976,7 @@ SELECT col0 col0 FROM tab0 cor0 GROUP BY col0, col1
 43
 83
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT col1 AS col2 FROM tab2 GROUP BY col1 HAVING NULL >= + col2 + + - col1
 ----
@@ -63260,6 +63354,7 @@ query II rowsort
 SELECT ALL - + col0 AS col0, col0 AS col2 FROM tab1 AS cor0 WHERE NOT - col0 * - col2 IS NOT NULL GROUP BY col0, col2
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col2 col0, + col2 FROM tab0 AS cor0 GROUP BY col2
 ----
@@ -63967,6 +64062,7 @@ SELECT - col0 AS col1 FROM tab1 AS cor0 GROUP BY col2, col0, col0 HAVING NOT NUL
 -28
 -82
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT - col1 col0, col1 FROM tab1 AS cor0 GROUP BY col1
 ----
@@ -64010,6 +64106,7 @@ query I rowsort
 SELECT col2 AS col1 FROM tab1 AS cor0 GROUP BY col2, col2 HAVING NULL IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + col1 col1, - col0 AS col0 FROM tab2 AS cor0 GROUP BY col0, col1, col0
 ----
@@ -64340,6 +64437,7 @@ SELECT DISTINCT - col0 * + + col0 FROM tab1 GROUP BY col0
 -6724
 -784
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - - col0 col2, col0 FROM tab2 AS cor0 GROUP BY col0
 ----
@@ -64482,6 +64580,7 @@ query I rowsort
 SELECT DISTINCT col0 FROM tab1 cor0 WHERE NOT ( col0 ) <= NULL GROUP BY col2, col0, col1
 ----
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL col2 AS col0 FROM tab0 AS cor0 GROUP BY col2 HAVING NOT + col0 < NULL
 ----

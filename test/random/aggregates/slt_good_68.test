@@ -73938,6 +73938,7 @@ SELECT DISTINCT 0 AS col0, - 52 / - 0 * + col2 * + CAST( NULL AS SIGNED ) + 65 F
 NULL
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query II rowsort label-8042
 SELECT DISTINCT 0 AS col0, - 52 / - 0 * + col2 * + CAST ( NULL AS INTEGER ) + 65 FROM tab1
 ----

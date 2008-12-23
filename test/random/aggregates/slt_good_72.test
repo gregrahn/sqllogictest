@@ -2543,6 +2543,7 @@ query III rowsort
 SELECT DISTINCT * FROM tab2 AS cor0 WHERE - col1 * + 10 + + + col0 IS NULL
 ----
 
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query III rowsort
 SELECT * FROM tab0 AS cor0 WHERE ( NOT - 4 / + + 0 > NULL )
 ----
@@ -2693,6 +2694,7 @@ SELECT COUNT ( - 93 ) + + 27 FROM tab2
 ----
 30
 
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query I rowsort
 SELECT DISTINCT + + col0 * + + col1 / + + 66 FROM tab0 WHERE NULL = + col0 + - 85 / 0
 ----

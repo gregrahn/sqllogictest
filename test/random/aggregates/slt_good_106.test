@@ -9300,6 +9300,7 @@ query III rowsort
 SELECT ALL * FROM tab2 WHERE NOT - + col2 NOT BETWEEN NULL AND col2
 ----
 
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query I rowsort
 SELECT DISTINCT 40 + + 78 / - 0 FROM tab0 WHERE NOT NULL IS NULL
 ----

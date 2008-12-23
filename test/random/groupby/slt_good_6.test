@@ -578,6 +578,7 @@ SELECT - + COALESCE ( 37, + tab2.col1, - 38 * - tab2.col2 + - 41 * tab2.col0 ) D
 0
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort label-66
 SELECT - + COALESCE ( 37, + tab2.col1, - 38 * - tab2.col2 + - 41 * tab2.col0 ) / 45 FROM tab2 GROUP BY col0
 ----
@@ -1600,6 +1601,7 @@ SELECT + 33 FROM tab0 AS cor0 GROUP BY col1
 33
 33
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT COALESCE ( - 30, - col1 * cor0.col2 + - 56 ) AS col1 FROM tab0 AS cor0 GROUP BY cor0.col0, cor0.col0
 ----
@@ -1910,6 +1912,7 @@ SELECT DISTINCT cor0.col0 * + cor0.col1 AS col0 FROM tab0 cor0 CROSS JOIN tab0 A
 0
 3483
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
 SELECT ALL CASE cor0.col1 WHEN + cor0.col0 THEN cor0.col1 * col0 + + cor0.col1 END col1 FROM tab2 AS cor0 GROUP BY col0, cor0.col1
 ----
@@ -4366,6 +4369,7 @@ SELECT + cor0.col1 / + cor0.col1 AS col2 FROM tab1 AS cor0 GROUP BY cor0.col1
 1
 1
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + COALESCE ( + 82, - cor0.col0 * col1 ) AS col0 FROM tab2 AS cor0 GROUP BY cor0.col1
 ----
@@ -6615,6 +6619,7 @@ SELECT DISTINCT cor0.col1 / + 7 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col1, co
 6
 8
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL COALESCE ( - 8, + col2, + col0 ) AS col1 FROM tab0 cor0 GROUP BY cor0.col0
 ----
@@ -7553,6 +7558,7 @@ SELECT + 94 AS col0 FROM tab1 cor0 GROUP BY col1
 94
 94
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT COALESCE ( - 62, cor0.col1, - 51, - 15 * + cor0.col1 ) FROM tab1 AS cor0 GROUP BY cor0.col2
 ----
@@ -7626,6 +7632,7 @@ SELECT DISTINCT col1 AS col1 FROM tab2 AS cor0 GROUP BY col1
 59
 61
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT + COALESCE ( + 35, + col2, NULLIF ( cor0.col0, - cor0.col0 ) + cor0.col1 * + cor0.col1 ) FROM tab0 AS cor0 GROUP BY cor0.col0
 ----
@@ -8104,6 +8111,7 @@ SELECT ALL col2 * + 94 FROM tab0 AS cor0 GROUP BY cor0.col2
 3572
 7426
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT DISTINCT COALESCE ( 35, - tab0.col2, + tab0.col1 ) FROM tab0 GROUP BY tab0.col0
 ----
@@ -8360,6 +8368,7 @@ SELECT COALESCE ( 30, col1 ) + cor0.col0 DIV - cor0.col0 FROM tab1 AS cor0 GROUP
 29
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort label-1123
 SELECT COALESCE ( 30, col1 ) + cor0.col0 / - cor0.col0 FROM tab1 AS cor0 GROUP BY col2, cor0.col0
 ----
@@ -8987,6 +8996,7 @@ SELECT + ( 94 ) * - tab1.col2 FROM tab1 GROUP BY col2
 -6674
 -752
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL + - COALESCE ( + 25, tab2.col2 + + tab2.col1, tab2.col1 * tab2.col0 ) AS col0 FROM tab2 GROUP BY col1
 ----
@@ -8994,6 +9004,7 @@ SELECT ALL + - COALESCE ( + 25, tab2.col2 + + tab2.col1, tab2.col1 * tab2.col0 )
 -25
 -25
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT + CASE - 35 WHEN + tab2.col0 + - tab2.col0 THEN NULL WHEN - 76 THEN - tab2.col2 ELSE + 3 END FROM tab2 GROUP BY tab2.col0
 ----
@@ -11854,6 +11865,7 @@ SELECT DISTINCT cor0.col1 DIV COALESCE ( + 80, cor0.col1 * cor0.col0 ) + 54 FROM
 54
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort label-1597
 SELECT DISTINCT cor0.col1 / COALESCE ( + 80, cor0.col1 * cor0.col0 ) + 54 FROM tab1 cor0 GROUP BY cor0.col1
 ----
@@ -12212,6 +12224,7 @@ SELECT DISTINCT + 89 + + tab0.col2 AS col0 FROM tab0 GROUP BY col2
 127
 168
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL CASE + 71 WHEN + 85 THEN col0 * cor0.col1 ELSE NULL END + 43 AS col0 FROM tab2 AS cor0 GROUP BY cor0.col1
 ----
@@ -12832,6 +12845,7 @@ SELECT ALL + 21 * cor0.col2 col2 FROM tab0 AS cor0 GROUP BY cor0.col2
 504
 798
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT COALESCE ( - 41, cor0.col2, cor0.col1 ) + cor0.col0 FROM tab1 cor0 GROUP BY col0
 ----
@@ -14867,6 +14881,7 @@ SELECT DISTINCT - 11 / col0 AS col1 FROM tab2 AS cor0 GROUP BY col0
 ----
 0
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT - tab2.col0 + COALESCE ( - 87, - tab2.col2 + - tab2.col1 * + COALESCE ( + tab2.col1, tab2.col0 ) ) FROM tab2 GROUP BY tab2.col0
 ----
@@ -20202,6 +20217,7 @@ SELECT - cor0.col0 + - col0 AS col2 FROM tab1 AS cor0 GROUP BY cor0.col0
 -44
 -56
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL + cor0.col2 * - cor0.col2 + cor0.col2 AS col0 FROM tab2 AS cor0 GROUP BY cor0.col2 HAVING NULL <= - col0
 ----
@@ -28204,6 +28220,7 @@ SELECT DISTINCT cor0.col0 / cor0.col0 AS col1 FROM tab2 AS cor0 GROUP BY cor0.co
 ----
 1
 
+skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
 SELECT ALL + cor0.col0 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col0 HAVING NULL NOT IN ( - cor0.col0 * - col2 )
 ----

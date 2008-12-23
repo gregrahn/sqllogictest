@@ -29675,6 +29675,7 @@ SELECT DISTINCT + col2 + + ( - 35 ) AS col1 FROM tab0 cor0
 12
 64
 
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query IIIIII rowsort
 SELECT * FROM tab1 AS cor0 CROSS JOIN tab1 AS cor1 WHERE NOT NULL = 38 / 0
 ----
@@ -38172,6 +38173,7 @@ SELECT ALL - 30 / - 0 * - AVG ( + - CAST( NULL AS SIGNED ) ) FROM tab1
 NULL
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query I rowsort label-4077
 SELECT ALL - 30 / - 0 * - AVG ( + - CAST ( NULL AS INTEGER ) ) FROM tab1
 ----

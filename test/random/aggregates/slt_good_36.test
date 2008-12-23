@@ -89328,6 +89328,7 @@ SELECT ALL COUNT( - col2 ) * + 10 / - + COUNT( * ) * + + SUM( + - col2 ) AS col2
 NULL
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query I rowsort label-9867
 SELECT ALL COUNT ( - col2 ) * + 10 / - + COUNT ( * ) * + + SUM ( + - col2 ) AS col2 FROM tab2 AS cor0 WHERE NULL IS NOT NULL
 ----

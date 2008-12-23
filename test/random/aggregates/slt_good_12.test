@@ -71383,6 +71383,7 @@ SELECT - col0 + - col0 + - 50 / + + 0 + - ( 4 ) FROM tab2 WHERE NULL IS NULL AND
 ----
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL handles NULL in DIV/0 by differently
 query I rowsort label-7694
 SELECT - col0 + - col0 + - 50 / + + 0 + - ( 4 ) FROM tab2 WHERE NULL IS NULL AND NOT ( NULL ) <> - 60 * - CAST ( NULL AS INTEGER )
 ----
