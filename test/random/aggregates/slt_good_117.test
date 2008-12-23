@@ -1404,6 +1404,7 @@ SELECT COUNT( * ) col0, - 31 * - + 97 * 58 AS col1 FROM tab0 AS cor0
 174406
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-138
 SELECT COUNT ( * ) col0, - 31 * - + 97 * 58 AS col1 FROM tab0 AS cor0
 ----
@@ -1837,6 +1838,7 @@ SELECT ALL col2 * - - col0 col1 FROM tab1
 5015
 6188
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 col0, col0 + col1 AS col2 FROM tab2
 ----
@@ -2255,6 +2257,7 @@ SELECT DISTINCT 18 * - col1 col2 FROM tab2
 -1386
 -918
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT - col2 col1, - col0 FROM tab0 AS cor0
 ----
@@ -2433,6 +2436,7 @@ SELECT ALL COUNT( * ) col2, 25 AS col0 FROM tab2 cor0
 25
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-250
 SELECT ALL COUNT ( * ) col2, 25 AS col0 FROM tab2 cor0
 ----
@@ -3040,6 +3044,7 @@ SELECT ALL + col2 AS col0, col1 AS col1 FROM tab1 AS cor0
 96
 14
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col1 col2, col0 + col1 + - col2 - - 13 FROM tab0 cor0
 ----
@@ -3273,6 +3278,7 @@ SELECT MAX( + col0 ) col0, + 75 FROM tab2
 75
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-341
 SELECT MAX ( + col0 ) col0, + 75 FROM tab2
 ----
@@ -3311,6 +3317,7 @@ SELECT CAST( + 52 AS SIGNED ) col0, 28 FROM tab1 AS cor0
 28
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-344
 SELECT CAST ( + 52 AS INTEGER ) col0, 28 FROM tab1 AS cor0
 ----
@@ -5775,6 +5782,7 @@ SELECT DISTINCT + + 33 col2, + COUNT( * ) FROM tab1 AS cor0 WHERE col1 * + 40 IS
 3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-621
 SELECT DISTINCT + + 33 col2, + COUNT ( * ) FROM tab1 AS cor0 WHERE col1 * + 40 IS NOT NULL
 ----
@@ -5879,6 +5887,7 @@ SELECT ALL col2 AS col2, col0 AS col2, + col1 + - 75 AS col1 FROM tab1 AS cor0
 ----
 9 values hashing to 75be9f1171582753f1f867f980bc2067
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - + col2 col1, + col1 * 1 FROM tab0 AS cor0
 ----
@@ -6494,6 +6503,7 @@ SELECT col1 * + + col0 FROM tab0 AS cor0
 1827
 97
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT 46 col0, col2 FROM tab1 AS cor0
 ----
@@ -6830,6 +6840,7 @@ SELECT - 59 col2, - COUNT( * ) FROM tab0
 -3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-736
 SELECT - 59 col2, - COUNT ( * ) FROM tab0
 ----
@@ -7912,6 +7923,7 @@ SELECT + 47 AS col1, + SUM ( + + 64 ) * + - COUNT ( DISTINCT col0 ) col2 FROM ta
 47
 -576
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - - col2 + - + col2 col1, - col0 AS col2 FROM tab0 WHERE NOT col2 BETWEEN NULL AND + ( ( - + 92 ) )
 ----
@@ -10538,6 +10550,7 @@ NULL
 NULL
 NULL
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + - 98 * - col0 * + col0 col2, col1 FROM tab1 AS cor0
 ----
@@ -11473,6 +11486,7 @@ SELECT ALL COUNT( * ) col2, - COUNT( * ) FROM tab1 AS cor0
 -3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-1232
 SELECT ALL COUNT ( * ) col2, - COUNT ( * ) FROM tab1 AS cor0
 ----
@@ -12776,6 +12790,7 @@ SELECT col2 * ( 7 ) FROM tab2
 280
 406
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + col0 col0, 92 FROM tab1
 ----
@@ -12845,6 +12860,7 @@ query III rowsort
 SELECT * FROM tab0 AS cor0 WHERE NOT - 34 IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col0 col0, col0 FROM tab2 AS cor0
 ----
@@ -12962,6 +12978,7 @@ query I rowsort
 SELECT 81 FROM tab1 WHERE ( NOT 87 IS NOT NULL )
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col2 col1, - 56 AS col1 FROM tab2
 ----
@@ -14168,6 +14185,7 @@ SELECT + CAST ( + 6 AS INTEGER ) AS col2 FROM tab0
 6
 6
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - 21 col1, col0 + col0 FROM tab2
 ----
@@ -14195,6 +14213,7 @@ SELECT DISTINCT * FROM tab0 WHERE ( - col2 * + + col1 ) IS NOT NULL
 ----
 9 values hashing to c4b42765dff94eaaa46040e537fb43b7
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col2 col1, + 43 FROM tab0 AS cor0
 ----
@@ -14703,6 +14722,7 @@ SELECT + col0 * 25 * 28 * col0 AS col0 FROM tab1 AS cor0
 5057500
 5796700
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - col1 col0, - 25 FROM tab2 AS cor0
 ----
@@ -15689,6 +15709,7 @@ NULL
 0
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-1681
 SELECT DISTINCT - CAST ( NULL AS INTEGER ) + + col1 col1, - col1 / - - col2 AS col1 FROM tab1 AS cor0
 ----
@@ -16081,6 +16102,7 @@ SELECT DISTINCT - 57 * + col2 + - col0 * col2 * - CAST ( NULL AS INTEGER ) AS co
 ----
 NULL
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col0 - + col1 col0, 5 AS col0 FROM tab2 AS cor0
 ----
@@ -16295,6 +16317,7 @@ SELECT - - COUNT( col0 ) DIV SUM( ALL col2 ) * + COUNT( col1 ) col0, - 29 AS col
 -29
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-1742
 SELECT - - COUNT ( col0 ) / SUM ( ALL col2 ) * + COUNT ( col1 ) col0, - 29 AS col2 FROM tab1 AS cor0
 ----
@@ -16969,6 +16992,7 @@ SELECT DISTINCT - 3 * + CAST ( 72 AS INTEGER ) FROM tab2
 ----
 -216
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + 92 col1, col2 FROM tab1 AS cor0
 ----
@@ -18559,6 +18583,7 @@ SELECT DISTINCT col2 / + col1 FROM tab1 AS cor0 WHERE + col1 IS NOT NULL
 11
 6
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL 70 col1, - 32 AS col1 FROM tab1 cor0
 ----
@@ -19204,6 +19229,7 @@ query III rowsort
 SELECT ALL * FROM tab0 AS cor0 WHERE ( 91 ) - + + col1 <= NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + col1 + - 9 col0, - col1 + col2 AS col0 FROM tab2 AS cor0
 ----
@@ -19604,6 +19630,7 @@ SELECT + - MAX ( col0 ) FROM tab0 AS cor0
 ----
 -97
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + + 34 * - - 4 col1, + col0 * - col1 FROM tab2 AS cor0
 ----
@@ -19884,12 +19911,14 @@ SELECT - 20 col2, + COUNT( * ) AS col1 FROM tab0
 3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-2145
 SELECT - 20 col2, + COUNT ( * ) AS col1 FROM tab0
 ----
 -20
 3
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col1 col1, col0 * + col1 FROM tab1 AS cor0
 ----
@@ -20427,6 +20456,7 @@ SELECT DISTINCT col2 * 64 + - + col2 col2 FROM tab1 AS cor0
 4284
 6048
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + ( 89 ) col0, - col0 - + + 21 * + + ( - col1 ) AS col2 FROM tab1 cor0
 ----
@@ -20600,6 +20630,7 @@ query II rowsort
 SELECT DISTINCT - 93 AS col2, + col0 AS col1 FROM tab2 WHERE NOT NULL IN ( + 20, col1, col1 * col0 * col1 + - + col0 )
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT 61 col2, - col1 FROM tab2
 ----
@@ -20764,6 +20795,7 @@ SELECT + - ( - ( COUNT( * ) ) ) col1, COUNT( ( - 30 ) ) FROM tab0 AS cor0
 3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-2234
 SELECT + - ( - ( COUNT ( * ) ) ) col1, COUNT ( ( - 30 ) ) FROM tab0 AS cor0
 ----
@@ -21044,6 +21076,7 @@ SELECT DISTINCT * FROM tab1 WHERE + 22 > - + 35
 ----
 9 values hashing to c6c0a4111b36d04dbc811a11e4d54cad
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + 36 col0, col2 + - col1 * col2 AS col2 FROM tab0
 ----
@@ -21761,6 +21794,7 @@ SELECT MIN ( DISTINCT - col1 ) AS col0 FROM tab0
 ----
 -81
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col1 * + col1 col1, col2 FROM tab0
 ----
@@ -22317,6 +22351,7 @@ SELECT + COUNT( * ) col0, - CAST( NULL AS SIGNED ) FROM tab0
 NULL
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-2403
 SELECT + COUNT ( * ) col0, - CAST ( NULL AS INTEGER ) FROM tab0
 ----
@@ -22728,6 +22763,7 @@ SELECT DISTINCT 77 col2 FROM tab2
 ----
 77
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT 11 col1, - col2 AS col0 FROM tab2
 ----
@@ -23734,6 +23770,7 @@ SELECT DISTINCT 42 col0, - CAST( col1 AS SIGNED ) * - - 78 * + + 8 - - 18 + - - 
 ----
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-2561
 SELECT DISTINCT 42 col0, - CAST ( col1 AS INTEGER ) * - - 78 * + + 8 - - 18 + - - 31 * + - col0 FROM tab2 AS cor0 WHERE NOT col0 <= NULL
 ----
@@ -25865,6 +25902,7 @@ SELECT col0 FROM tab1 AS cor0 WHERE NOT - col1 * - col0 + + col1 IS NULL
 85
 91
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT 39 col2, 96 * col0 AS col0 FROM tab2
 ----
@@ -26506,6 +26544,7 @@ SELECT + MIN ( ALL + + col0 ) FROM tab2
 ----
 46
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 * + col2 col2, - 95 FROM tab1
 ----
@@ -26659,6 +26698,7 @@ SELECT COUNT( * ) col2, 43 FROM tab1 AS cor0
 43
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-2889
 SELECT COUNT ( * ) col2, 43 FROM tab1 AS cor0
 ----
@@ -27808,6 +27848,7 @@ SELECT 12 AS col0, - col1 FROM tab0 AS cor0
 12
 -81
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + 96 col0, 26 AS col0 FROM tab2 AS cor0
 ----
@@ -27826,6 +27867,7 @@ SELECT DISTINCT 97 AS col0 FROM tab1 AS cor0 CROSS JOIN tab0 AS cor1
 ----
 97
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 col2, col2 AS col2 FROM tab1
 ----
@@ -27872,6 +27914,7 @@ query III rowsort
 SELECT ALL * FROM tab2 AS cor0 WHERE NOT - 53 >= NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL - + col0 col2, - 20 AS col0 FROM tab2 cor0
 ----
@@ -28317,6 +28360,7 @@ SELECT ALL ( + + 99 ), col0 * - col1 + + col1 AS col0 FROM tab2 cor0
 99
 -4958
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + col0 * - col2 col1, - ( 39 ) FROM tab2 AS cor0
 ----
@@ -29907,6 +29951,7 @@ SELECT - - SUM ( ALL - 62 ) FROM tab2 cor0
 ----
 -186
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL - + col2 col0, col2 AS col1 FROM tab2 AS cor0
 ----
@@ -30582,6 +30627,7 @@ SELECT col2 col1, + 52 + col1 DIV col2 * - col0 FROM tab0
 52
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-3320
 SELECT col2 col1, + 52 + col1 / col2 * - col0 FROM tab0
 ----
@@ -31292,6 +31338,7 @@ SELECT - COUNT ( * ) - 29 AS col0 FROM tab0 AS cor0 CROSS JOIN tab1 AS cor1
 ----
 -38
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + 31 col0, ( col2 ) * - col0 + + col0 AS col2 FROM tab1
 ----
@@ -31336,6 +31383,7 @@ SELECT - 2 AS col2, - 39 FROM tab2 cor0
 -2
 -39
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + - 14 col2, col1 * + + col2 AS col2 FROM tab0 cor0
 ----
@@ -31769,6 +31817,7 @@ SELECT + COUNT ( * ) * + + COUNT ( * ) / + 70 * + - COUNT ( * ) AS col2, COUNT (
 0
 3
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col0 * 39 col2, + col0 FROM tab2 AS cor0 WHERE NOT NULL BETWEEN NULL AND col1
 ----
@@ -32287,6 +32336,7 @@ SELECT DISTINCT - COUNT( * ) col0, - 2 FROM tab2 cor0
 -2
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-3506
 SELECT DISTINCT - COUNT ( * ) col0, - 2 FROM tab2 cor0
 ----
@@ -33467,6 +33517,7 @@ SELECT DISTINCT + COUNT ( DISTINCT - + col1 ) * + COUNT ( * ) FROM tab0 AS cor0
 ----
 9
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT ( + - 71 ) col0, + 38 FROM tab2 AS cor0
 ----
@@ -36046,6 +36097,7 @@ SELECT ALL 11 * COUNT( * ) col1, + CAST( NULL AS SIGNED ) AS col2 FROM tab1
 NULL
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-3940
 SELECT ALL 11 * COUNT ( * ) col1, + CAST ( NULL AS INTEGER ) AS col2 FROM tab1
 ----
@@ -36301,6 +36353,7 @@ SELECT col2 / + + col2 FROM tab2 AS cor0 WHERE NOT NULL IS NOT NULL
 1
 1
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL - col0 col0, + col1 FROM tab0 AS cor0
 ----
@@ -40627,6 +40680,7 @@ SELECT + 21, COUNT ( * ) AS col0 FROM tab2
 21
 3
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL - col2 col0, col1 * + col2 FROM tab2 AS cor0 WHERE NULL BETWEEN NULL AND - col1
 ----
@@ -41114,6 +41168,7 @@ SELECT ALL * FROM tab0 AS cor0 WHERE NOT col0 + - 97 IS NULL
 ----
 9 values hashing to c4b42765dff94eaaa46040e537fb43b7
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + 34 col1, + col1 * + 54 AS col0 FROM tab1 AS cor0
 ----
@@ -41154,6 +41209,7 @@ SELECT DISTINCT - col0 + - + col0 col0 FROM tab2 WHERE NOT + col2 / + ( + col2 )
 -150
 -92
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - col1 * 10 col0, - col0 AS col0 FROM tab1 WHERE NOT NULL IS NULL
 ----
@@ -42636,6 +42692,7 @@ SELECT COUNT ( * ) col0 FROM ( tab1 AS cor0 CROSS JOIN tab1 AS cor1 )
 ----
 9
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL ( - 89 ) col2, col0 AS col1 FROM tab2 AS cor0
 ----
@@ -43140,6 +43197,7 @@ query I rowsort
 SELECT ALL - - col2 + + - col1 AS col0 FROM tab2 AS cor0 WHERE NULL = col2 + - col2
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 col2, 40 AS col2 FROM tab0 AS cor0 WHERE NULL IS NOT NULL
 ----
@@ -44157,6 +44215,7 @@ SELECT ALL - MIN( ALL + 5 ) col1, - 91 AS col1 FROM tab0 AS cor0
 -91
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-4825
 SELECT ALL - MIN ( ALL + 5 ) col1, - 91 AS col1 FROM tab0 AS cor0
 ----
@@ -44272,6 +44331,7 @@ SELECT DISTINCT - MIN ( ALL - 90 ) FROM tab0
 ----
 90
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + ( - 81 ) * - - 84 col2, + col1 FROM tab1
 ----
@@ -44566,6 +44626,7 @@ SELECT ALL - 57 / ( + + COUNT ( * ) ) AS col2 FROM tab1 AS cor0
 ----
 -19
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col1 col1, - col1 AS col0 FROM tab0 AS cor0
 ----
@@ -44647,6 +44708,7 @@ SELECT DISTINCT - col0 AS col1, col1 FROM tab1
 -91
 47
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + 92 col1, col1 + + col1 FROM tab2
 ----
@@ -44839,6 +44901,7 @@ query I rowsort
 SELECT - 79 AS col1 FROM tab2 WHERE NULL < - - 35
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + ( - col2 ) - + col0 col1, + 48 AS col0 FROM tab0
 ----
@@ -45578,6 +45641,7 @@ SELECT DISTINCT + COUNT( * ) col0, COUNT( * ) FROM tab1
 3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-4982
 SELECT DISTINCT + COUNT ( * ) col0, COUNT ( * ) FROM tab1
 ----
@@ -46957,6 +47021,7 @@ SELECT ALL COUNT ( * ) - + - COUNT ( + col1 ) FROM tab2
 ----
 6
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT 63 col1, - col0 AS col2 FROM tab1
 ----
@@ -47099,6 +47164,7 @@ query I rowsort
 SELECT - col1 - - 32 AS col0 FROM tab2 AS cor0 WHERE NOT NULL IS NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + 77 col2, + col1 FROM tab2 AS cor0
 ----
@@ -48355,6 +48421,7 @@ SELECT DISTINCT + 32 FROM tab2 WHERE col0 IS NOT NULL
 ----
 32
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col0 col1, - col1 + + col2 AS col2 FROM tab0
 ----
@@ -48698,6 +48765,7 @@ SELECT 13 * 15 - 84 - COUNT( * ) col1, COUNT( * ) FROM tab2 WHERE + col0 IS NOT 
 3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-5322
 SELECT 13 * 15 - 84 - COUNT ( * ) col1, COUNT ( * ) FROM tab2 WHERE + col0 IS NOT NULL
 ----
@@ -49952,6 +50020,7 @@ SELECT ALL + COUNT( * ) col0, SUM( DISTINCT + CAST( col2 AS SIGNED ) ) AS col1 F
 121
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-5456
 SELECT ALL + COUNT ( * ) col0, SUM ( DISTINCT + CAST ( col2 AS INTEGER ) ) AS col1 FROM tab2
 ----
@@ -51540,6 +51609,7 @@ SELECT ALL 64 AS col0, + COUNT ( * ) AS col1 FROM tab1
 64
 3
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT 9 col2, col2 AS col1 FROM tab2
 ----
@@ -51744,6 +51814,7 @@ NULL
 NULL
 NULL
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - 39 col0, 54 FROM tab0
 ----
@@ -53193,6 +53264,7 @@ SELECT DISTINCT - 12 * + col0 - - - col0 FROM tab2
 -832
 -975
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - col1 * + + col2 + - - col0 col1, - col2 AS col2 FROM tab2
 ----
@@ -53417,6 +53489,7 @@ SELECT SUM ( + col2 ) + - 1 AS col0 FROM tab0
 ----
 155
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL ( + ( + col0 ) ) * col2 col0, + col1 AS col2 FROM tab0
 ----
@@ -54098,6 +54171,7 @@ NULL
 1
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-5905
 SELECT ALL - ( - + col1 ) * - + col1 + + ( + CAST ( NULL AS INTEGER ) ) * - col1 col0, col2 / + + col2 FROM tab1 AS cor0
 ----
@@ -54713,6 +54787,7 @@ SELECT - - CAST ( + - ( - ( + 67 ) ) AS INTEGER ) * 40 AS col2 FROM tab1 AS cor0
 2680
 2680
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col0 col1, + 43 FROM tab2 AS cor0
 ----
@@ -54723,6 +54798,7 @@ SELECT col0 col1, + 43 FROM tab2 AS cor0
 75
 43
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + col2 col1, - ( - + col0 ) + + col2 AS col0 FROM tab0 AS cor0
 ----
@@ -56305,6 +56381,7 @@ SELECT ALL 7 DIV + col0 col2, + col2 * - col0 - + col1 AS col0 FROM tab0
 -9604
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-6149
 SELECT ALL 7 / + col0 col2, + col2 * - col0 - + col1 AS col0 FROM tab0
 ----
@@ -56329,6 +56406,7 @@ SELECT ALL ( - 19 ) AS col0 FROM tab2
 -19
 -19
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query III rowsort
 SELECT 2 * - - col0 col0, - col0, - + col0 AS col0 FROM tab1
 ----
@@ -56802,6 +56880,7 @@ SELECT COUNT( * ) - + + 67 * - - ( + CAST( - + COUNT( + col1 ) AS SIGNED ) ) col
 3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-6200
 SELECT COUNT ( * ) - + + 67 * - - ( + CAST ( - + COUNT ( + col1 ) AS INTEGER ) ) col1, COUNT ( * ) AS col2 FROM tab2 AS cor0
 ----
@@ -57882,6 +57961,7 @@ SELECT DISTINCT + ( 79 ) col1 FROM tab2 AS cor0
 ----
 79
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col2 col1, col1 FROM tab0 AS cor0
 ----
@@ -58936,6 +59016,7 @@ query I rowsort
 SELECT - col2 AS col1 FROM tab2 WHERE NOT ( - 40 - col2 * - 63 ) IS NOT NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + 68 col1, + 16 AS col0 FROM tab0
 ----
@@ -60373,6 +60454,7 @@ query III rowsort
 SELECT * FROM tab1 AS cor0 WHERE col1 + - col2 = + col2
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT - col0 - 62 col1, + 33 AS col0 FROM tab0 AS cor0
 ----
@@ -62416,6 +62498,7 @@ SELECT ALL - 49 col0, COUNT( * ) FROM tab2
 3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-6796
 SELECT ALL - 49 col0, COUNT ( * ) FROM tab2
 ----
@@ -62722,6 +62805,7 @@ SELECT - 42 AS col2 FROM tab1, tab1 AS cor0
 ----
 9 values hashing to 9894093f29c0defae91347934f060329
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + col2 col1, 50 FROM tab1
 ----
@@ -63881,6 +63965,7 @@ SELECT + 20, CAST ( - + col0 AS INTEGER ) / col0 AS col2 FROM tab2 AS cor0 WHERE
 20
 -1
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 col1, col1 AS col2 FROM tab1
 ----
@@ -66205,6 +66290,7 @@ NULL
 177
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-7195
 SELECT ALL - CAST ( NULL AS INTEGER ) col1, 86 + + col0 AS col1 FROM tab1
 ----
@@ -66350,6 +66436,7 @@ SELECT DISTINCT COUNT( * ) col2, 9 * + COUNT( * ) AS col0 FROM tab0
 27
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-7208
 SELECT DISTINCT COUNT ( * ) col2, 9 * + COUNT ( * ) AS col0 FROM tab0
 ----
@@ -66967,6 +67054,7 @@ SELECT - + 60 / COUNT ( * ) FROM tab1 AS cor0 WHERE NOT col1 IS NULL
 ----
 -20
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT + col0 col1, ( + col2 ) FROM tab2 WHERE NOT - col1 IS NOT NULL
 ----
@@ -67024,6 +67112,7 @@ SELECT ALL + 36 col1, COUNT( * ) FROM tab2
 3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-7281
 SELECT ALL + 36 col1, COUNT ( * ) FROM tab2
 ----
@@ -67042,6 +67131,7 @@ SELECT + ( + MAX ( ALL - col2 ) ) FROM tab1 cor0
 ----
 -59
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col2 col2, - 83 AS col1 FROM tab1 AS cor0
 ----
@@ -69089,6 +69179,7 @@ SELECT DISTINCT - col1 col1, + col2 DIV + + 73 AS col1 FROM tab2 AS cor0
 0
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-7524
 SELECT DISTINCT - col1 col1, + col2 / + + 73 AS col1 FROM tab2 AS cor0
 ----
@@ -69734,6 +69825,7 @@ SELECT + 37 col0, + COUNT( * ) * MIN( + + col0 ) FROM tab2
 138
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-7585
 SELECT + 37 col0, + COUNT ( * ) * MIN ( + + col0 ) FROM tab2
 ----
@@ -69766,6 +69858,7 @@ SELECT ALL - 60 * + col2 FROM tab2 AS cor0
 -2400
 -3480
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + 97 * - col2 col2, ( + 61 ) * - + 49 * - 52 AS col0 FROM tab1
 ----
@@ -70211,6 +70304,7 @@ SELECT DISTINCT - ( - COUNT ( * ) ) col0 FROM tab0 cor0
 ----
 3
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + col2 col0, + col1 + - 94 FROM tab1 AS cor0
 ----
@@ -71343,6 +71437,7 @@ SELECT ALL + MIN ( ALL col1 ) AS col2 FROM tab1 AS cor0
 ----
 5
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + col2 * + col1 col2, col1 - 99 FROM tab1 AS cor0
 ----
@@ -72666,6 +72761,7 @@ SELECT DISTINCT * FROM tab0 WHERE NULL IS NULL OR ( NULL ) IS NULL
 ----
 9 values hashing to c4b42765dff94eaaa46040e537fb43b7
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT - 85 col0, 4 AS col0 FROM tab2 AS cor0
 ----
@@ -74623,6 +74719,7 @@ NULL
 58
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-8110
 SELECT ALL CAST ( NULL AS INTEGER ) col1, col2 FROM tab2
 ----
@@ -76408,6 +76505,7 @@ SELECT ALL COUNT( * ) * + 43 * - ( 31 ) col2, - 9 DIV 10 FROM tab2
 0
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-8302
 SELECT ALL COUNT ( * ) * + 43 * - ( 31 ) col2, - 9 / 10 FROM tab2
 ----
@@ -76705,6 +76803,7 @@ SELECT ALL col0 * + 38 FROM tab0
 3686
 570
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT col1 col2, + 43 FROM tab0
 ----
@@ -77278,6 +77377,7 @@ SELECT - col0 + + 14 FROM tab1
 -71
 -77
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL col0 col1, col2 FROM tab0
 ----
@@ -77364,6 +77464,7 @@ SELECT DISTINCT - COUNT ( * ) AS col0 FROM tab0 AS cor0 WHERE NOT NULL IS NOT NU
 ----
 -3
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL + col0 col1, + col0 + + col0 FROM tab1 AS cor0
 ----
@@ -78238,6 +78339,7 @@ SELECT DISTINCT - 11 * - CAST ( 77 AS INTEGER ) - COUNT ( * ) - - + SUM ( DISTIN
 905
 78
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - 11 col1, - col2 AS col2 FROM tab2 AS cor0
 ----
@@ -78626,6 +78728,7 @@ NULL
 NULL
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-8542
 SELECT - CAST ( NULL AS REAL ) col2, CAST ( NULL AS INTEGER ) * 43 / + - col0 AS col0 FROM tab0 AS cor0
 ----
@@ -78844,6 +78947,7 @@ SELECT DISTINCT - - col1 / col1 col2, col0 / - - CAST( - col1 AS SIGNED ) FROM t
 ----
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-8562
 SELECT DISTINCT - - col1 / col1 col2, col0 / - - CAST ( - col1 AS INTEGER ) FROM tab1 AS cor0 WHERE NOT NULL >= - col1
 ----
@@ -82277,6 +82381,7 @@ SELECT ALL - 8 col2 FROM tab1
 -8
 -8
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col0 col1, + 46 + - 13 FROM tab1
 ----
@@ -82380,6 +82485,7 @@ SELECT DISTINCT * FROM tab1 AS cor0 WHERE - col0 + + col1 IS NOT NULL
 ----
 9 values hashing to c6c0a4111b36d04dbc811a11e4d54cad
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL - 34 col1, ( col1 ) FROM tab1 AS cor0
 ----
@@ -83701,6 +83807,7 @@ SELECT - 88 * - + 50 * + COUNT ( * ) col1 FROM tab0 AS cor0
 ----
 13200
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT + - col2 col2, col1 FROM tab1 cor0
 ----
@@ -84888,6 +84995,7 @@ SELECT DISTINCT + + 75 AS col1 FROM tab1 AS cor0
 ----
 75
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT 59 col1, col1 FROM tab1 AS cor0
 ----
@@ -85337,6 +85445,7 @@ SELECT DISTINCT - 49 * col0 FROM tab2 AS cor0
 -3136
 -3675
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT ALL - col0 * + col1 col2, col2 + - 50 AS col0 FROM tab1 AS cor0
 ----
@@ -85400,6 +85509,7 @@ SELECT + COUNT( * ) col2, + 61 FROM tab2
 61
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-9267
 SELECT + COUNT ( * ) col2, + 61 FROM tab2
 ----
@@ -86339,6 +86449,7 @@ SELECT DISTINCT + 6 col2, + MIN( + col0 ) AS col1 FROM tab0 cor0
 15
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-9375
 SELECT DISTINCT + 6 col2, + MIN ( + col0 ) AS col1 FROM tab0 cor0
 ----
@@ -87189,6 +87300,7 @@ SELECT - 46 * ( - + COUNT ( - + col1 ) ) FROM tab1 cor0
 ----
 138
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT - col2 col0, - col1 AS col0 FROM tab1 AS cor0
 ----
@@ -90214,6 +90326,7 @@ query I rowsort
 SELECT - - 34 FROM tab0 AS cor0 WHERE NOT ( NULL ) IS NULL
 ----
 
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
 SELECT DISTINCT col1 col1, 63 FROM tab0 AS cor0
 ----
@@ -90925,6 +91038,7 @@ SELECT DISTINCT - 54 DIV - 58 col2, col1 FROM tab1 AS cor0
 5
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-9870
 SELECT DISTINCT - 54 / - 58 col2, col1 FROM tab1 AS cor0
 ----
@@ -91145,6 +91259,7 @@ NULL
 -96
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-9894
 SELECT DISTINCT - CAST ( NULL AS INTEGER ) col0, - 96 FROM tab0
 ----
@@ -91329,6 +91444,7 @@ SELECT + 12 col2, + COUNT( * ) AS col0 FROM tab0
 3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-9913
 SELECT + 12 col2, + COUNT ( * ) AS col0 FROM tab0
 ----
@@ -91473,6 +91589,7 @@ SELECT + MIN( + - col2 ) col2, - COUNT( * ) AS col2 FROM tab0
 -3
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-9928
 SELECT + MIN ( + - col2 ) col2, - COUNT ( * ) AS col2 FROM tab0
 ----
@@ -91791,6 +91908,7 @@ SELECT ALL - - 51 col2, - 83 DIV + col0 AS col0 FROM tab1 AS cor0
 0
 
 skipif mysql # not compatible
+skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort label-9965
 SELECT ALL - - 51 col2, - 83 / + col0 AS col0 FROM tab1 AS cor0
 ----
