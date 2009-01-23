@@ -619,6 +619,7 @@ int main(int argc, char **argv){
       if( sScript.azToken[3][0]
        || (hashThreshold>0 && nResult>hashThreshold)
       ){
+        md5_add("");  /* make sure md5 is reset, even if no results */
         for(i=0; i<nResult; i++){
           md5_add(azResult[i]);
           md5_add("\n");
