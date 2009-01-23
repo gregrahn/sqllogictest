@@ -93,6 +93,11 @@ static void ODBC3_perror(char *fn,
       fprintf(stderr,
               "%s:%s:%ld:%ld:%s\n", fn, state, (long)i, (long)native, text);
     }
+    else
+    {
+      fprintf(stderr,
+              "%s: unknown ODBC/SQL error\n", fn);
+    }
   }
   while( SQL_SUCCEEDED(ret) );
 }
@@ -395,7 +400,12 @@ static int ODBC3Statement(
   }
 
   ret = SQLExecDirect(stmt, (SQLCHAR *)zSql, SQL_NTS);
-  if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
+  if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) 
+  /* a searched update or delete statement was executed but did not affect any rows (ODBC3) */
+#if defined(SQL_NO_DATA)
+      && (ret != SQL_NO_DATA) 
+#endif
+    ){
     ODBC3_perror("SQLExecDirect", stmt, SQL_HANDLE_STMT);
     rc = 1;
   }
