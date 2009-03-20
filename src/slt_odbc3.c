@@ -656,7 +656,12 @@ static int ODBC3GetEngineName(
                    sizeof(zDmbsName),
                    &outLen);
   if( SQL_SUCCEEDED(ret) || (ret == SQL_SUCCESS_WITH_INFO) ){
-    *zName = zDmbsName;
+    // map Microsoft SQL Server -> mssql
+    if( stricmp("Microsoft SQL Server", zDmbsName)==0 ){
+      *zName = "mssql";
+    } else {
+      *zName = zDmbsName;
+    }
     return 0;
   }
   return 1;
