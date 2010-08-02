@@ -514,6 +514,8 @@ int main(int argc, char **argv){
     /* Figure out the record type and do appropriate processing */
     if( strcmp(sScript.azToken[0],"statement")==0 ){
       int k = 0;
+      int bExpectOk = 0;
+      int bExpectError = 0;
 
       /* Extract the SQL from second and subsequent lines of the
       ** record.  Copy the SQL into contiguous memory at the beginning
@@ -525,14 +527,20 @@ int main(int argc, char **argv){
       }
       zScript[k] = 0;
 
-      /* Run the statement.  Remember the results */
-      rc = pEngine->xStatement(pConn, zScript);
+      bExpectOk = strcmp(sScript.azToken[1],"ok")==0;
+      bExpectError = strcmp(sScript.azToken[1],"error")==0;
+
+      /* Run the statement.  Remember the results 
+      ** If we're expecting an error, pass true to suppress
+      ** printing of any errors. 
+      */
+      rc = pEngine->xStatement(pConn, zScript, bExpectError);
       nCmd++;
 
       /* Check to see if we are expecting success or failure */
-      if( strcmp(sScript.azToken[1],"ok")==0 ){
+      if( bExpectOk ){
         /* do nothing if we expect success */
-      }else if( strcmp(sScript.azToken[1],"error")==0 ){
+      }else if( bExpectError ){
         /* Invert the result if we expect failure */
         rc = !rc;
       }else{

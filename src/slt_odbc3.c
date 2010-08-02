@@ -42,8 +42,9 @@
 #include <sqlext.h>
 
 
-#define SLT_DSN "sqllogictest"
-#define SLT_DB  "slt"
+#define SLT_DSN   "sqllogictest"
+#define SLT_DB    "slt"
+#define SLT_USER  "slt"
 
 
 /* 
@@ -51,7 +52,13 @@
 */
 static int ODBC3Statement(
   void *pConn,                /* Connection created by xConnect */
-  const char *zSql            /* SQL statement to evaluate */
+  const char *zSql,           /* SQL statement to evaluate */
+  int bQuiet                  /* True to suppress printing errors. */
+);
+
+static int ODBC3GetEngineName(
+  void *pConn,                /* Connection created by xConnect */
+  const char **zName          /* SQL statement to evaluate */
 );
 
 /*
@@ -156,9 +163,15 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
   SQLSMALLINT columns; /* number of columns in result-set */
   ODBC3_resAccum res;          /* query result accumulator */
   SQLUSMALLINT i;
+  char *zDmbsName = "unknown";
   char zSql[512];
   SQLHSTMT stmt = SQL_NULL_HSTMT;
 
+  /* find type of db engine.  we may need to do special
+   * processing based on the engine.
+   */
+  ODBC3GetEngineName(pODBC3conn, &zDmbsName);
+  
   /* zero out accumulator structure */
   memset(&res, 0, sizeof(res));
 
@@ -232,23 +245,78 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
     ** tables from that database.
     */
     char zDbName[512] = SLT_DB;
-    char *pc1 = zDbName;
-    char *pc2 = strstr(pODBC3conn->zConnStr, "DATABASE=");
+    char zUserName[512] = SLT_USER;
+    char *pc1;
+    char *pc2;
+
+    pc1 = zDbName;
+    pc2 = strstr(pODBC3conn->zConnStr, "DATABASE=");
     if( pc2 ){
       pc2 += 9;
       while( *pc2 && (*pc2!=';') ) *pc1++ = *pc2++;
       *pc1 = '\0';
     }
-  
+
+    pc1 = zUserName;
+    pc2 = strstr(pODBC3conn->zConnStr, "UID=");
+    if( pc2 ){
+      pc2 += 4;
+      while( *pc2 && (*pc2!=';') ) *pc1++ = *pc2++;
+      *pc1 = '\0';
+    }
+
     /* for each valid table found, drop it */
-    for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
-      if(    (0 == strcmp(res.azValue[i], zDbName)
-               || 0 == strcmp(res.azValue[i], "NULL"))
-          && (strlen(res.azValue[i+2])>0)
-          && (0 == strcmp(res.azValue[i+3], "TABLE"))
-      ){
-        sprintf(zSql, "DROP TABLE %s", res.azValue[i+2]);
-        rc = ODBC3Statement(pODBC3conn, zSql);
+    if( 0 == stricmp(zDmbsName, "mysql") ){
+      for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
+        if(    (0 == stricmp(res.azValue[i], zDbName))
+            && (strlen(res.azValue[i+2])>0)
+            && (0 == strcmp(res.azValue[i+3], "TABLE"))
+        ){
+          sprintf(zSql, "DROP TABLE %s", res.azValue[i+2]);
+          rc = ODBC3Statement(pODBC3conn, zSql, 0);
+        }
+      }
+    }else if( 0 == stricmp(zDmbsName, "oracle") ){
+      for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
+        if(    (0 == stricmp(res.azValue[i], zDbName)
+                 || 0 == strcmp(res.azValue[i], "NULL"))
+            && (0 == strcmp(res.azValue[i+1], "(empty)")
+                 || 0 == strcmp(res.azValue[i+1], "NULL")
+                 || 0 == stricmp(res.azValue[i+1], zUserName))
+            && (strlen(res.azValue[i+2])>0)
+              && (0 == strchr(res.azValue[i+2], '$')) /* system/temp table */
+            && (0 == strcmp(res.azValue[i+3], "TABLE"))
+            && (0 == strcmp(res.azValue[i+4], "NULL"))
+        ){
+          sprintf(zSql, "DROP TABLE %s", res.azValue[i+2]);
+          rc = ODBC3Statement(pODBC3conn, zSql, 0);
+        }
+      }
+    }else if( 0 == stricmp(zDmbsName, "mssql") ){
+      for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
+        if(    (0 == stricmp(res.azValue[i], zDbName))
+            && (0 == strcmp(res.azValue[i+1], "dbo"))
+            && (strlen(res.azValue[i+2])>0)
+            && (0 == strcmp(res.azValue[i+3], "TABLE"))
+            && (0 == strcmp(res.azValue[i+4], "NULL"))
+        ){
+          sprintf(zSql, "DROP TABLE %s", res.azValue[i+2]);
+          rc = ODBC3Statement(pODBC3conn, zSql, 0);
+        }
+      }
+    }else{
+      for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
+        if(    (0 == strcmp(res.azValue[i], zDbName)
+                 || 0 == strcmp(res.azValue[i], "NULL"))
+            && (0 == strcmp(res.azValue[i+1], "(empty)")
+                 || 0 == strcmp(res.azValue[i+1], "NULL"))
+            && (strlen(res.azValue[i+2])>0)
+            && (0 == strcmp(res.azValue[i+3], "TABLE"))
+            && (0 == strcmp(res.azValue[i+4], "NULL"))
+        ){
+          sprintf(zSql, "DROP TABLE %s", res.azValue[i+2]);
+          rc = ODBC3Statement(pODBC3conn, zSql, 0);
+        }
       }
     }
   }
@@ -385,7 +453,8 @@ static int ODBC3Connect(
 */
 static int ODBC3Statement(
   void *pConn,                /* Connection created by xConnect */
-  const char *zSql            /* SQL statement to evaluate */
+  const char *zSql,           /* SQL statement to evaluate */
+  int bQuiet                  /* True to suppress printing errors. */
 ){
   int rc = 0;
   SQLRETURN ret; /* ODBC API return status */
@@ -395,7 +464,7 @@ static int ODBC3Statement(
   /* Allocate a statement handle */
   ret = SQLAllocHandle(SQL_HANDLE_STMT, pODBC3conn->dbc, &stmt);
   if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
-    ODBC3_perror("SQLAllocHandle", pODBC3conn->dbc, SQL_HANDLE_DBC);
+    if (!bQuiet) ODBC3_perror("SQLAllocHandle", pODBC3conn->dbc, SQL_HANDLE_DBC);
     return 1;
   }
 
@@ -406,7 +475,7 @@ static int ODBC3Statement(
       && (ret != SQL_NO_DATA) 
 #endif
     ){
-    ODBC3_perror("SQLExecDirect", stmt, SQL_HANDLE_STMT);
+    if (!bQuiet) ODBC3_perror("SQLExecDirect", stmt, SQL_HANDLE_STMT);
     rc = 1;
   }
 

@@ -293,3 +293,25 @@ query I nosort
 SELECT 1 FROM t1 WHERE NULL NOT IN ( NULL, '1' )
 ----
 
+# EVIDENCE-OF: R-00416-37972 When the right operand of an IN or NOT IN
+# operator is a subquery, the subquery must have a single result column.
+
+query I nosort
+SELECT 1 FROM t1 WHERE 1 IN (SELECT 1)
+----
+1
+1
+1
+
+statement error
+SELECT 1 FROM t1 WHERE 1 IN (SELECT 1,2)
+
+statement error
+SELECT 1 FROM t1 WHERE 1 IN (SELECT x,y FROM t1)
+
+statement error
+SELECT 1 FROM t1 WHERE 1 IN (SELECT * FROM t1)
+
+statement error
+SELECT 1 FROM t1 WHERE 1 IN (SELECT min(x),max(x) FROM t1)
+

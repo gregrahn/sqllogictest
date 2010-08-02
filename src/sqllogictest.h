@@ -35,7 +35,9 @@ struct DbEngine {
   void *pAuxData;                         /* Aux data passed to xConnect */
   int (*xConnect)(void *pAux, const char *zConnectStr, void **ppConn);
   int (*xGetEngineName)(void*, const char **zName);
-  int (*xStatement)(void*, const char *zSql);
+  int (*xStatement)(void*, 
+                    const char *zSql, 
+                    int bQuiet);          /* True to suppress printing errors. */
   int (*xQuery)(void*, const char *zSql, const char *zTypes,
                 char ***pazResult, int *pnResult);
   int (*xFreeResults)(void*, char **azResult, int nResult);

@@ -77,7 +77,8 @@ static int sqliteConnect(
 */
 static int sqliteStatement(
   void *pConn,                /* Connection created by xConnect */
-  const char *zSql            /* SQL statement to evaluate */
+  const char *zSql,           /* SQL statement to evaluate */
+  int bQuiet                  /* True to suppress printing errors. */
 ){
   int rc;
   sqlite3 *db;
