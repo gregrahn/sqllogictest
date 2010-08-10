@@ -26,6 +26,16 @@ CREATE VIEW view1 AS SELECT x FROM t1 WHERE x>0
 statement error
 CREATE VIEW view1 AS SELECT x FROM t1 WHERE x>0
 
+query I rowsort label-0
+SELECT x FROM t1 WHERE x>0
+----
+1
+
+query I rowsort label-0
+SELECT x FROM view1
+----
+1
+
 # TBD-EVIDENCE-OF: R-63075-15970 Once the view is created, it can be used in
 # the FROM clause of another SELECT in place of a table name.
 
