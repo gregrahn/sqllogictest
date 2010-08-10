@@ -1,0 +1,75 @@
+hash-threshold 8
+
+statement ok
+CREATE TABLE t1( x INTEGER, y VARCHAR(8) )
+
+statement ok
+INSERT INTO t1 VALUES(1,'true')
+
+statement ok
+INSERT INTO t1 VALUES(0,'false')
+
+statement ok
+INSERT INTO t1 VALUES(NULL,'NULL')
+
+statement ok
+CREATE INDEX t1i1 ON t1(x)
+
+
+# EVIDENCE-OF: R-01463-03846 The DROP TABLE statement removes a table
+# added with the CREATE TABLE statement.
+
+statement ok
+DROP TABLE t1
+
+# already dropped
+statement error
+DROP TABLE t1
+
+# never existed
+statement error
+DROP TABLE tX
+
+# TBD-EVIDENCE-OF: R-40197-14811 The dropped table is completely removed
+# from the database schema and the disk file.
+
+# EVIDENCE-OF: R-33950-57093 All indices and triggers associated with
+# the table are also deleted.
+
+# this should error, as was dropped with table
+statement error
+DROP INDEX t1i1;
+
+# PARTIAL-EVIDENCE-OF: R-57089-01510 The optional IF EXISTS clause suppresses
+# the error that would normally result if the table does not exist.
+
+statement ok
+CREATE TABLE t1( x INTEGER, y VARCHAR(8) )
+
+skipif mssql
+DROP TABLE IF EXISTS t1
+
+skipif mssql
+DROP TABLE IF EXISTS t1
+
+# TBD-EVIDENCE-OF: R-55943-26846 If foreign key constraints are enabled, a
+# DROP TABLE command performs an implicit DELETE FROM &lt;tbl&gt;
+# command before removing the table from the database schema.
+
+# TBD-EVIDENCE-OF: R-02002-57504 Any triggers attached to the table are
+# dropped from the database schema before the implicit DELETE FROM
+# &lt;tbl&gt; is executed, so this cannot cause any triggers to fire.
+
+# TBD-EVIDENCE-OF: R-33044-60878 an implicit DELETE FROM &lt;tbl&gt; does
+# cause any configured foreign key actions to take place.
+
+# TBD-EVIDENCE-OF: R-17649-15849 If the implicit DELETE FROM &lt;tbl&gt;
+# executed as part of a DROP TABLE command violates any immediate
+# foreign key constraints, an error is returned and the table is not
+# dropped.
+
+# TBD-EVIDENCE-OF: R-01608-60102 If the implicit DELETE FROM &lt;tbl&gt;
+# causes any deferred foreign key constraints to be violated, and the
+# violations still exist when the transaction is committed, an error is
+# returned at the time of commit.
+

@@ -1,0 +1,96 @@
+hash-threshold 8
+
+statement ok
+CREATE TABLE t1( x INTEGER, y VARCHAR(8) )
+
+statement ok
+INSERT INTO t1 VALUES(1,'true')
+
+statement ok
+INSERT INTO t1 VALUES(0,'false')
+
+statement ok
+INSERT INTO t1 VALUES(NULL,'NULL')
+
+statement ok
+CREATE INDEX t1i1 ON t1(x)
+
+
+# EVIDENCE-OF: R-51331-37626 The UPDATE statement is used to change the
+# value of columns in selected rows of a table.
+
+statement ok
+UPDATE t1 SET x=2 WHERE x>0
+
+# EVIDENCE-OF: R-39990-21878 Each assignment in an UPDATE specifies a
+# column name to the left of the equals sign and an arbitrary expression
+# to the right.
+
+statement ok
+UPDATE t1 SET y='unknown' WHERE x>0
+
+statement error
+UPDATE t1 SET z='foo'
+
+statement error
+UPDATE t1 SET z='foo' WHERE x>0
+
+# EVIDENCE-OF: R-51230-45980 The expressions may use the values of other
+# columns.
+
+statement ok
+UPDATE t1 SET y=x WHERE x>0
+
+# EVIDENCE-OF: R-34438-08394 All expressions are evaluated before any
+# assignments are made.
+
+statement ok
+UPDATE t1 SET y=y+2 WHERE x>0
+
+# EVIDENCE-OF: R-55426-32478 A WHERE clause can be used to restrict
+# which rows are updated.
+
+statement ok
+UPDATE t1 SET x=1 WHERE x>0
+
+statement ok
+UPDATE t1 SET y='true' WHERE x>0
+
+# TBD-EVIDENCE-OF: R-48588-18160 The optional conflict-clause allows the
+# specification of an alternative constraint conflict resolution
+# algorithm to use during this one UPDATE command.
+
+# TBD-EVIDENCE-OF: R-55493-24001 There are additional syntax restrictions on
+# UPDATE statements that occur within the body of a CREATE TRIGGER
+# statement.
+
+# TBD-EVIDENCE-OF: R-07956-29754 The table-name of the UPDATE must be
+# unqualified.
+
+# TBD-EVIDENCE-OF: R-09690-36749 In other words, the database-name. prefix
+# on the table name of the UPDATE is not allowed within triggers.
+
+# TBD-EVIDENCE-OF: R-08610-60711 The table to be updated must be in the same
+# database as the table to which the trigger is attached.
+
+# TBD-EVIDENCE-OF: R-19619-42762 The INDEXED BY and NOT INDEXED clauses are
+# not allowed on UPDATE statements within triggers.
+
+# TBD-EVIDENCE-OF: R-14001-24988 The LIMIT clause for UPDATE is unsupported
+# within triggers.
+
+# TBD-EVIDENCE-OF: R-59581-44104 If SQLite is built with the
+# SQLITE_ENABLE_UPDATE_DELETE_LIMIT compile-time option then the syntax
+# of the UPDATE statement is extended with optional ORDER BY and LIMIT
+# clauses
+
+# TBD-EVIDENCE-OF: R-47158-42005 The optional LIMIT clause can be used to
+# limit the number of rows modified, and thereby limit the size of the
+# transaction.
+
+# TBD-EVIDENCE-OF: R-27955-06688 The ORDER BY clause on an UPDATE statement
+# is used only to determine which rows fall within the LIMIT.
+
+# TBD-EVIDENCE-OF: R-45033-12484 The order in which rows are modified is
+# arbitrary and is not determined by the ORDER BY clause.
+
