@@ -19,7 +19,10 @@ CREATE INDEX t1i1 ON t1(x)
 # EVIDENCE-OF: R-27002-52307 The DROP VIEW statement removes a view
 # created by the CREATE VIEW statement.
 
-# EVIDENCE-OF: R-31903-25381 The name specified is the view name.
+# EVIDENCE-OF: R-27882-59129 The view to drop is identified by the
+# view-name and optional database-name specified as part of the DROP
+# VIEW statement. This reference is resolved using the standard
+# procedure for object resolution.
 
 statement ok
 CREATE VIEW view1 AS SELECT x FROM t1 WHERE x>0
@@ -38,8 +41,9 @@ DROP VIEW viewX
 statement ok
 CREATE VIEW view2 AS SELECT x FROM t1 WHERE x=0
 
-# EVIDENCE-OF: R-25468-11728 It is removed from the database schema, but
-# no actual data in the underlying base tables is modified.
+# EVIDENCE-OF: R-00359-41639 The view definition is removed from the
+# database schema, but no actual data in the underlying base tables is
+# modified.
 
 query I rowsort label-0
 SELECT x FROM view2
