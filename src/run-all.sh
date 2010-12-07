@@ -2,7 +2,7 @@
 #
 # Run this script to run all test cases
 #
-find ../test -name '*.test' -print |
+find ../test -name '*.test' -print | sort |
   while read i
   do
     ./sqllogictest -verify $i
