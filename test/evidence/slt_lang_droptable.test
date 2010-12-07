@@ -47,29 +47,9 @@ statement ok
 CREATE TABLE t1( x INTEGER, y VARCHAR(8) )
 
 skipif mssql
+statement ok
 DROP TABLE IF EXISTS t1
 
 skipif mssql
+statement ok
 DROP TABLE IF EXISTS t1
-
-# TBD-EVIDENCE-OF: R-55943-26846 If foreign key constraints are enabled, a
-# DROP TABLE command performs an implicit DELETE FROM &lt;tbl&gt;
-# command before removing the table from the database schema.
-
-# TBD-EVIDENCE-OF: R-02002-57504 Any triggers attached to the table are
-# dropped from the database schema before the implicit DELETE FROM
-# &lt;tbl&gt; is executed, so this cannot cause any triggers to fire.
-
-# TBD-EVIDENCE-OF: R-33044-60878 an implicit DELETE FROM &lt;tbl&gt; does
-# cause any configured foreign key actions to take place.
-
-# TBD-EVIDENCE-OF: R-17649-15849 If the implicit DELETE FROM &lt;tbl&gt;
-# executed as part of a DROP TABLE command violates any immediate
-# foreign key constraints, an error is returned and the table is not
-# dropped.
-
-# TBD-EVIDENCE-OF: R-01608-60102 If the implicit DELETE FROM &lt;tbl&gt;
-# causes any deferred foreign key constraints to be violated, and the
-# violations still exist when the transaction is committed, an error is
-# returned at the time of commit.
-
