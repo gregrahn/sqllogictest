@@ -25,6 +25,27 @@
 ** Use this interface as a model for other database engine interfaces.
 */
 #include "sqlite3.h"
+#include <ctype.h>
+#include <stdio.h>
+
+
+/*
+** Skip forward over whitespace in a string.
+*/
+static const char *skipWhitespace(const char *z){
+  while( isspace(*z) ){ z++; }
+  return z;
+}
+
+/*
+** Skip forward to the end of a string or past the next ";" character
+** in the string.
+*/
+static const char *skipToNextParameter(const char *z){
+  while( z[0] && z[0]!=';' ){ z++; }
+  if( z[0]==';' ) z++;
+  return skipWhitespace(z);
+}
 
 /*
 ** This routine is called to open a connection to a new, empty database.
@@ -42,7 +63,8 @@
 static int sqliteConnect(
   void *NotUsed,              /* Argument from DbEngine object.  Not used */
   const char *zConnectStr,    /* Connection string */
-  void **ppConn               /* Write completed connection here */
+  void **ppConn,              /* Write completed connection here */
+  const char *zParam          /* Value of the -parameters command-line option */
 ){
   sqlite3 *db;
   int rc;
@@ -51,8 +73,8 @@ static int sqliteConnect(
   ** then delete the database before we start, thus resetting it to an
   ** empty database.
   */
-  zConnectStr = "test.db";
-  if( zConnectStr ){
+  if( zConnectStr==0 ) zConnectStr = "test.db";
+  if( zConnectStr && zConnectStr[0] ){
 #ifndef WIN32
     unlink(zConnectStr);
 #else
@@ -65,6 +87,19 @@ static int sqliteConnect(
   rc = sqlite3_open(zConnectStr, &db);
   if( rc!=SQLITE_OK ){
     return 1;
+  }
+  if( zParam ){
+    zParam = skipWhitespace(zParam);
+    while( zParam[0] ){
+      if( memcmp(zParam, "optimizer=", 10)==0 ){
+        int x = atoi(&zParam[10]);
+        sqlite3_test_control(SQLITE_TESTCTRL_OPTIMIZATIONS, db, x);
+      }else{
+        fprintf(stderr, "unknown parameter: [%s]\n", zParam);
+        exit(1);
+      }
+      zParam = skipToNextParameter(zParam);
+    }
   }
   sqlite3_exec(db, "PRAGMA synchronous=OFF", 0, 0, 0);
   *ppConn = (void*)db;

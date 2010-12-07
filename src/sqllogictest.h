@@ -33,7 +33,7 @@ typedef struct DbEngine DbEngine;
 struct DbEngine {
   const char *zName;                      /* Name of this engine */
   void *pAuxData;                         /* Aux data passed to xConnect */
-  int (*xConnect)(void *pAux, const char *zConnectStr, void **ppConn);
+  int (*xConnect)(void*, const char *zCon, void **ppConn, const char *zOpt);
   int (*xGetEngineName)(void*, const char **zName);
   int (*xStatement)(void*, 
                     const char *zSql, 

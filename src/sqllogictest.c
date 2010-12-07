@@ -327,6 +327,7 @@ int main(int argc, char **argv){
   char zHash[100];                     /* Storage space for hash results */
   int hashThreshold = DEFAULT_HASH_THRESHOLD;  /* Threshold for hashing res */
   int bHt = 0;                         /* True if -ht command-line option */
+  const char *zParam = 0;              /* Argument to -parameters */
 
   /* Add calls to the registration procedures for new database engine
   ** interfaces here
@@ -355,15 +356,15 @@ int main(int argc, char **argv){
     int n = (int)strlen(argv[i]);
     if( strncmp(argv[i], "-verify",n)==0 ){
       verifyMode = 1;
-#if 0  /* Obsolete code */
     }else if( strncmp(argv[i], "-engine",n)==0 ){
       zDbEngine = argv[++i];
     }else if( strncmp(argv[i], "-connection",n)==0 ){
       zConnection = argv[++i];
-#endif
     }else if( strncmp(argv[i], "-odbc",n)==0 ){
       zDbEngine = "ODBC3";
       zConnection = argv[++i];
+    }else if( strncmp(argv[i], "-parameters",n)==0 ){
+      zParam = argv[++i];
     }else if( strncmp(argv[i], "-ht",n)==0 ){
       hashThreshold = atoi(argv[++i]);
       bHt = -1;
@@ -427,7 +428,7 @@ int main(int argc, char **argv){
 
   /* Open the database engine under test
   */
-  rc = pEngine->xConnect(pEngine->pAuxData, zConnection, &pConn);
+  rc = pEngine->xConnect(pEngine->pAuxData, zConnection, &pConn, zParam);
   if( rc ){
     fprintf(stderr, "%s: unable to connect to database\n", argv[0]);
     exit(1);
@@ -742,8 +743,11 @@ int main(int argc, char **argv){
   /* Report the number of errors and quit.
   */
   if( verifyMode || nErr || nSkipped){
-    fprintf(stderr, "%s: %d errors out of %d SQL statement.  %d skipped.\n",
-           zScriptFile, nErr, nCmd, nSkipped);
+    fprintf(stderr, "%d errors out of %d tests in %s - %d skipped.",
+            nErr, nCmd, zScriptFile, nSkipped);
+    if( zParam ) fprintf(stderr, " [%s]", zParam);
+    fprintf(stderr, "\n");
+  
   }
   free(zScript);
   return nErr; 

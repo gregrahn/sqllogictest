@@ -340,7 +340,8 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
 static int ODBC3Connect(
   void *NotUsed,              /* Argument from DbEngine object.  Not used */
   const char *zConnectStr,    /* Connection string */
-  void **ppConn               /* Write completed connection here */
+  void **ppConn,              /* Write completed connection here */
+  const char *zOptions        /* Option parameters */
 ){
   int rc = 0;
   SQLRETURN ret; /* ODBC API return status */
