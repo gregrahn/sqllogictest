@@ -163,7 +163,7 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
   SQLSMALLINT columns; /* number of columns in result-set */
   ODBC3_resAccum res;          /* query result accumulator */
   SQLUSMALLINT i;
-  char *zDmbsName = "unknown";
+  const char *zDmbsName = "unknown";
   char zSql[512];
   SQLHSTMT stmt = SQL_NULL_HSTMT;
 
@@ -184,7 +184,8 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
 
   /* Retrieve a list of tables */
   /* TBD:  do we need to drop views, triggers, etc. here? */
-  ret = SQLTables(stmt, NULL, 0, NULL, 0, NULL, 0, "TABLE", SQL_NTS);
+  ret = SQLTables(stmt, NULL, 0, NULL, 0, NULL, 0, (SQLCHAR *)"TABLE",
+                  SQL_NTS);
   if( !SQL_SUCCEEDED(ret) && (ret != SQL_SUCCESS_WITH_INFO) ){
     ODBC3_perror("SQLTables", stmt, SQL_HANDLE_STMT);
     rc = 1;
@@ -250,7 +251,7 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
     char *pc2;
 
     pc1 = zDbName;
-    pc2 = strstr(pODBC3conn->zConnStr, "DATABASE=");
+    pc2 = strstr((const char *)pODBC3conn->zConnStr, "DATABASE=");
     if( pc2 ){
       pc2 += 9;
       while( *pc2 && (*pc2!=';') ) *pc1++ = *pc2++;
@@ -258,7 +259,7 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
     }
 
     pc1 = zUserName;
-    pc2 = strstr(pODBC3conn->zConnStr, "UID=");
+    pc2 = strstr((const char *)pODBC3conn->zConnStr, "UID=");
     if( pc2 ){
       pc2 += 4;
       while( *pc2 && (*pc2!=';') ) *pc1++ = *pc2++;
