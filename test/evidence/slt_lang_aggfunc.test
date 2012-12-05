@@ -56,7 +56,7 @@ SELECT max(DISTINCT x) FROM t1
 1
 
 query T nosort
-SELECT group_concat(DISTINCT x) FROM t1
+SELECT group_concat(DISTINCT x) FROM t1 NOT INDEXED
 ----
 1,0
 
@@ -236,12 +236,12 @@ SELECT count(DISTINCT *) FROM t1 WHERE y='false'
 # string which is the concatenation of all non-NULL values of X.
 
 query T nosort
-SELECT group_concat(x) FROM t1
+SELECT group_concat(x) FROM t1 NOT INDEXED
 ----
 1,0,2,2
 
 query T nosort
-SELECT group_concat(DISTINCT x) FROM t1
+SELECT group_concat(DISTINCT x) FROM t1 NOT INDEXED
 ----
 1,0,2
 
@@ -250,7 +250,7 @@ SELECT group_concat(DISTINCT x) FROM t1
 # as the separator between instances of X.
 
 query T nosort
-SELECT group_concat(x,':') FROM t1
+SELECT group_concat(x,':') FROM t1 NOT INDEXED
 ----
 1:0:2:2
 
@@ -263,12 +263,12 @@ SELECT group_concat(DISTINCT x,':') FROM t1
 # is omitted.
 
 query T nosort
-SELECT group_concat(x) FROM t1
+SELECT group_concat(x) FROM t1 NOT INDEXED
 ----
 1,0,2,2
 
 query T nosort
-SELECT group_concat(DISTINCT x) FROM t1
+SELECT group_concat(DISTINCT x) FROM t1 NOT INDEXED
 ----
 1,0,2
 
@@ -493,5 +493,3 @@ SELECT total(x) FROM t1
 query R nosort
 SELECT total(DISTINCT x) FROM t1
 ----
-
-
