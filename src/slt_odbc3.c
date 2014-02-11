@@ -305,7 +305,7 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
           rc = ODBC3Statement(pODBC3conn, zSql, 0);
         }
       }
-    }else if( 0 == stricmp(zDmbsName, "pgsql") ){
+    }else if( 0 == stricmp(zDmbsName, "postgresql") ){
       for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
         if(    (0 == stricmp(res.azValue[i], zDbName))
             && (0 == strcmp(res.azValue[i+1], "(empty)")
@@ -743,11 +743,8 @@ static int ODBC3GetEngineName(
                    &outLen);
   if( SQL_SUCCEEDED(ret) || (ret == SQL_SUCCESS_WITH_INFO) ){
     /* map Microsoft SQL Server -> mssql */
-    /* map PostgreSQL -> pgsql */
     if( stricmp("Microsoft SQL Server", zDmbsName)==0 ){
       *zName = "mssql";
-    }else if( stricmp("PostgreSQL", zDmbsName)==0 ){
-      *zName = "pgsql";
     }else{
       *zName = zDmbsName;
     }
