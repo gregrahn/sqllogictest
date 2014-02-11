@@ -305,6 +305,21 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
           rc = ODBC3Statement(pODBC3conn, zSql, 0);
         }
       }
+    }else if( 0 == stricmp(zDmbsName, "pgsql") ){
+      for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
+        if(    (0 == stricmp(res.azValue[i], zDbName))
+            && (0 == strcmp(res.azValue[i+1], "(empty)")
+                 || 0 == strcmp(res.azValue[i+1], "NULL")
+                 || 0 == stricmp(res.azValue[i+1], "public"))
+            && (strlen(res.azValue[i+2])>0)
+            && (0 == strcmp(res.azValue[i+3], "TABLE"))
+            && (0 == strcmp(res.azValue[i+4], "(empty)")
+                 || 0 == strcmp(res.azValue[i+4], "NULL"))
+        ){
+          sprintf(zSql, "DROP TABLE %s", res.azValue[i+2]);
+          rc = ODBC3Statement(pODBC3conn, zSql, 0);
+        }
+      }
     }else{
       for( i=0; !rc && (i+4<res.nUsed); i+=5 ){
         if(    (0 == strcmp(res.azValue[i], zDbName)
@@ -727,10 +742,13 @@ static int ODBC3GetEngineName(
                    sizeof(zDmbsName),
                    &outLen);
   if( SQL_SUCCEEDED(ret) || (ret == SQL_SUCCESS_WITH_INFO) ){
-    // map Microsoft SQL Server -> mssql
+    /* map Microsoft SQL Server -> mssql */
+    /* map PostgreSQL -> pgsql */
     if( stricmp("Microsoft SQL Server", zDmbsName)==0 ){
       *zName = "mssql";
-    } else {
+    }else if( stricmp("PostgreSQL", zDmbsName)==0 ){
+      *zName = "pgsql";
+    }else{
       *zName = zDmbsName;
     }
     return 0;
