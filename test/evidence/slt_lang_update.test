@@ -85,19 +85,23 @@ SELECT count(*) FROM t1 WHERE x=4
 # once in the list of assignment expressions, all but the rightmost
 # occurrence is ignored.
 
+skipif mssql
 statement ok
 UPDATE t1 SET x=3, x=4, x=5
 
+skipif mssql
 query I rowsort
 SELECT count(*) FROM t1 WHERE x=3
 ----
 0
 
+skipif mssql
 query I rowsort
 SELECT count(*) FROM t1 WHERE x=4
 ----
 0
 
+skipif mssql
 query I rowsort
 SELECT count(*) FROM t1 WHERE x=5
 ----
