@@ -65,15 +65,18 @@ void sqllogictestRegisterEngine(const DbEngine *p){
 ** Print a usage comment and die
 */
 static void usage(const char *argv0){
-#if 0  /* Obsolete code */
+  fprintf(stdout, "Usage: %s [options] script\n", argv0);
   fprintf(stdout,
-    "Usage: %s [-verify] [-engine DBENGINE] [-connection STR] [-ht NUM] script\n",
-    argv0);
-#else
-  fprintf(stdout,
-    "Usage: %s [-verify] [-odbc STR] [-ht NUM] script\n",
-    argv0);
-#endif
+    "Options:\n"
+    "  --connection STR       The connection string\n"
+    "  --engine DBENGINE      The engine name (ex: SQLite, ODBC3)\n"
+    "  --halt                 Stop when first error is seen\n"
+    "  --ht NUM               Check results by hash if numbe of lines > NUM\n"
+    "  --odbc STR             Shorthand for \"--engine ODBC3 --connection STR\"\n"
+    "  --parameters TXT       Extra parameters to the connection string\n"
+    "  --trace                Enable tracing of SQL to standard output\n"
+    "  --verify               Use \"verify MODE\"\n"
+  );
   exit(1);
 }
 
@@ -308,6 +311,8 @@ static int checkValue(const char *zKey, const char *zHash){
 */
 int main(int argc, char **argv){
   int verifyMode = 0;                  /* True if in -verify mode */
+  int haltOnError = 0;                 /* Stop on first error if true */
+  int enableTrace = 0;                 /* Trace SQL statements if true */
   const char *zScriptFile = 0;         /* Input script filename */
   const char *zDbEngine = "SQLite";    /* Name of database engine */
   const char *zConnection = 0;         /* Connection string on DB engine */
@@ -357,20 +362,24 @@ int main(int argc, char **argv){
     const char *z = argv[i];
     if( z[0]=='-' && z[1]=='-' ) z++;
     n = (int)strlen(z);
-    if( strncmp(z, "-verify",n)==0 ){
-      verifyMode = 1;
+    if( strncmp(z, "-connection",n)==0 ){
+      zConnection = argv[++i];
     }else if( strncmp(z, "-engine",n)==0 ){
       zDbEngine = argv[++i];
-    }else if( strncmp(z, "-connection",n)==0 ){
-      zConnection = argv[++i];
+    }else if( strncmp(z, "-halt",n)==0 ){
+      haltOnError = 1;
+    }else if( strncmp(z, "-ht",n)==0 ){
+      hashThreshold = atoi(argv[++i]);
+      bHt = -1;
     }else if( strncmp(z, "-odbc",n)==0 ){
       zDbEngine = "ODBC3";
       zConnection = argv[++i];
     }else if( strncmp(z, "-parameters",n)==0 ){
       zParam = argv[++i];
-    }else if( strncmp(z, "-ht",n)==0 ){
-      hashThreshold = atoi(argv[++i]);
-      bHt = -1;
+    }else if( strncmp(z, "-trace",n)==0 ){
+      enableTrace = 1;
+    }else if( strncmp(z, "-verify",n)==0 ){
+      verifyMode = 1;
     }else if( zScriptFile==0 ){
       zScriptFile = z;
     }else{
@@ -446,7 +455,7 @@ int main(int argc, char **argv){
   }
 
   /* Loop over all records in the file */
-  while( findStartOfNextRecord(&sScript) ){
+  while( (nErr==0 || !haltOnError) && findStartOfNextRecord(&sScript) ){
     int bSkip = 0; /* True if we should skip the current record. */
 
     /* Tokenizer the first line of the record.  This also records the
@@ -538,6 +547,7 @@ int main(int argc, char **argv){
       ** If we're expecting an error, pass true to suppress
       ** printing of any errors. 
       */
+      if( enableTrace ) printf("%s;\n", zScript);
       rc = pEngine->xStatement(pConn, zScript, bExpectError);
       nCmd++;
 
@@ -597,6 +607,7 @@ int main(int argc, char **argv){
       /* Run the query */
       nResult = 0;
       azResult = 0;
+      if( enableTrace ) printf("%s;\n", zScript);
       rc = pEngine->xQuery(pConn, zScript, sScript.azToken[1],
                            &azResult, &nResult);
       nCmd++;

@@ -28,6 +28,20 @@
 #include <ctype.h>
 #include <stdio.h>
 
+/*
+** The SQLite database connection object
+*/
+typedef struct SQLiteConn SQLiteConn;
+struct SQLiteConn {
+  sqlite3 *db;            /* The database connection */
+  unsigned flags;         /* Various flags */
+};
+
+/*
+** Allowed values for SQLiteConn.flags
+*/
+#define FG_INTEGRITY_CHECK  0x0001    /* Run PRAGMA integrity_check */
+
 
 /*
 ** Skip forward over whitespace in a string.
@@ -66,8 +80,8 @@ static int sqliteConnect(
   void **ppConn,              /* Write completed connection here */
   const char *zParam          /* Value of the -parameters command-line option */
 ){
-  sqlite3 *db;
   int rc;
+  SQLiteConn *p;
 
   /* If the database filename is defined and the database already exists,
   ** then delete the database before we start, thus resetting it to an
@@ -82,18 +96,27 @@ static int sqliteConnect(
 #endif
   }
 
+  p = sqlite3_malloc( sizeof(*p) );
+  if( p==0 ){
+    return 1;
+  }
+  memset(p, 0, sizeof(*p));
+
   /* Open a connection to the new database.
   */
-  rc = sqlite3_open(zConnectStr, &db);
+  rc = sqlite3_open(zConnectStr, &p->db);
   if( rc!=SQLITE_OK ){
+    sqlite3_free(p);
     return 1;
   }
   if( zParam ){
     zParam = skipWhitespace(zParam);
     while( zParam[0] ){
-      if( memcmp(zParam, "optimizer=", 10)==0 ){
+      if( strncmp(zParam, "optimizer=", 10)==0 ){
         int x = atoi(&zParam[10]);
-        sqlite3_test_control(SQLITE_TESTCTRL_OPTIMIZATIONS, db, x);
+        sqlite3_test_control(SQLITE_TESTCTRL_OPTIMIZATIONS, p->db, x);
+      }else if( strncmp(zParam, "integrity_check", 15)==0 ){
+        p->flags |= FG_INTEGRITY_CHECK;
       }else{
         fprintf(stderr, "unknown parameter: [%s]\n", zParam);
         exit(1);
@@ -101,8 +124,8 @@ static int sqliteConnect(
       zParam = skipToNextParameter(zParam);
     }
   }
-  sqlite3_exec(db, "PRAGMA synchronous=OFF", 0, 0, 0);
-  *ppConn = (void*)db;
+  sqlite3_exec(p->db, "PRAGMA synchronous=OFF", 0, 0, 0);
+  *ppConn = (void*)p;
   return 0;  
 }
 
@@ -116,10 +139,33 @@ static int sqliteStatement(
   int bQuiet                  /* True to suppress printing errors. */
 ){
   int rc;
-  sqlite3 *db;
+  SQLiteConn *p;
+  
 
-  db = (sqlite3*)pConn;
-  rc = sqlite3_exec(db, zSql, 0, 0, 0);
+  p = (SQLiteConn*)pConn;
+  rc = sqlite3_exec(p->db, zSql, 0, 0, 0);
+  if( rc==SQLITE_OK && (p->flags & FG_INTEGRITY_CHECK)!=0 ){
+    sqlite3_stmt *pStmt;
+    rc = sqlite3_prepare_v2(p->db, "PRAGMA integrity_check;", -1, &pStmt, 0);
+    if( rc!=SQLITE_OK ){
+      fprintf(stderr, "cannot prepare integrity_check\n");
+      rc = 1;
+    }else{
+      char *z;
+      if( sqlite3_step(pStmt)!=SQLITE_ROW ){
+        fprintf(stderr, "cannot run integrity_check\n");
+        rc = 1;
+      }else if( (z = (char*)sqlite3_column_text(pStmt,0))==0
+            || strcmp(z,"ok")!=0
+      ){
+        fprintf(stderr, "integrity_check returns: %s\n", z);
+        rc = 1;
+      }else{
+        rc = 0;
+      }
+      sqlite3_finalize(pStmt);
+    }
+  }
   return rc!=SQLITE_OK;
 }
 
@@ -184,10 +230,12 @@ static int sqliteQuery(
   sqlite3_stmt *pStmt;        /* Prepared statement */
   int rc;                     /* Result code from subroutine calls */
   ResAccum res;               /* query result accumulator */
+  SQLiteConn *p;              /* The database connection */
   char zBuffer[200];          /* Buffer to render numbers */
 
   memset(&res, 0, sizeof(res));
-  db = (sqlite3*)pConn;
+  p = (SQLiteConn*)pConn;
+  db = p->db;
   rc = sqlite3_prepare_v2(db, zSql, -1, &pStmt, 0);
   if( rc!=SQLITE_OK ){
     sqlite3_finalize(pStmt);
@@ -278,9 +326,15 @@ static int sqliteFreeResults(
 static int sqliteDisconnect(
   void *pConn                 /* Connection created by xConnect */
 ){
-  sqlite3 *db = (sqlite3*)pConn;
-  sqlite3_close(db);
-  return 0;
+  SQLiteConn *p = (SQLiteConn*)pConn;
+  int rc;
+  rc = sqlite3_close(p->db);
+  sqlite3_free(p);
+  if( sqlite3_memory_used()>0 ){
+    fprintf(stderr, "memory leak after connection close\n");
+    rc = 1;
+  }
+  return rc;
 }
 
 /*
