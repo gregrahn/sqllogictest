@@ -36,9 +36,9 @@ set totalerr 0
 set totaltest 0
 set totalrun 0
 foreach tx [lsort [array names tcase]] {
-  foreach opt {0 1023} {
+  foreach opt {0 0xfff} {
     catch {
-      exec $BIN -verify -parameter optimizer=$opt $tx
+      exec $BIN -verify -parameter optimizer=[expr {$opt+0}] $tx
     } res
     puts $res
     if {[regexp {(\d+) errors out of (\d+) tests} $res all nerr ntst]} {

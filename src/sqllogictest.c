@@ -353,23 +353,26 @@ int main(int argc, char **argv){
   /* Scan the command-line and process arguments
   */
   for(i=1; i<argc; i++){
-    int n = (int)strlen(argv[i]);
-    if( strncmp(argv[i], "-verify",n)==0 ){
+    int n;
+    const char *z = argv[i];
+    if( z[0]=='-' && z[1]=='-' ) z++;
+    n = (int)strlen(z);
+    if( strncmp(z, "-verify",n)==0 ){
       verifyMode = 1;
-    }else if( strncmp(argv[i], "-engine",n)==0 ){
+    }else if( strncmp(z, "-engine",n)==0 ){
       zDbEngine = argv[++i];
-    }else if( strncmp(argv[i], "-connection",n)==0 ){
+    }else if( strncmp(z, "-connection",n)==0 ){
       zConnection = argv[++i];
-    }else if( strncmp(argv[i], "-odbc",n)==0 ){
+    }else if( strncmp(z, "-odbc",n)==0 ){
       zDbEngine = "ODBC3";
       zConnection = argv[++i];
-    }else if( strncmp(argv[i], "-parameters",n)==0 ){
+    }else if( strncmp(z, "-parameters",n)==0 ){
       zParam = argv[++i];
-    }else if( strncmp(argv[i], "-ht",n)==0 ){
+    }else if( strncmp(z, "-ht",n)==0 ){
       hashThreshold = atoi(argv[++i]);
       bHt = -1;
     }else if( zScriptFile==0 ){
-      zScriptFile = argv[i];
+      zScriptFile = z;
     }else{
       fprintf(stderr, "%s: unknown argument: %s\n", argv[0], argv[i]);
       usage(argv[0]);
