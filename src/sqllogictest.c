@@ -23,15 +23,11 @@
 **
 ** This main driver for the sqllogictest program.
 */
-#ifdef WIN32
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 #include "sqllogictest.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#ifndef WIN32
+#ifndef _WIN32
 #include <unistd.h>
 #define stricmp strcasecmp
 #endif

@@ -34,7 +34,7 @@
 */
 #ifndef OMIT_ODBC  /* Omit this module if OMIT_ODBC is defined */
 
-#ifdef WIN32
+#ifdef _WIN32
 #include <windows.h>
 #endif
 #define SQL_NOUNICODEMAP
@@ -126,7 +126,7 @@ struct ODBC3_resAccum {
 static void ODBC3_appendValue(ODBC3_resAccum *p, const char *zValue){
   char *z;
   if( zValue ){
-#ifdef WIN32
+#ifdef _WIN32
     z = _strdup(zValue);
 #else
     z = strdup(zValue);

@@ -1,0 +1,72 @@
+#
+# nmake Makefile for sqllogictest
+#
+###############################################################################
+
+# The toplevel directory of the source tree.  This is the directory that
+# contains this "Makefile.msc".
+#
+TOP = .
+
+# Check for the predefined command macro CC.  This should point to the compiler
+# binary for the target platform.  If it is not defined, simply define it to
+# the legacy default value 'cl.exe'.
+#
+!IFNDEF CC
+CC = cl.exe
+!ENDIF
+
+# Check for the command macro LD.  This should point to the linker binary for
+# the target platform.  If it is not defined, simply define it to the legacy
+# default value 'link.exe'.
+#
+!IFNDEF LD
+LD = link.exe
+!ENDIF
+
+# C compiler and options for use in building executables that
+# will run on the target platform.  (BCC and TCC are usually the
+# same unless your are cross-compiling.)
+#
+TCC = $(CC) -nologo -W3
+TCC = $(TCC) -I$(TOP) -fp:precise
+
+# Prevent warnings about "insecure" MSVC runtime library functions
+# being used.
+#
+TCC = $(TCC) -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS
+BCC = $(BCC) -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS
+RCC = $(RCC) -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS
+
+# Prevent warnings about "deprecated" POSIX functions being used.
+#
+TCC = $(TCC) -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_NONSTDC_NO_WARNINGS
+BCC = $(BCC) -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_NONSTDC_NO_WARNINGS
+RCC = $(RCC) -D_CRT_NONSTDC_NO_DEPRECATE -D_CRT_NONSTDC_NO_WARNINGS
+
+# Add in any optional parameters specified on the commane line, e.g.
+# nmake /f Makefile.msc all "OPTS=-DSQLITE_ENABLE_FOO=1 -DSQLITE_OMIT_FOO=1"
+#
+TCC = $(TCC) $(OPTS)
+RCC = $(RCC) $(OPTS)
+
+# This is the default Makefile target.  The objects listed here
+# are what get build when you type just "make" with no arguments.
+#
+all:	sqllogictest.exe
+
+# Rules to build individual *.lo files from files in the src directory.
+#
+md5.lo:	$(TOP)\md5.c
+	$(TCC) -Fo$@ -c $(TOP)\md5.c
+
+sqlite3.lo:	$(TOP)\sqlite3.c
+	$(TCC) -Fo$@ -c $(TOP)\sqlite3.c
+
+sqllogictest.exe:	md5.lo sqlite3.lo
+	$(TCC) -Fe$@ $(TOP)\sqllogictest.c /link odbc32.lib md5.lo sqlite3.lo
+
+clean:
+	del /Q *.exp *.lo *.ilk *.lib *.obj *.ncb *.pdb *.sdf *.suo 2>NUL
+	del /Q *.bsc *.cod *.da *.bb *.bbg gmon.out 2>NUL
+	del /Q sqllogictest.exe 2>NUL

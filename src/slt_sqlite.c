@@ -89,7 +89,7 @@ static int sqliteConnect(
   */
   if( zConnectStr==0 ) zConnectStr = "test.db";
   if( zConnectStr && zConnectStr[0] ){
-#ifndef WIN32
+#ifndef _WIN32
     unlink(zConnectStr);
 #else
     _unlink(zConnectStr);
