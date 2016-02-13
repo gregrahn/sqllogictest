@@ -113,7 +113,7 @@ extern "C" {
 */
 #define SQLITE_VERSION        "3.11.0"
 #define SQLITE_VERSION_NUMBER 3011000
-#define SQLITE_SOURCE_ID      "2016-02-09 20:37:46 1135ad014aac8a4ae5169375af1b368feaa8331b"
+#define SQLITE_SOURCE_ID      "2016-02-12 18:48:09 a049fbbde5da2e43d41aa8c2b41f9eb21507ac76"
 
 /*
 ** CAPI3REF: Run-Time Library Version Numbers
@@ -347,7 +347,7 @@ typedef int (*sqlite3_callback)(void*,int,char**, char**);
 ** from [sqlite3_malloc()] and passed back through the 5th parameter.
 ** To avoid memory leaks, the application should invoke [sqlite3_free()]
 ** on error message strings returned through the 5th parameter of
-** of sqlite3_exec() after the error message string is no longer needed.
+** sqlite3_exec() after the error message string is no longer needed.
 ** ^If the 5th parameter to sqlite3_exec() is not NULL and no errors
 ** occur, then sqlite3_exec() sets the pointer in its 5th parameter to
 ** NULL before returning.
