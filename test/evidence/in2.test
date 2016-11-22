@@ -1,7 +1,3 @@
-# EVIDENCE-OF: R-58875-56087 The IN and NOT IN operators take a single
-# scalar operand on the left and a vector operand on the right formed by
-# an explicit list of zero or more scalars or by a single subquery.
-#
 
 # EVIDENCE-OF: R-52275-55503 When the right operand is an empty set, the
 # result of IN is false and the result of NOT IN is true, regardless of
@@ -293,8 +289,9 @@ query I nosort
 SELECT 1 FROM t1 WHERE NULL NOT IN ( NULL, '1' )
 ----
 
-# EVIDENCE-OF: R-00416-37972 When the right operand of an IN or NOT IN
-# operator is a subquery, the subquery must have a single result column.
+# EVIDENCE-OF: R-35033-20570 The subquery on the right of an IN or NOT
+# IN operator must be a scalar subquery if the left expression is not a
+# row value expression.
 
 query I nosort
 SELECT 1 FROM t1 WHERE 1 IN (SELECT 1)
@@ -314,4 +311,3 @@ SELECT 1 FROM t1 WHERE 1 IN (SELECT * FROM t1)
 
 statement error
 SELECT 1 FROM t1 WHERE 1 IN (SELECT min(x),max(x) FROM t1)
-
