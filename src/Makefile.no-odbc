@@ -8,7 +8,7 @@ E =
 #### C Compile and options for use in building executables that 
 #    will run on the target platform.
 #
-CC = gcc -g -Wall
+CC = gcc -g -Wall -Os
 #CC = gcc -g -Wall -DOMIT_ODBC=1 -fprofile-arcs -ftest-coverage
 #CC += -DSQLITE_COVERAGE_TEST
 CC += -DSQLITE_NO_SYNC=1 -DOMIT_ODBC=1
@@ -29,6 +29,7 @@ INC = \
   slt_odbc3.c
 
 OPTS += -DSQLITE_THREADSAFE=0
+OPTS += -DSQLITE_DEBUG
 
 # The following OMIT options must match the OMIT options used to build
 # the amalgamation.
@@ -42,7 +43,7 @@ md5.o:	md5.c
 	$(CC) -c md5.c
 
 sqlite3.o:	sqlite3.c sqlite3.h
-	$(CC) -c sqlite3.c $(OPTS)
+	$(CC) $(OPTS) -c sqlite3.c
 
 clean:
 	rm -f $(OBJ)

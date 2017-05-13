@@ -316,6 +316,7 @@ int main(int argc, char **argv){
   int i;                               /* Loop counter */
   char *zScript;                       /* Content of the script */
   long nScript;                        /* Size of the script in bytes */
+  long nGot;                           /* Number of bytes read */
   void *pConn;                         /* Connection to the database engine */
   int rc;                              /* Result code from subroutine call */
   int nErr = 0;                        /* Number of errors */
@@ -421,9 +422,14 @@ int main(int argc, char **argv){
     exit(1);
   }
   fseek(in, 0L, SEEK_SET);
-  fread(zScript, 1, nScript, in);
+  nGot = fread(zScript, 1, nScript, in);
   fclose(in);
-  zScript[nScript] = 0;
+  if( nGot<nScript ){
+    fprintf(stderr, "%s: partial read - %d of %d bytes\n",
+            zScriptFile, (int)nGot, (int)nScript);
+    exit(1);
+  }
+  zScript[nGot] = 0;
 
   /* Initialize the sScript structure so that the cursor will be pointing
   ** to the start of the first line in the file after nextLine() is called
