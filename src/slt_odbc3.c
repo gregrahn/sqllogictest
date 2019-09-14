@@ -213,7 +213,7 @@ static int ODBC3_dropAllTables(ODBC3_Handles *pODBC3conn)
       if (SQL_SUCCEEDED(ret)) {
         /* Loop through the columns in the row */
         for( i=1; i<=columns; i++ ){
-          SQLINTEGER indicator;
+          SQLLEN indicator;
           char zBuffer[512];
           /* retrieve column data as a string */
           ret = SQLGetData(stmt, 
@@ -568,7 +568,7 @@ static int ODBC3Query(
       if( SQL_SUCCEEDED(ret) ){
         /* Loop through the columns */
         for(i = 1; !rc && (i <= columns); i++){
-          SQLINTEGER indicator = 0;
+          SQLLEN indicator = 0;
           switch( zType[i-1] ){
             case 'T': {
               /* retrieve column data as a string */

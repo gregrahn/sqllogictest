@@ -36,7 +36,7 @@ OPTS += -DSQLITE_THREADSAFE=0
 OPTS += -DSQLITE_OMIT_LOAD_EXTENSION
 
 sqllogictest$(E):	sqllogictest.c sqllogictest.h $(OBJ) $(INC)
-	$(CC) -o sqllogictest$(E) sqllogictest.c $(OBJ)
+	$(CC) -o sqllogictest$(E) sqllogictest.c $(OBJ) -lodbc
 
 md5.o:	md5.c
 	$(CC) -c md5.c
