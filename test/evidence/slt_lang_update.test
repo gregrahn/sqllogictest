@@ -85,22 +85,26 @@ SELECT count(*) FROM t1 WHERE x=4
 # occurrence is ignored.
 
 skipif mssql
+skipif postgresql
 statement ok
 UPDATE t1 SET x=3, x=4, x=5
 
 skipif mssql
+skipif postgresql
 query I rowsort
 SELECT count(*) FROM t1 WHERE x=3
 ----
 0
 
 skipif mssql
+skipif postgresql
 query I rowsort
 SELECT count(*) FROM t1 WHERE x=4
 ----
 0
 
 skipif mssql
+skipif postgresql
 query I rowsort
 SELECT count(*) FROM t1 WHERE x=5
 ----
