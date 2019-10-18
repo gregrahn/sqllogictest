@@ -36,12 +36,12 @@ const (
 
 // ResultLogEntry is a single line in a sqllogictest result log file.
 type ResultLogEntry struct {
-	entryTime    time.Time
-	testFile     string
-	lineNum      int
-	query        string
-	result       ResultType
-	errorMessage string
+	EntryTime    time.Time
+	TestFile     string
+	LineNum      int
+	Query        string
+	Result       ResultType
+	ErrorMessage string
 }
 
 // ParseResultFile parses a result log file produced by the test runner and returns a slice of results, in the order
@@ -84,18 +84,18 @@ func parseLogEntry(scanner *parser.LineScanner) (*ResultLogEntry, error) {
 			continue
 		}
 
-		entry.entryTime, err = time.Parse(time.RFC3339Nano, line[:firstSpace])
+		entry.EntryTime, err = time.Parse(time.RFC3339Nano, line[:firstSpace])
 		if err != nil {
 			// unrecognized log line, ignore and continue
 			continue
 		}
 
 		if strings.HasSuffix(line, "ok") {
-			entry.result = Ok
+			entry.Result = Ok
 		} else if strings.Contains(line, "not ok:") {
-			entry.result = NotOk
+			entry.Result = NotOk
 		} else if strings.HasSuffix(line, "skipped") {
-			entry.result = Skipped
+			entry.Result = Skipped
 		} else {
 			panic("Couldn't determine result of log line " + line)
 		}
@@ -107,7 +107,7 @@ func parseLogEntry(scanner *parser.LineScanner) (*ResultLogEntry, error) {
 			colonIdx = colonIdx + firstSpace + 1
 		}
 
-		entry.testFile = line[firstSpace+1 : colonIdx]
+		entry.TestFile = line[firstSpace+1 : colonIdx]
 		colonIdx2 := strings.Index(line[colonIdx+1:], ":")
 		if colonIdx2 == -1 {
 			panic(fmt.Sprintf("Malformed line %v on line %d", line, scanner.LineNum))
@@ -115,22 +115,22 @@ func parseLogEntry(scanner *parser.LineScanner) (*ResultLogEntry, error) {
 			colonIdx2 = colonIdx + 1 + colonIdx2
 		}
 
-		entry.lineNum, err = strconv.Atoi(line[colonIdx+1 : colonIdx2])
+		entry.LineNum, err = strconv.Atoi(line[colonIdx+1 : colonIdx2])
 		if err != nil {
 			panic(fmt.Sprintf("Failed to parse line number on line %v", scanner.LineNum))
 		}
 
-		switch entry.result {
+		switch entry.Result {
 		case NotOk:
 			eoq := strings.Index(line[colonIdx2+1:], "not ok: ") + colonIdx2 + 1
-			entry.query = line[colonIdx2+2 : eoq-1]
-			entry.errorMessage = line[eoq+len("not ok: "):]
+			entry.Query = line[colonIdx2+2 : eoq-1]
+			entry.ErrorMessage = line[eoq+len("not ok: "):]
 		case Ok:
 			eoq := strings.Index(line[colonIdx2+1:], "ok") + colonIdx2 + 1
-			entry.query = line[colonIdx2+2 : eoq-1]
+			entry.Query = line[colonIdx2+2 : eoq-1]
 		case Skipped:
 			eoq := strings.Index(line[colonIdx2+1:], "skipped") + colonIdx2 + 1
-			entry.query = line[colonIdx2+2 : eoq-1]
+			entry.Query = line[colonIdx2+2 : eoq-1]
 		}
 
 		return entry, nil

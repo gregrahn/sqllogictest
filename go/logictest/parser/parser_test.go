@@ -132,6 +132,20 @@ func TestParseFile(t *testing.T) {
 )`),
 			lineNum: 80,
 		},
+		{
+			recordType: Query,
+			label: "join-4-1",
+			sortMode: ValueSort,
+			query: removeNewlines(`SELECT x29,x31,x51,x55
+  FROM t51,t29,t31,t55
+  WHERE a51=b31
+    AND a29=6
+    AND a29=b51
+    AND b55=a31`),
+			lineNum: 90,
+			schema: "TTTT",
+			result: []string {"table t29 row 6", "table t31 row 9", "table t51 row 5", "table t55 row 4"},
+		},
 	}
 
 	assert.Equal(t, expectedRecords, records)

@@ -121,7 +121,7 @@ func (r *Record) NumResults() int {
 		numVals, _ = strconv.Atoi(valsStr)
 	}
 
-	return numVals / len(r.schema)
+	return numVals
 }
 
 // NumCols returns the number of columns for results of this record's query. Panics if the record is a statement instead
