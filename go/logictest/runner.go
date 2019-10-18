@@ -22,7 +22,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/liquidata-inc/dolt/go/libraries/doltcore/sqle/logictest/parser"
+	"github.com/liquidata-inc/sqllogictest/go/logictest/parser"
 )
 
 var currTestFile string
