@@ -120,6 +120,18 @@ func TestParseFile(t *testing.T) {
 			result:  []string{"-3", "222", "-3", "222", "-1", "222", "-1", "222"},
 			lineNum: 62,
 		},
+		{
+			recordType: Statement,
+			query: removeNewlines(`CREATE TABLE t1(
+  a1 INTEGER,
+  b1 INTEGER,
+  c1 INTEGER,
+  d1 INTEGER,
+  e1 INTEGER,
+  x1 VARCHAR(30)
+)`),
+			lineNum: 80,
+		},
 	}
 
 	assert.Equal(t, expectedRecords, records)

@@ -153,12 +153,15 @@ func parseRecord(scanner *LineScanner) (*Record, error) {
 
 		case stateStatement:
 			if isBlankLine {
+				record.query = queryBuilder.String()
 				return record, nil
 			}
 
-			record.query = commentsRemoved
-			record.lineNum = scanner.LineNum
-			return record, nil
+			if record.lineNum == 0 {
+				record.lineNum = scanner.LineNum
+			}
+
+			queryBuilder.WriteString(commentsRemoved)
 		case stateQuery:
 			if record.lineNum == 0 {
 				record.lineNum = scanner.LineNum
@@ -188,6 +191,11 @@ func parseRecord(scanner *LineScanner) (*Record, error) {
 
 	if scanner.Err() == nil && linesScanned == 0 {
 		return nil, io.EOF
+	}
+
+	switch state {
+	case stateStatement:
+		record.query = queryBuilder.String()
 	}
 
 	return record, nil
