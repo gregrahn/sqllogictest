@@ -92,11 +92,10 @@ func parseRecord(scanner *LineScanner) (*Record, error) {
 
 	state := stateStart
 	queryBuilder := strings.Builder{}
-	linesScanned := 0
+	linesParsed := 0
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		linesScanned++
 		isBlankLine := isBlankLine(line)
 		commentsRemoved := commentRegex.ReplaceAllString(line, "$1")
 
@@ -105,6 +104,7 @@ func parseRecord(scanner *LineScanner) (*Record, error) {
 			continue
 		}
 
+		linesParsed++
 		fields := strings.Fields(commentsRemoved)
 
 		switch state {
@@ -189,7 +189,7 @@ func parseRecord(scanner *LineScanner) (*Record, error) {
 		return nil, scanner.Err()
 	}
 
-	if scanner.Err() == nil && linesScanned == 0 {
+	if scanner.Err() == nil && linesParsed == 0 {
 		return nil, io.EOF
 	}
 

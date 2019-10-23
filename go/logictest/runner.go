@@ -121,7 +121,7 @@ func executeRecord(harness Harness, record *parser.Record) (cont bool) {
 		err := harness.ExecuteStatement(record.Query())
 
 		if record.ExpectError() {
-			if err != nil {
+			if err == nil {
 				logFailure("Expected error but didn't get one")
 				return true
 			}
