@@ -13,28 +13,26 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package mysql
 
 import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/liquidata-inc/sqllogictest/go/logictest"
-	"os"
 	"strings"
 )
 
-func main() {
-	args := os.Args[1:]
-
-	harness := NewMysqlHarness("sqllogictest:password@tcp(127.0.0.1:3306)/sqllogictest")
-	logictest.RunTestFiles(harness, args...)
-}
-
+// sqllogictest harness for MySQL databases.
 type MysqlHarness struct {
 	db *sql.DB
 }
 
+// compile check for interface compliance
+var _ logictest.Harness = &MysqlHarness{}
+
+// NewMysqlHarness returns a new MySQL test harness for the data source name given. Panics if it cannot open a
+// connection using the DSN.
 func NewMysqlHarness(dsn string) *MysqlHarness {
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
@@ -43,12 +41,50 @@ func NewMysqlHarness(dsn string) *MysqlHarness {
 	return &MysqlHarness{db:db}
 }
 
+// See Harness.EngineStr
 func (h *MysqlHarness) EngineStr() string {
 	return "mysql"
 }
 
+// See Harness.Init
 func (h *MysqlHarness) Init() error {
 	return h.dropAllTables()
+}
+
+// See Harness.ExecuteStatement
+func (h *MysqlHarness) ExecuteStatement(statement string) error {
+	_, err := h.db.Exec(statement)
+	return err
+}
+
+// See Harness.ExecuteQuery
+func (h *MysqlHarness) ExecuteQuery(statement string) (schema string, results []string, err error) {
+	rows, err := h.db.Query(statement)
+	if err != nil {
+		return "", nil, err
+	}
+
+	schema, columns, err := columns(rows)
+	if err != nil {
+		return "", nil, err
+	}
+
+	for rows.Next() {
+		err := rows.Scan(columns...)
+		if err != nil {
+			return "", nil, err
+		}
+
+		for _, col := range columns {
+			results = append(results, stringVal(col))
+		}
+	}
+
+	if rows.Err() != nil {
+		return "", nil, rows.Err()
+	}
+
+	return schema, results, nil
 }
 
 func (h *MysqlHarness) dropAllTables() error {
@@ -82,40 +118,6 @@ func (h *MysqlHarness) dropAllTables() error {
 	}
 
 	return nil
-}
-
-func (h *MysqlHarness) ExecuteStatement(statement string) error {
-	_, err := h.db.Exec(statement)
-	return err
-}
-
-func (h *MysqlHarness) ExecuteQuery(statement string) (schema string, results []string, err error) {
-	rows, err := h.db.Query(statement)
-	if err != nil {
-		return "", nil, err
-	}
-
-	schema, columns, err := columns(rows)
-	if err != nil {
-		return "", nil, err
-	}
-
-	for rows.Next() {
-		err := rows.Scan(columns...)
-		if err != nil {
-			return "", nil, err
-		}
-
-		for _, col := range columns {
-			results = append(results, stringVal(col))
-		}
-	}
-
-	if rows.Err() != nil {
-		return "", nil, rows.Err()
-	}
-
-	return schema, results, nil
 }
 
 // Returns the string representation of the column value given
