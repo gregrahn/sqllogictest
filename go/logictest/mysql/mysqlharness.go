@@ -19,44 +19,131 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/liquidata-inc/sqllogictest/go/logictest"
+	"os"
 	"reflect"
 	"strings"
 )
 
 func main() {
-	db, err := sql.Open("mysql", "sqllogictest:password@tcp(127.0.0.1:3306)/sqllogictest")
+	args := os.Args[1:]
+
+	harness := NewMysqlHarness("sqllogictest:password@tcp(127.0.0.1:3306)/sqllogictest")
+	logictest.RunTestFiles(harness, args...)
+}
+
+type MysqlHarness struct {
+	db *sql.DB
+}
+
+func NewMysqlHarness(dsn string) *MysqlHarness {
+	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		panic(err)
 	}
+	return &MysqlHarness{db:db}
+}
 
-	rows, err := db.Query("show tables")
+func (h *MysqlHarness) EngineStr() string {
+	return "mysql"
+}
+
+func (h *MysqlHarness) Init() error {
+	return h.dropAllTables()
+}
+
+func (h *MysqlHarness) dropAllTables() error {
+	rows, err := h.db.Query("show tables")
 	if err != nil {
-		panic(err)
+		return err
 	}
 
-	columns, err := columns(rows)
+	_, columns, err := columns(rows)
 	if err != nil {
-		panic(err)
+		return err
+	}
+
+	var tableNames []string
+	for rows.Next() {
+		err := rows.Scan(columns)
+		if err != nil {
+			return err
+		}
+
+		tableName := columns[0].(*string)
+		tableNames = append(tableNames, *tableName)
+	}
+
+	if len(tableNames) > 0 {
+		dropTables := "drop table if exists " + strings.Join(tableNames, ",")
+		_, err = h.db.Exec(dropTables)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (h *MysqlHarness) ExecuteStatement(statement string) error {
+	_, err := h.db.Exec(statement)
+	return err
+}
+
+func (h *MysqlHarness) ExecuteQuery(statement string) (schema string, results []string, err error) {
+	rows, err := h.db.Query(statement)
+	if err != nil {
+		return "", nil, err
+	}
+
+	schema, columns, err := columns(rows)
+	if err != nil {
+		return "", nil, err
 	}
 
 	for rows.Next() {
-		err = rows.Scan(columns...)
+		err := rows.Scan(columns)
 		if err != nil {
-			panic(err)
+			return "", nil, err
 		}
 
-		for _, column := range columns {
-			strPtr := column.(*string)
-			fmt.Printf("%v\n", *strPtr)
+		for _, col := range columns {
+			results = append(results, stringVal(col))
 		}
+	}
+
+	if rows.Err() != nil {
+		return "", nil, rows.Err()
+	}
+
+	return schema, results, nil
+}
+
+// Returns the string representation of the column value given
+func stringVal(col interface{}) string {
+	switch v := col.(type) {
+	case bool:
+		if v {
+			return "1"
+		} else {
+			return "0"
+		}
+	case int64:
+		return fmt.Sprintf("%d", v)
+	case float64:
+		return fmt.Sprintf("%.3f", v)
+	case string:
+		return v
+	default:
+		panic(fmt.Sprintf("unhandled type %T for value %v", v, v))
 	}
 }
 
-// Returns a slice of columns suitable for scanning values into.
-func columns(rows *sql.Rows) ([]interface{}, error) {
+// Returns the schema for the rows given, as well as a slice of columns suitable for scanning values into.
+func columns(rows *sql.Rows) (string, []interface{}, error) {
 	types, err := rows.ColumnTypes()
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 
 	sb := strings.Builder{}
@@ -81,9 +168,9 @@ func columns(rows *sql.Rows) ([]interface{}, error) {
 			columns = append(columns, &colVal)
 			sb.WriteString("T")
 		default:
-			return nil, fmt.Errorf("Unhandled type %d", scanType.Kind())
+			return "", nil, fmt.Errorf("Unhandled type %d", scanType.Kind())
 		}
 	}
 
-	return columns, nil
+	return "", columns, nil
 }

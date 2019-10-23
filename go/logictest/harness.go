@@ -23,7 +23,7 @@ type Harness interface {
 	// Init initializes this harness to begin executing query records, beginning with a clean state for the underlying
 	// database. Called once per test file before any tests are run. Harnesses are re-used between test files for runs
 	// that request multiple test files, so this method should reset all relevant state.
-	Init()
+	Init() error
 
 	// ExecuteStatement executes a DDL / insert / update statement on the underlying engine and returns any error. Some
 	// tests expect errors. Any non-nil error satisfies a test that expects an error.

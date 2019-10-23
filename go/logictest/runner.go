@@ -73,7 +73,10 @@ func RunTestFiles(harness Harness, paths ...string) {
 func runTestFile(harness Harness, file string) {
 	currTestFile = file
 
-	harness.Init()
+	err := harness.Init()
+	if err != nil {
+		panic(err)
+	}
 
 	testRecords, err := parser.ParseTestFile(file)
 	if err != nil {
