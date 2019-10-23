@@ -21,7 +21,6 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/liquidata-inc/sqllogictest/go/logictest"
 	"os"
-	"reflect"
 	"strings"
 )
 
@@ -70,8 +69,8 @@ func (h *MysqlHarness) dropAllTables() error {
 			return err
 		}
 
-		tableName := columns[0].(*string)
-		tableNames = append(tableNames, *tableName)
+		tableName := columns[0].(*sql.NullString)
+		tableNames = append(tableNames, tableName.String)
 	}
 
 	if len(tableNames) > 0 {
@@ -122,18 +121,30 @@ func (h *MysqlHarness) ExecuteQuery(statement string) (schema string, results []
 // Returns the string representation of the column value given
 func stringVal(col interface{}) string {
 	switch v := col.(type) {
-	case *bool:
-		if *v {
+	case *sql.NullBool:
+		if !v.Valid {
+			return "NULL"
+		}
+		if v.Bool {
 			return "1"
 		} else {
 			return "0"
 		}
-	case *int64:
-		return fmt.Sprintf("%d", *v)
-	case *float64:
-		return fmt.Sprintf("%.3f", *v)
-	case *string:
-		return *v
+	case *sql.NullInt64:
+		if !v.Valid {
+			return "NULL"
+		}
+		return fmt.Sprintf("%d", v.Int64)
+	case *sql.NullFloat64:
+		if !v.Valid {
+			return "NULL"
+		}
+		return fmt.Sprintf("%.3f", v.Float64)
+	case *sql.NullString:
+		if !v.Valid {
+			return "NULL"
+		}
+		return v.String
 	default:
 		panic(fmt.Sprintf("unhandled type %T for value %v", v, v))
 	}
@@ -149,30 +160,25 @@ func columns(rows *sql.Rows) (string, []interface{}, error) {
 	sb := strings.Builder{}
 	var columns []interface{}
 	for _, columnType := range types {
-		scanType := columnType.ScanType()
-		switch scanType.Kind() {
-		case reflect.Bool:
-			colVal := false
+		switch columnType.DatabaseTypeName() {
+		case "BIT":
+			colVal := sql.NullBool{}
 			columns = append(columns, &colVal)
 			sb.WriteString("I")
-		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-			colVal := int64(0)
-			columns = append(columns, &colVal)
-			sb.WriteString("I")
-		case reflect.Float32, reflect.Float64:
-			colVal := float64(0)
-			columns = append(columns, &colVal)
-			sb.WriteString("R")
-		case reflect.String, reflect.Slice: // the mysql driver returns a ScanType of slice for string results
-			colVal := ""
+		case "TEXT", "VARCHAR", "MEDIUMTEXT", "CHAR", "TINYTEXT":
+			colVal := sql.NullString{}
 			columns = append(columns, &colVal)
 			sb.WriteString("T")
-		case reflect.Struct: // the mysql driver returns a BIGINT type for some things
-			colVal := int64(0)
+		case "DECIMAL", "DOUBLE", "FLOAT":
+			colVal := sql.NullFloat64{}
+			columns = append(columns, &colVal)
+			sb.WriteString("R")
+		case "MEDIUMINT", "INT", "BIGINT", "TINYINT", "SMALLINT":
+			colVal := sql.NullInt64{}
 			columns = append(columns, &colVal)
 			sb.WriteString("I")
 		default:
-			return "", nil, fmt.Errorf("Unhandled type %d", scanType.Kind())
+			return "", nil, fmt.Errorf("Unhandled type %s", columnType.DatabaseTypeName())
 		}
 	}
 
