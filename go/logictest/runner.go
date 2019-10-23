@@ -73,7 +73,10 @@ func RunTestFiles(harness Harness, paths ...string) {
 func runTestFile(harness Harness, file string) {
 	currTestFile = file
 
-	harness.Init()
+	err := harness.Init()
+	if err != nil {
+		panic(err)
+	}
 
 	testRecords, err := parser.ParseTestFile(file)
 	if err != nil {
@@ -118,7 +121,7 @@ func executeRecord(harness Harness, record *parser.Record) (cont bool) {
 		err := harness.ExecuteStatement(record.Query())
 
 		if record.ExpectError() {
-			if err != nil {
+			if err == nil {
 				logFailure("Expected error but didn't get one")
 				return true
 			}
