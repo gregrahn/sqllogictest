@@ -57,9 +57,11 @@ func TestRecordMethods(t *testing.T) {
  WHERE c>d
    AND b>c
  ORDER BY 2,1`),
-		condition: &Condition{
-			isSkip: true,
-			engine: "mssql",
+		conditions: []*Condition{
+			{
+				isSkip: true,
+				engine: "mssql",
+			},
 		},
 		result:  []string{"-3", "222", "-3", "222", "-1", "222", "-1", "222"},
 		lineNum: 62,
@@ -91,9 +93,11 @@ func TestRecordMethods(t *testing.T) {
    AND d>e
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 4,2,1,3,5`),
-		condition: &Condition{
-			isOnly: true,
-			engine: "mysql",
+		conditions: []*Condition{
+			{
+				isOnly: true,
+				engine: "mysql",
+			},
 		},
 		result:  []string{"1", "2", "3", "4", "5"},
 		lineNum: 41,
@@ -183,4 +187,35 @@ func TestRecordMethods(t *testing.T) {
 	assert.Equal(t, 8, record.LineNum())
 	assert.True(t, record.ExpectError())
 	assert.True(t, record.ShouldExecuteForEngine("mysql"))
+
+	record = Record{
+		recordType: Query,
+		sortMode:   NoSort,
+		query:      removeNewlines(`SELECT 1 FROM t1 WHERE 1.0 IN ()`),
+		lineNum:    106,
+		schema:     "I",
+		conditions: []*Condition{
+			{
+				isSkip: true,
+				engine: "mysql",
+			},
+			{
+				isSkip: true,
+				engine: "mssql",
+			},
+			{
+				isSkip: true,
+				engine: "oracle",
+			},
+		},
+	}
+
+	assert.Equal(t, Query, record.Type())
+	assert.Equal(t, 106, record.LineNum())
+	assert.False(t, record.ExpectError())
+	assert.False(t, record.IsHashResult())
+	assert.False(t, record.ShouldExecuteForEngine("mysql"))
+	assert.False(t, record.ShouldExecuteForEngine("mssql"))
+	assert.False(t, record.ShouldExecuteForEngine("mysql"))
+	assert.True(t, record.ShouldExecuteForEngine("postgresql"))
 }
