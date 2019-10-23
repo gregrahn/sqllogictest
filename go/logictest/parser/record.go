@@ -46,8 +46,8 @@ type Record struct {
 	recordType RecordType
 	// Whether this record expects an error to occur on execution.
 	expectError bool
-	// The condition for executing this record, if applicable
-	condition *Condition
+	// The conditions for executing this record, if applicable
+	conditions []*Condition
 	// The schema for results of this query record, in the form e.g. "ITTR"
 	schema string
 	// The sort mode for validating results of a query
@@ -142,17 +142,18 @@ func (r *Record) LineNum() int {
 
 // ShouldExecuteForEngine returns whether this record should be executed for the engine with the identifier given.
 func (r *Record) ShouldExecuteForEngine(engine string) bool {
-	if r.condition == nil {
-		return true
+	// skipif and onlyif don't really play nicely together. We honor an onlyif only as the single condition for a record.
+	if len(r.conditions) == 1 && r.conditions[0].isOnly {
+		return r.conditions[0].engine == engine
 	}
 
-	if r.condition.isOnly {
-		return r.condition.engine == engine
-	} else if r.condition.isSkip {
-		return r.condition.engine != engine
-	} else {
-		panic("Incorrectly constructed condition for record: one of isSkip, isOnly must be true")
+	for _, condition := range r.conditions {
+		if condition.isSkip && condition.engine == engine {
+			return false
+		}
 	}
+
+	return true
 }
 
 // rowSorter sorts a slice of result values with by-row semantics.

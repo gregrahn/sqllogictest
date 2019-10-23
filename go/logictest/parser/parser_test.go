@@ -74,9 +74,11 @@ func TestParseFile(t *testing.T) {
 		},
 		{
 			recordType: Halt,
-			condition: &Condition{
-				isOnly: true,
-				engine: "mysql",
+			conditions: []*Condition{
+				{
+					isOnly: true,
+					engine: "mysql",
+				},
 			},
 			lineNum: 37,
 		},
@@ -95,9 +97,11 @@ func TestParseFile(t *testing.T) {
    AND d>e
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 4,2,1,3,5`),
-			condition: &Condition{
-				isOnly: true,
-				engine: "mysql",
+			conditions: []*Condition{
+				{
+					isOnly: true,
+					engine: "mysql",
+				},
 			},
 			result:  []string{"1", "2", "3", "4", "5"},
 			lineNum: 41,
@@ -113,9 +117,11 @@ func TestParseFile(t *testing.T) {
  WHERE c>d
    AND b>c
  ORDER BY 2,1`),
-			condition: &Condition{
-				isSkip: true,
-				engine: "mssql",
+			conditions: []*Condition{
+				{
+					isSkip: true,
+					engine: "mssql",
+				},
 			},
 			result:  []string{"-3", "222", "-3", "222", "-1", "222", "-1", "222"},
 			lineNum: 62,
@@ -145,6 +151,27 @@ func TestParseFile(t *testing.T) {
 			lineNum: 90,
 			schema: "TTTT",
 			result: []string {"table t29 row 6", "table t31 row 9", "table t51 row 5", "table t55 row 4"},
+		},
+		{
+			recordType: Query,
+			sortMode: NoSort,
+			query: removeNewlines(`SELECT 1 FROM t1 WHERE 1.0 IN ()`),
+			lineNum: 106,
+			schema: "I",
+			conditions: []*Condition{
+				{
+					isSkip: true,
+					engine: "mysql",
+				},
+				{
+					isSkip: true,
+					engine: "mssql",
+				},
+				{
+					isSkip: true,
+					engine: "oracle",
+				},
+			},
 		},
 	}
 

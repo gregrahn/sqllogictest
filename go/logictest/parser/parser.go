@@ -119,11 +119,11 @@ func parseRecord(scanner *LineScanner) (*Record, error) {
 				record.lineNum = scanner.LineNum
 				return record, nil
 			case skipif, onlyif:
-				record.condition = &Condition{
+				record.conditions = append(record.conditions, &Condition{
 					isOnly: fields[0] == onlyif,
 					isSkip: fields[0] == skipif,
 					engine: fields[1],
-				}
+				})
 			case hashThreshold:
 				// Ignored
 				return nil, nil
