@@ -65,7 +65,7 @@ func (h *MysqlHarness) dropAllTables() error {
 
 	var tableNames []string
 	for rows.Next() {
-		err := rows.Scan(columns)
+		err := rows.Scan(columns...)
 		if err != nil {
 			return err
 		}
@@ -102,7 +102,7 @@ func (h *MysqlHarness) ExecuteQuery(statement string) (schema string, results []
 	}
 
 	for rows.Next() {
-		err := rows.Scan(columns)
+		err := rows.Scan(columns...)
 		if err != nil {
 			return "", nil, err
 		}
@@ -122,18 +122,18 @@ func (h *MysqlHarness) ExecuteQuery(statement string) (schema string, results []
 // Returns the string representation of the column value given
 func stringVal(col interface{}) string {
 	switch v := col.(type) {
-	case bool:
-		if v {
+	case *bool:
+		if *v {
 			return "1"
 		} else {
 			return "0"
 		}
-	case int64:
-		return fmt.Sprintf("%d", v)
-	case float64:
-		return fmt.Sprintf("%.3f", v)
-	case string:
-		return v
+	case *int64:
+		return fmt.Sprintf("%d", *v)
+	case *float64:
+		return fmt.Sprintf("%.3f", *v)
+	case *string:
+		return *v
 	default:
 		panic(fmt.Sprintf("unhandled type %T for value %v", v, v))
 	}
@@ -167,10 +167,14 @@ func columns(rows *sql.Rows) (string, []interface{}, error) {
 			colVal := ""
 			columns = append(columns, &colVal)
 			sb.WriteString("T")
+		case reflect.Struct: // the mysql driver returns a BIGINT type for some things
+			colVal := int64(0)
+			columns = append(columns, &colVal)
+			sb.WriteString("I")
 		default:
 			return "", nil, fmt.Errorf("Unhandled type %d", scanType.Kind())
 		}
 	}
 
-	return "", columns, nil
+	return sb.String(), columns, nil
 }
