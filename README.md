@@ -50,3 +50,18 @@ For [dolt](https://github.com/liquidata-inc/dolt), we periodically publish dolt'
 | not ok  | 4233009  |
 +---------+----------+
 ```
+
+# MySQL results
+
+We've also written a MySQL harness, primarily for comparision purposes. In principle the MySQL harness should have 100% correctness, but we have found that, at least on the latest release of MySQL Community Server for Windows 10, this number is actually about 90%. The reason for this discrepancy is unclear as of this writing, but at least some large subset of the failures are due to changed syntax for some statements, e.g. creating triggers. You can find the full results for MySQL [here](https://www.dolthub.com/repositories/Liquidata/dolt-sqllogictest-results/data/master/mysql_results).
+
+```
+% dolt sql -q "select result, count(*) from mysql_results group by 1"
++---------+----------+
+| result  | COUNT(*) |
++---------+----------+
+| skipped | 1315547  |
+| ok      | 4450267  |
+| not ok  | 536198   |
++---------+----------+
+```
