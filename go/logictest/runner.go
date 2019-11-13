@@ -105,6 +105,7 @@ func executeRecord(harness Harness, record *parser.Record) (cont bool) {
 				toLog = strings.ReplaceAll(err.Error(), "\n", " ")
 			}
 			logFailure("Caught panic: %v", toLog)
+			cont = true
 		}
 	}()
 
