@@ -61,6 +61,8 @@ type Record struct {
 	result []string
 	// Label used to store results for a query, currently unused.
 	label string
+	// Hash threshold is the number of records to begin hashing results at
+	hashThreshold int
 }
 
 // A condition is a directive to execute a record or not depending on the underlying engine being evaluated.

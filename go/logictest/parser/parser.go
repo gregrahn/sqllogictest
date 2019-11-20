@@ -21,15 +21,18 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
 const (
-	separator     = "----"
-	halt          = "halt"
-	hashThreshold = "hash-threshold"
-	skipif        = "skipif"
-	onlyif        = "onlyif"
+	separator            = "----"
+	halt                 = "halt"
+	hashThreshold        = "hash-threshold"
+	skipif               = "skipif"
+	onlyif               = "onlyif"
+	defaultHashThreshold = 8
+	hashThresholdUnset   = -1
 )
 
 // ParseTestFile parses a sqllogictest file and returns the array of records it contains, or an error if it cannot.
@@ -42,6 +45,7 @@ func ParseTestFile(f string) ([]*Record, error) {
 	var records []*Record
 
 	scanner := LineScanner{bufio.NewScanner(file), 0}
+	var prevRecord *Record
 
 	for {
 		record, err := parseRecord(&scanner)
@@ -51,6 +55,15 @@ func ParseTestFile(f string) ([]*Record, error) {
 			return nil, err
 		}
 		if record != nil {
+			if record.hashThreshold == hashThresholdUnset {
+				if prevRecord != nil {
+					record.hashThreshold = prevRecord.hashThreshold
+				} else {
+					record.hashThreshold = defaultHashThreshold
+				}
+			}
+
+			prevRecord = record
 			records = append(records, record)
 		}
 	}
@@ -88,7 +101,7 @@ var commentRegex = regexp.MustCompile("([^#]*)#?.*")
 // 183
 // For control records, returns (nil, nil) on hash-threshold and (nil, EOF) for halt.
 func parseRecord(scanner *LineScanner) (*Record, error) {
-	record := &Record{}
+	record := &Record{hashThreshold: hashThresholdUnset}
 
 	state := stateStart
 	queryBuilder := strings.Builder{}
@@ -125,8 +138,7 @@ func parseRecord(scanner *LineScanner) (*Record, error) {
 					engine: fields[1],
 				})
 			case hashThreshold:
-				// Ignored
-				return nil, nil
+				record.hashThreshold, _ = strconv.Atoi(fields[1])
 			case "statement":
 				record.recordType = Statement
 				if fields[1] == "ok" {
