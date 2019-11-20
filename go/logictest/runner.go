@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
 
@@ -31,7 +32,7 @@ var currRecord *parser.Record
 var _, TruncateQueriesInLog = os.LookupEnv("SQLLOGICTEST_TRUNCATE_QUERIES")
 
 // Runs the test files found under any of the paths given. Can specify individual test files, or directories that
-// contain test files somewhere underneath. All files named *.test enountered under a directory will be attempted to be
+// contain test files somewhere underneath. All files named *.test encountered under a directory will be attempted to be
 // parsed as a test file, and will panic for malformed test files or paths that don't exist.
 func RunTestFiles(harness Harness, paths ...string) {
 	var testFiles []string
@@ -204,9 +205,22 @@ func hashResults(results []string) (string, error) {
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
+var allIs = regexp.MustCompile("^I+$")
+var isAndRs = regexp.MustCompile("^[IR]+$")
+
 // Returns whether the schema given matches the record's expected schema, and logging an error if not.
 func verifySchema(record *parser.Record, schemaStr string) bool {
 	if schemaStr != record.Schema() {
+		// There's an edge case here: for results sets that contain no rows, the test records use integer values for the
+		// result schema even when they contain float columns. I think this is because an earlier version of MySQL had this
+		// buggy behavior. For this reason, when a result set is empty we skip schema comparison. A better solution in the
+		// longer term would be to update the test files with the types returned by modern versions of MySQL.
+		if len(schemaStr) == len(record.Schema()) &&
+			record.NumResults() == 0 &&
+			allIs.MatchString(record.Schema()) &&
+			isAndRs.MatchString(schemaStr) {
+			return true
+		}
 		logFailure("Schemas differ. Expected %s, got %s", record.Schema(), schemaStr)
 		return false
 	}
