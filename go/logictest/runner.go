@@ -72,7 +72,6 @@ func collectTestFiles(paths []string) []string {
 				return nil
 			})
 		} else {
-
 			testFiles = append(testFiles, abs)
 		}
 	}
@@ -117,54 +116,66 @@ func generateTestFile(harness Harness, f string) {
 	}
 	wr := bufio.NewWriter(generatedFile)
 
+	defer func() {
+		err  = wr.Flush()
+		if err != nil {
+			panic(err)
+		}
+
+		err = generatedFile.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+
 	for _, record := range testRecords {
 		schema, records, _, err := executeRecord(harness, record)
+
+		// If there was an error or we skipped this test, then just copy output until the next record.
+		if err != nil || !record.ShouldExecuteForEngine(harness.EngineStr()) {
+			copyUntilEndOfRecord(scanner, wr) // advance until the next record
+			continue
+		} else if record.Type() == parser.Halt {
+			copyRestOfFile(scanner, wr)
+			return
+		}
+
+		// Copy until we get to the line before the query we executed (e.g. "query IIRT no-sort")
 		for scanner.Scan() && scanner.LineNum < record.LineNum() - 1 {
 			line := scanner.Text()
 			writeLine(wr, line)
 		}
 
+		// Copy statements directly
 		if record.Type() == parser.Statement {
 			writeLine(wr, scanner.Text())
+		// Fill in the actual query result schema
 		} else if record.Type() == parser.Query {
-			if err == nil {
-				sb := strings.Builder{}
-				sb.WriteString("query ")
-				sb.WriteString(schema)
-				sb.WriteString(" ")
-				sb.WriteString(record.SortString())
-				if record.Label() != "" {
-					sb.WriteString(" ")
-					sb.WriteString(record.Label())
-				}
-				writeLine(wr, sb.String())
-
-				copyUntilSeparator(scanner, wr)   // copy the query and separator
-				writeResults(record, records, wr) // write the result
-				skipUntilEndOfRecord(scanner, wr) // advance until the next record
+			var label string
+			if record.Label() != "" {
+				label = " " + record.Label()
 			}
+
+			writeLine(wr, fmt.Sprintf("query %s %s%s", schema, record.SortString(), label))
+			copyUntilSeparator(scanner, wr)   // copy the original query and separator
+			writeResults(record, records, wr) // write the query result
+			skipUntilEndOfRecord(scanner, wr) // advance until the next record
 		}
 	}
 
-	for scanner.Scan() {
-		writeLine(wr, scanner.Text())
-	}
-
-	err  = wr.Flush()
-	if err != nil {
-		panic(err)
-	}
-
-	err = generatedFile.Close()
-	if err != nil {
-		panic(err)
-	}
+	copyRestOfFile(scanner, wr)
 }
 
 func writeLine(wr *bufio.Writer, s string) {
 	_, err := wr.WriteString(s + "\n")
 	if err != nil {
 		panic(err)
+	}
+}
+
+func copyRestOfFile(scanner *parser.LineScanner, wr *bufio.Writer) {
+	for scanner.Scan() {
+		writeLine(wr, scanner.Text())
 	}
 }
 
@@ -193,14 +204,22 @@ func copyUntilSeparator(scanner *parser.LineScanner, wr *bufio.Writer) {
 	}
 }
 
+func copyUntilEndOfRecord(scanner *parser.LineScanner, wr *bufio.Writer) {
+	for scanner.Scan() {
+		line := scanner.Text()
+		writeLine(wr, line)
+		if strings.TrimSpace(line) == "" {
+			break
+		}
+	}
+}
+
 func skipUntilEndOfRecord(scanner *parser.LineScanner, wr *bufio.Writer) {
 	for scanner.Scan() {
 		line := scanner.Text()
 		if strings.TrimSpace(line) == "" {
 			writeLine(wr, "")
 			break
-		} else {
-			//writeLine(wr, /*"skipping line: " + */line)
 		}
 	}
 }
