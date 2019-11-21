@@ -214,3 +214,15 @@ func (r *Record) SortResults(results []string) []string {
 		panic(fmt.Sprintf("Uncrecognized sort mode %v", r.sortMode))
 	}
 }
+
+func (r *Record) SortString() string {
+	return string(r.sortMode)
+}
+
+func (r *Record) Label() string {
+	return r.label
+}
+
+func (r *Record) HashThreshold() int {
+	return r.hashThreshold
+}

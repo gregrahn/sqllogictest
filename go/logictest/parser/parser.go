@@ -26,7 +26,7 @@ import (
 )
 
 const (
-	separator            = "----"
+	Separator            = "----"
 	halt                 = "halt"
 	hashThreshold        = "hash-threshold"
 	skipif               = "skipif"
@@ -179,7 +179,7 @@ func parseRecord(scanner *LineScanner) (*Record, error) {
 				record.lineNum = scanner.LineNum
 			}
 
-			if len(fields) == 1 && fields[0] == separator {
+			if len(fields) == 1 && fields[0] == Separator {
 				record.query = queryBuilder.String()
 				state = stateResults
 			} else if isBlankLine {

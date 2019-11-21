@@ -15,6 +15,7 @@
 package logictest
 
 import (
+	"bufio"
 	"crypto/md5"
 	"fmt"
 	"os"
@@ -35,6 +36,15 @@ var _, TruncateQueriesInLog = os.LookupEnv("SQLLOGICTEST_TRUNCATE_QUERIES")
 // contain test files somewhere underneath. All files named *.test encountered under a directory will be attempted to be
 // parsed as a test file, and will panic for malformed test files or paths that don't exist.
 func RunTestFiles(harness Harness, paths ...string) {
+	testFiles := collectTestFiles(paths)
+
+	for _, file := range testFiles {
+		runTestFile(harness, file)
+	}
+}
+
+// Returns all the test files residing at the paths given.
+func collectTestFiles(paths []string) []string {
 	var testFiles []string
 	for _, arg := range paths {
 		abs, err := filepath.Abs(arg)
@@ -62,12 +72,127 @@ func RunTestFiles(harness Harness, paths ...string) {
 				return nil
 			})
 		} else {
+
 			testFiles = append(testFiles, abs)
 		}
 	}
+	return testFiles
+}
+
+// Generates the test files given by executing the query and replacing expected results with the ones obtained by the
+// test run. Files written will have the .generated suffix.
+func GenerateTestFiles(harness Harness, paths ...string) {
+	testFiles := collectTestFiles(paths)
 
 	for _, file := range testFiles {
-		runTestFile(harness, file)
+		generateTestFile(harness, file)
+	}
+}
+
+func generateTestFile(harness Harness, f string) {
+	currTestFile = f
+
+	err := harness.Init()
+	if err != nil {
+		panic(err)
+	}
+
+	file, err := os.Open(f)
+	if err != nil {
+		panic(err)
+	}
+
+	testRecords, err := parser.ParseTestFile(f)
+	if err != nil {
+		panic(err)
+	}
+
+	generatedFile, err := os.Create(f + ".generated")
+	if err != nil {
+		panic(err)
+	}
+
+	scanner := &parser.LineScanner{
+		bufio.NewScanner(file), 0,
+	}
+	wr := bufio.NewWriter(generatedFile)
+
+	for _, record := range testRecords {
+		schema, records, _, err := executeRecord(harness, record)
+		for scanner.Scan() && scanner.LineNum < record.LineNum() - 1 {
+			line := scanner.Text()
+			writeLine(wr, /*"Copying: " + */line)
+		}
+
+		if record.Type() == parser.Statement {
+			writeLine(wr, scanner.Text())
+		} else if record.Type() == parser.Query {
+			if err == nil {
+				sb := strings.Builder{}
+				sb.WriteString("query ")
+				sb.WriteString(schema)
+				sb.WriteString(" ")
+				sb.WriteString(record.SortString())
+				if record.Label() != "" {
+					sb.WriteString(" ")
+					sb.WriteString(record.Label())
+				}
+				writeLine(wr, /*"computed: " + */sb.String())
+
+//				scanner.Scan()                    // skip "query" line
+				copyUntilSeparator(scanner, wr)   // copy the query and separator
+				writeResults(record, records, wr) // write the result
+				skipUntilEndOfRecord(scanner, wr) // advance until the next record
+			}
+		}
+	}
+
+	for scanner.Scan() {
+		writeLine(wr, scanner.Text())
+	}
+}
+
+func writeLine(wr *bufio.Writer, s string) {
+	_, err := wr.WriteString(s + "\n")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func writeResults(record *parser.Record, results []string, wr *bufio.Writer) {
+	if len(results) > record.HashThreshold() {
+		hash, err := hashResults(results)
+		if err != nil {
+			panic(err)
+		}
+		writeLine(wr, /*"writeResults:" + */fmt.Sprintf("%d values hashing to %s", len(results), hash))
+	} else {
+		for _, result := range results {
+			writeLine(wr, /*"writeResults:" + */fmt.Sprintf("%s", result))
+		}
+	}
+}
+
+func copyUntilSeparator(scanner *parser.LineScanner, wr *bufio.Writer) {
+	for scanner.Scan() {
+		line := scanner.Text()
+		writeLine(wr, /*"copyuntilseparator: " + */line)
+
+		if strings.TrimSpace(line) == parser.Separator {
+			break
+		}
+	}
+}
+
+func skipUntilEndOfRecord(scanner *parser.LineScanner, wr *bufio.Writer) {
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.TrimSpace(line) == "" {
+			writeLine(wr, "")
+			break
+		} else {
+			//writeLine(wr, /*"skipping line: " + */line)
+		}
 	}
 }
 
@@ -85,14 +210,15 @@ func runTestFile(harness Harness, file string) {
 	}
 
 	for _, record := range testRecords {
-		if !executeRecord(harness, record) {
+		_, _, cont, _ := executeRecord(harness, record)
+		if !cont {
 			break
 		}
 	}
 }
 
 // Executes a single record and returns whether execution of records should continue
-func executeRecord(harness Harness, record *parser.Record) (cont bool) {
+func executeRecord(harness Harness, record *parser.Record) (schema string, results []string, cont bool, err error) {
 	currRecord = record
 
 	defer func() {
@@ -115,7 +241,7 @@ func executeRecord(harness Harness, record *parser.Record) (cont bool) {
 		if record.Type() == parser.Query || record.Type() == parser.Statement {
 			logSkip()
 		}
-		return true
+		return "", nil, false, nil
 	}
 
 	switch record.Type() {
@@ -125,29 +251,29 @@ func executeRecord(harness Harness, record *parser.Record) (cont bool) {
 		if record.ExpectError() {
 			if err == nil {
 				logFailure("Expected error but didn't get one")
-				return true
+				return "", nil, true, nil
 			}
 		} else if err != nil {
 			logFailure("Unexpected error %v", err)
-			return true
+			return "", nil, true, err
 		}
 
 		logSuccess()
-		return true
+		return "", nil, true, nil
 	case parser.Query:
 		schemaStr, results, err := harness.ExecuteQuery(record.Query())
 		if err != nil {
 			logFailure("Unexpected error %v", err)
-			return true
+			return "", nil, true, err
 		}
 
 		// Only log one error per record, so if schema comparison fails don't bother with result comparison
 		if verifySchema(record, schemaStr) {
 			verifyResults(record, results)
 		}
-		return true
+		return schemaStr, results, true, nil
 	case parser.Halt:
-		return false
+		return "", nil, false, nil
 	default:
 		panic(fmt.Sprintf("Uncrecognized record type %v", record.Type()))
 	}

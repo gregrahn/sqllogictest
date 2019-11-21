@@ -26,5 +26,5 @@ func main() {
 	args := os.Args[1:]
 
 	harness := mysql.NewMysqlHarness("sqllogictest:password@tcp(127.0.0.1:3306)/sqllogictest")
-	logictest.RunTestFiles(harness, args...)
+	logictest.GenerateTestFiles(harness, args...)
 }
