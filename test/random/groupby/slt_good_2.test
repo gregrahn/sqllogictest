@@ -74,10 +74,10 @@ SELECT ALL + - 65 FROM tab1 GROUP BY col1
 -65
 -65
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 39 + 59 AS col0 FROM tab2 GROUP BY tab2.col0
 ----
-98
+98.000
 
 query I rowsort
 SELECT DISTINCT + - 56 FROM tab0 GROUP BY col1
@@ -745,10 +745,10 @@ SELECT + ( tab1.col1 ) FROM tab1 GROUP BY col1
 57
 6
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + - ( - 76 ) FROM tab2, tab0 AS cor0 GROUP BY cor0.col0
 ----
-76
+76.000
 
 query I rowsort
 SELECT - 77 AS col2 FROM tab2 AS cor0 CROSS JOIN tab0 cor1 GROUP BY cor0.col0
@@ -1467,7 +1467,7 @@ SELECT DISTINCT cor1.col0 col2 FROM tab2 AS cor0 CROSS JOIN tab2 AS cor1 GROUP B
 92
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-205
+query R rowsort label-205
 SELECT ALL CAST( NULL AS DECIMAL ) FROM tab1, tab0 cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -3911,7 +3911,7 @@ SELECT DISTINCT 54 AS col0 FROM tab0 GROUP BY tab0.col0
 54
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-538
+query R rowsort label-538
 SELECT CAST( NULL AS DECIMAL ) AS col2 FROM tab1 AS cor0 GROUP BY cor0.col0
 ----
 NULL
@@ -4654,12 +4654,12 @@ SELECT ALL - 52 + - 44 FROM tab2 cor0 GROUP BY cor0.col0
 -96
 -96
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 15 AS col0 FROM tab1 GROUP BY tab1.col2
 ----
-15
-15
-15
+15.000
+15.000
+15.000
 
 query I rowsort
 SELECT ALL + - col0 FROM tab0 GROUP BY col0
@@ -4992,10 +4992,10 @@ SELECT - cor0.col0 + + 3 AS col2 FROM tab1 cor0 GROUP BY cor0.col0
 -25
 -79
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 89 FROM tab1 GROUP BY tab1.col2
 ----
-89
+89.000
 
 query I rowsort
 SELECT - 69 AS col0 FROM tab0 GROUP BY col2
@@ -5212,12 +5212,12 @@ SELECT + col1 * + 32 + cor0.col1 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col1
 1881
 198
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 23 AS col1 FROM tab2 GROUP BY tab2.col1
 ----
-23
-23
-23
+23.000
+23.000
+23.000
 
 query I rowsort
 SELECT + 38 AS col1 FROM tab1 GROUP BY col0
@@ -5288,12 +5288,12 @@ SELECT - 96 AS col0 FROM tab0 AS cor0 GROUP BY cor0.col0
 -96
 -96
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 27 FROM tab2 GROUP BY col1
 ----
-27
-27
-27
+27.000
+27.000
+27.000
 
 query I rowsort
 SELECT + + 21 AS col0 FROM tab0 GROUP BY tab0.col2
@@ -5328,12 +5328,12 @@ SELECT DISTINCT + cor0.col1 + + cor0.col1 AS col0 FROM tab1 AS cor0 GROUP BY col
 88
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT ALL - - 9 col2 FROM tab2 GROUP BY tab2.col1
 ----
-9
-9
-9
+9.000
+9.000
+9.000
 
 query I rowsort
 SELECT 44 AS col2 FROM tab0 cor0 GROUP BY cor0.col1, cor0.col2
@@ -5543,12 +5543,12 @@ SELECT ALL + + tab2.col2 AS col1 FROM tab2 GROUP BY col2
 87
 
 onlyif mysql # DIV for integer division: 
-query I rowsort label-762
+query R rowsort label-762
 SELECT ALL - - 92 + tab1.col2 DIV 34 AS col1 FROM tab1 GROUP BY col2
 ----
-92
-93
-94
+92.000
+93.000
+94.000
 
 skipif mysql # not compatible
 query I rowsort label-762
@@ -6597,12 +6597,12 @@ SELECT + col0 AS col0 FROM tab1 GROUP BY tab1.col0
 28
 82
 
-query I rowsort
+query R rowsort
 SELECT - - 31 FROM tab2 GROUP BY tab2.col0
 ----
-31
-31
-31
+31.000
+31.000
+31.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -6625,10 +6625,10 @@ SELECT DISTINCT cor0.col1 * - 53 AS col1 FROM tab0 AS cor0 GROUP BY cor0.col1
 -4293
 0
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 86 AS col0 FROM tab2 GROUP BY col1
 ----
-86
+86.000
 
 query I rowsort
 SELECT DISTINCT 13 FROM tab1 GROUP BY tab1.col2
@@ -7297,11 +7297,11 @@ SELECT ALL cor0.col0 / cor0.col2 - + cor0.col2 * + 4 FROM tab0 AS cor0 GROUP BY 
 -316
 -95
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 67 AS col0 FROM tab0 GROUP BY tab0.col1
 ----
-67
-67
+67.000
+67.000
 
 query I rowsort
 SELECT - cor0.col0 * + 60 FROM tab2 cor0 GROUP BY cor0.col0, cor0.col1
@@ -7317,12 +7317,12 @@ SELECT DISTINCT - cor1.col1 FROM tab1 AS cor0 CROSS JOIN tab2 AS cor1 GROUP BY c
 -59
 -61
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 49 * - 69 FROM tab0 GROUP BY tab0.col2
 ----
--3381
--3381
--3381
+-3381.000
+-3381.000
+-3381.000
 
 query I rowsort
 SELECT - cor0.col1 FROM tab1 AS cor0 GROUP BY cor0.col1, cor0.col1
@@ -8566,12 +8566,12 @@ SELECT - 93 AS col0 FROM tab2 GROUP BY tab2.col0
 -93
 -93
 
-query I rowsort
+query R rowsort
 SELECT - - 88 AS col2 FROM tab2 GROUP BY tab2.col0
 ----
-88
-88
-88
+88.000
+88.000
+88.000
 
 query I rowsort
 SELECT + col1 * + tab1.col1 FROM tab1 GROUP BY tab1.col1
@@ -9150,12 +9150,12 @@ SELECT ALL - + 18 AS col2 FROM tab2 GROUP BY tab2.col0
 -18
 -18
 
-query I rowsort
+query R rowsort
 SELECT - - 65 FROM tab1 GROUP BY col1
 ----
-65
-65
-65
+65.000
+65.000
+65.000
 
 query I rowsort
 SELECT 4 AS col2 FROM tab1 GROUP BY col1
@@ -9621,10 +9621,10 @@ SELECT - cor0.col0 + col0 AS col0 FROM tab2 AS cor0 GROUP BY cor0.col0
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 51 AS col2 FROM tab2 GROUP BY tab2.col0
 ----
-51
+51.000
 
 query I rowsort
 SELECT ALL - 85 + 80 FROM tab1 cor0 GROUP BY cor0.col1
@@ -10076,12 +10076,12 @@ SELECT - 19 AS col2 FROM tab2 GROUP BY col0
 -19
 -19
 
-query I rowsort
+query R rowsort
 SELECT - - 1 AS col1 FROM tab2 GROUP BY col2
 ----
-1
-1
-1
+1.000
+1.000
+1.000
 
 query I rowsort
 SELECT ALL - cor0.col2 * + cor0.col2 FROM tab0 AS cor0 GROUP BY col2
@@ -10381,10 +10381,10 @@ SELECT DISTINCT + ( + tab0.col2 ) * + tab0.col2 FROM tab0 GROUP BY tab0.col2
 576
 6241
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - ( - 78 ) AS col2 FROM tab0 GROUP BY tab0.col2
 ----
-78
+78.000
 
 query I rowsort
 SELECT DISTINCT - 34 FROM tab1 GROUP BY tab1.col0
@@ -10750,12 +10750,12 @@ SELECT 38 FROM tab2 GROUP BY tab2.col1
 38
 38
 
-query I rowsort
+query R rowsort
 SELECT - - 32 + 10 AS col1 FROM tab2 GROUP BY tab2.col1
 ----
-42
-42
-42
+42.000
+42.000
+42.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -10779,10 +10779,10 @@ SELECT 19 AS col2 FROM tab0 AS cor0 GROUP BY cor0.col0, cor0.col0
 19
 19
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 30 AS col1 FROM tab1 GROUP BY tab1.col2
 ----
-30
+30.000
 
 query I rowsort
 SELECT cor0.col0 * 88 + 23 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col0
@@ -11836,12 +11836,12 @@ SELECT ALL + tab1.col2 col1 FROM tab1 GROUP BY tab1.col2
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 71 FROM tab2 GROUP BY tab2.col2
 ----
-71
-71
-71
+71.000
+71.000
+71.000
 
 query I rowsort
 SELECT DISTINCT + 94 * + cor0.col1 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col1
@@ -12274,12 +12274,12 @@ SELECT 17 AS col0 FROM tab1 AS cor0 GROUP BY col2
 17
 17
 
-query I rowsort
+query R rowsort
 SELECT ALL - - ( + 63 ) * tab0.col0 FROM tab0 GROUP BY tab0.col0
 ----
-1638
-2709
-5229
+5229.000
+1638.000
+2709.000
 
 onlyif mysql # CAST syntax: SIGNED type: 
 query I rowsort label-1714
@@ -12848,7 +12848,7 @@ SELECT - cor0.col1 AS col0 FROM tab1 cor0 GROUP BY col1
 -6
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-1785
+query R rowsort label-1785
 SELECT ALL CAST( NULL AS SIGNED ) / 78 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col2
 ----
 NULL
@@ -13159,7 +13159,7 @@ SELECT ALL + 78 * cor0.col0 + + cor0.col0 AS col2 FROM tab2 AS cor0 GROUP BY col
 7268
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-1831
+query R rowsort label-1831
 SELECT DISTINCT CAST( NULL AS DECIMAL ) + 5 * 58 AS col2 FROM tab1 AS cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -13740,12 +13740,12 @@ SELECT DISTINCT cor0.col0 AS col0 FROM tab0 AS cor0 GROUP BY cor0.col2, cor0.col
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 2 FROM tab1 GROUP BY tab1.col1
 ----
-2
-2
-2
+2.000
+2.000
+2.000
 
 query I rowsort
 SELECT + cor0.col2 + - cor0.col2 FROM tab2 cor0 GROUP BY cor0.col2
@@ -13977,12 +13977,12 @@ SELECT - + 8 AS col1 FROM tab0 GROUP BY tab0.col0
 -8
 -8
 
-query I rowsort
+query R rowsort
 SELECT - ( - 94 ) FROM tab1 GROUP BY tab1.col0
 ----
-94
-94
-94
+94.000
+94.000
+94.000
 
 query I rowsort
 SELECT DISTINCT - 18 FROM tab2 AS cor0 GROUP BY col0
@@ -13997,7 +13997,7 @@ SELECT DISTINCT cor0.col2 * + cor0.col0 AS col2 FROM tab1 cor0 GROUP BY cor0.col
 5822
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-1938
+query R rowsort label-1938
 SELECT CAST( NULL AS DECIMAL ) * + cor0.col1 + + col1 AS col1 FROM tab2 AS cor0 GROUP BY cor0.col0, cor0.col1
 ----
 NULL
@@ -14247,10 +14247,10 @@ SELECT + 90 * cor0.col0 FROM tab0 AS cor0 GROUP BY cor0.col0
 7470
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-1973
+query R rowsort label-1973
 SELECT DISTINCT - CAST( - 98 AS SIGNED ) AS col0 FROM tab2 AS cor0 GROUP BY cor0.col0
 ----
-98
+98.000
 
 skipif mysql # not compatible
 query I rowsort label-1973
@@ -14345,12 +14345,12 @@ SELECT DISTINCT 72 FROM tab1 GROUP BY col1
 ----
 72
 
-query I rowsort
+query R rowsort
 SELECT - - 98 AS col2 FROM tab0 GROUP BY tab0.col2
 ----
-98
-98
-98
+98.000
+98.000
+98.000
 
 query I rowsort
 SELECT ALL ( col0 ) * cor0.col0 + - cor0.col0 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col0
@@ -14478,12 +14478,12 @@ SELECT ALL - col0 + - cor0.col2 AS col1 FROM tab1 AS cor0 GROUP BY cor0.col2, co
 -30
 -73
 
-query I rowsort
+query R rowsort
 SELECT - - 63 AS col2 FROM tab0 GROUP BY tab0.col2
 ----
-63
-63
-63
+63.000
+63.000
+63.000
 
 query I rowsort
 SELECT 70 * tab1.col0 FROM tab1 GROUP BY tab1.col0
@@ -14770,7 +14770,7 @@ SELECT - col0 - col0 FROM tab2 GROUP BY col0 HAVING NULL IS NULL
 -184
 -30
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT cor0.col1 / cor0.col1 + cor0.col1 FROM tab0 AS cor0 GROUP BY cor0.col1 HAVING NOT NULL IS NULL
 ----
 
@@ -14863,12 +14863,12 @@ SELECT - 35 FROM tab2 AS cor0 GROUP BY cor0.col2
 -35
 -35
 
-query I rowsort
+query R rowsort
 SELECT - ( - 48 ) FROM tab1 AS cor0 GROUP BY cor0.col0, cor0.col2
 ----
-48
-48
-48
+48.000
+48.000
+48.000
 
 query I rowsort
 SELECT ( 17 ) AS col0 FROM tab1 AS cor0 GROUP BY cor0.col0
@@ -15260,11 +15260,11 @@ SELECT cor1.col2 col0 FROM tab2 AS cor0 CROSS JOIN tab1 AS cor1 GROUP BY cor1.co
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 95 + tab0.col1 FROM tab0 GROUP BY col1
 ----
-176
-95
+95.000
+176.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -15325,12 +15325,12 @@ SELECT ALL col1 FROM tab0 cor0 GROUP BY col1
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT - - ( + 11 ) * - 58 AS col0 FROM tab2 GROUP BY col1
 ----
--638
--638
--638
+-638.000
+-638.000
+-638.000
 
 query I rowsort
 SELECT DISTINCT 92 AS col2 FROM tab0 AS cor0 GROUP BY cor0.col1
@@ -15971,12 +15971,12 @@ SELECT ALL cor0.col2 FROM tab0 cor0 GROUP BY cor0.col1, cor0.col2
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT - - 28 FROM tab0 GROUP BY tab0.col0
 ----
-28
-28
-28
+28.000
+28.000
+28.000
 
 query I rowsort
 SELECT cor0.col2 * + ( 29 ) AS col2 FROM tab0 AS cor0 GROUP BY cor0.col2
@@ -16341,12 +16341,12 @@ SELECT ( 87 ) AS col1 FROM tab2 AS cor0 GROUP BY cor0.col0
 87
 87
 
-query I rowsort
+query R rowsort
 SELECT - - 90 + col0 AS col0 FROM tab2 GROUP BY col0
 ----
-105
-181
-182
+105.000
+181.000
+182.000
 
 query I rowsort
 SELECT - 84 AS col1 FROM tab2 AS cor0 GROUP BY cor0.col1
@@ -17079,12 +17079,12 @@ SELECT - 21 AS col0 FROM tab2 GROUP BY col2
 -21
 -21
 
-query I rowsort
+query R rowsort
 SELECT - - 73 AS col2 FROM tab2 GROUP BY col1
 ----
-73
-73
-73
+73.000
+73.000
+73.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -17462,12 +17462,12 @@ SELECT 94 AS col2 FROM tab0 AS cor0 GROUP BY cor0.col0, cor0.col2
 94
 94
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 99 * - 75 FROM tab2 GROUP BY tab2.col2
 ----
--7425
--7425
--7425
+-7425.000
+-7425.000
+-7425.000
 
 query I rowsort
 SELECT DISTINCT + col0 + 38 FROM tab1 AS cor0 GROUP BY cor0.col0
@@ -17524,12 +17524,12 @@ SELECT ALL 77 FROM tab0 cor0 CROSS JOIN tab1 AS cor1 GROUP BY cor0.col2
 77
 77
 
-query I rowsort
+query R rowsort
 SELECT - ( - 7 ) AS col1 FROM tab1 cor0 CROSS JOIN tab2 cor1 GROUP BY cor0.col0
 ----
-7
-7
-7
+7.000
+7.000
+7.000
 
 query I rowsort
 SELECT 46 AS col0 FROM tab0 AS cor0 CROSS JOIN tab2 cor1 GROUP BY cor0.col1
@@ -17970,7 +17970,7 @@ SELECT - cor0.col0 * 34 FROM tab1 AS cor0 GROUP BY cor0.col0
 -748
 -952
 
-query I rowsort
+query R rowsort
 SELECT + tab2.col0 + tab2.col0 / tab2.col0 AS col1 FROM tab2 GROUP BY tab2.col0 HAVING NOT NULL = ( NULL )
 ----
 
@@ -18918,7 +18918,7 @@ SELECT ALL + 42 AS col2 FROM tab1 AS cor0 GROUP BY cor0.col2
 42
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-2618
+query R rowsort label-2618
 SELECT CAST( NULL AS DECIMAL ) * 74 AS col2 FROM tab1 AS cor0 GROUP BY col1
 ----
 NULL
@@ -19299,7 +19299,7 @@ SELECT ALL - col2 AS col1 FROM tab0 AS cor0 GROUP BY cor0.col2, cor0.col0
 -79
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-2670
+query R rowsort label-2670
 SELECT DISTINCT - CAST( NULL AS DECIMAL ) + - cor0.col1 FROM tab1 AS cor0 GROUP BY cor0.col1, cor0.col1
 ----
 NULL
@@ -19378,12 +19378,12 @@ SELECT ALL cor0.col1 * - cor0.col1 col2 FROM tab2 AS cor0 GROUP BY cor0.col1
 -3481
 -3721
 
-query I rowsort
+query R rowsort
 SELECT - ( - 4 ) AS col1 FROM tab1 AS cor0 GROUP BY cor0.col2
 ----
-4
-4
-4
+4.000
+4.000
+4.000
 
 query I rowsort
 SELECT cor0.col2 + + col2 FROM tab2 AS cor0 GROUP BY col2
@@ -19818,10 +19818,10 @@ SELECT ALL cor0.col1 FROM tab0 AS cor0 GROUP BY cor0.col1 HAVING NULL IS NULL
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 97 AS col2 FROM tab0 GROUP BY tab0.col1
 ----
-97
+97.000
 
 query I rowsort
 SELECT ALL - 34 AS col1 FROM tab2 AS cor0 GROUP BY cor0.col2, cor0.col1
@@ -20235,7 +20235,7 @@ SELECT ALL cor0.col0 + - 37 col1 FROM tab2 AS cor0 GROUP BY cor0.col0
 55
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-2803
+query R rowsort label-2803
 SELECT + CAST( NULL AS DECIMAL ) * 49 FROM tab2 GROUP BY col1
 ----
 NULL
@@ -20571,12 +20571,12 @@ SELECT - + tab0.col2 * + 11 col0 FROM tab0 GROUP BY tab0.col2
 -869
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT ALL - - 51 * - tab1.col0 col0 FROM tab1 GROUP BY tab1.col0
 ----
--1122
--1428
--4182
+-1122.000
+-1428.000
+-4182.000
 
 query I rowsort
 SELECT 94 FROM tab1 AS cor0 GROUP BY cor0.col0, cor0.col0
@@ -21229,12 +21229,12 @@ SELECT - 25 FROM tab1 cor0 GROUP BY cor0.col0
 -25
 -25
 
-query I rowsort
+query R rowsort
 SELECT - - 91 AS col1 FROM tab1 GROUP BY col2
 ----
-91
-91
-91
+91.000
+91.000
+91.000
 
 query I rowsort
 SELECT + 19 AS col0 FROM tab2 AS cor0 GROUP BY cor0.col0, col1
@@ -21354,20 +21354,20 @@ SELECT - cor0.col2 - cor0.col0 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col0, cor
 -30
 -73
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 39 FROM tab2 GROUP BY col0
 ----
-39
+39.000
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 40 AS col1 FROM tab2 GROUP BY tab2.col1
 ----
-40
+40.000
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 49 FROM tab1 GROUP BY col0
 ----
-49
+49.000
 
 query I rowsort
 SELECT - 52 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col0
@@ -21561,11 +21561,11 @@ SELECT DISTINCT + col2 AS col0 FROM tab0 AS cor0 GROUP BY cor0.col2, cor0.col1
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT - - 10 FROM tab0 GROUP BY tab0.col1
 ----
-10
-10
+10.000
+10.000
 
 query I rowsort
 SELECT ALL - 43 AS col0 FROM tab2 AS cor0 GROUP BY col1
@@ -21720,10 +21720,10 @@ SELECT cor0.col1 AS col0 FROM tab1 AS cor0 CROSS JOIN tab2 AS cor1 GROUP BY cor0
 57
 6
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 48 AS col1 FROM tab0, tab0 cor0 GROUP BY cor0.col1
 ----
-48
+48.000
 
 query I rowsort
 SELECT DISTINCT cor0.col1 * + 93 AS col0 FROM tab0 AS cor0 GROUP BY cor0.col1
@@ -21758,12 +21758,12 @@ SELECT ALL 19 col0 FROM tab0 cor0 GROUP BY cor0.col2
 19
 19
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 29 AS col1 FROM tab1 GROUP BY col0
 ----
-29
-29
-29
+29.000
+29.000
+29.000
 
 query I rowsort
 SELECT cor0.col0 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col0, cor0.col2
@@ -21804,7 +21804,7 @@ SELECT DISTINCT cor1.col0 - cor1.col0 FROM tab2 AS cor0 CROSS JOIN tab0 AS cor1 
 0
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-3023
+query R rowsort label-3023
 SELECT + CAST( NULL AS SIGNED ) / + 25 FROM tab2 GROUP BY tab2.col1
 ----
 NULL
@@ -22768,12 +22768,12 @@ SELECT ALL - tab0.col1 + col1 FROM tab0 GROUP BY tab0.col1
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT - - 9 AS col0 FROM tab1 GROUP BY col2
 ----
-9
-9
-9
+9.000
+9.000
+9.000
 
 query I rowsort
 SELECT DISTINCT + col2 AS col0 FROM tab0 GROUP BY col2
@@ -23187,12 +23187,12 @@ SELECT 7 * - cor0.col2 FROM tab1 AS cor0 GROUP BY cor0.col2
 -497
 -56
 
-query I rowsort
+query R rowsort
 SELECT ALL - ( - 89 ) FROM tab1 cor0 GROUP BY cor0.col1
 ----
-89
-89
-89
+89.000
+89.000
+89.000
 
 query I rowsort
 SELECT 41 AS col0 FROM tab0 GROUP BY tab0.col2
@@ -23254,12 +23254,12 @@ SELECT DISTINCT 80 AS col1 FROM tab1 GROUP BY tab1.col0
 ----
 80
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 37 AS col0 FROM tab0 GROUP BY tab0.col0
 ----
-37
-37
-37
+37.000
+37.000
+37.000
 
 query I rowsort
 SELECT DISTINCT + - 56 + + tab0.col0 FROM tab0 GROUP BY col0
@@ -23658,10 +23658,10 @@ SELECT - cor0.col0 AS col2 FROM tab1 AS cor0 GROUP BY cor0.col0, cor0.col1
 -28
 -82
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 11 FROM tab1 GROUP BY tab1.col0
 ----
-11
+11.000
 
 query I rowsort
 SELECT - 24 + + col1 AS col0 FROM tab0 GROUP BY tab0.col1
@@ -24213,12 +24213,12 @@ SELECT + cor0.col0 AS col2 FROM tab1 AS cor0 GROUP BY cor0.col0, col1
 28
 82
 
-query I rowsort
+query R rowsort
 SELECT - - 92 FROM tab1 GROUP BY col1
 ----
-92
-92
-92
+92.000
+92.000
+92.000
 
 query I rowsort
 SELECT DISTINCT - 53 AS col0 FROM tab2 GROUP BY col0
@@ -24393,12 +24393,12 @@ SELECT ALL cor1.col0 AS col0 FROM tab0 AS cor0 CROSS JOIN tab2 AS cor1 GROUP BY 
 91
 92
 
-query I rowsort
+query R rowsort
 SELECT - ( - 3 ) FROM tab1 AS cor0 CROSS JOIN tab0 AS cor1 GROUP BY cor0.col1
 ----
-3
-3
-3
+3.000
+3.000
+3.000
 
 query I rowsort
 SELECT + 0 AS col1 FROM tab2 cor0 GROUP BY col2
@@ -24825,7 +24825,7 @@ SELECT DISTINCT tab0.col0 FROM tab0 WHERE NULL IS NOT NULL GROUP BY col0
 ----
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-3440
+query R rowsort label-3440
 SELECT ALL cor0.col1 + + CAST( NULL AS DECIMAL ) AS col2 FROM tab2 AS cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -24991,12 +24991,12 @@ SELECT ALL 73 AS col0 FROM tab0 AS cor0 GROUP BY cor0.col1, cor0.col1
 73
 73
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 76 FROM tab1 GROUP BY tab1.col1
 ----
-76
-76
-76
+76.000
+76.000
+76.000
 
 query I rowsort
 SELECT col1 + 83 FROM tab0 GROUP BY col1
@@ -25177,12 +25177,12 @@ SELECT ALL 80 + cor0.col0 AS col1 FROM tab0 AS cor0 GROUP BY cor0.col0, col0
 123
 163
 
-query I rowsort
+query R rowsort
 SELECT - ( - 80 ) FROM tab1 GROUP BY tab1.col1
 ----
-80
-80
-80
+80.000
+80.000
+80.000
 
 query I rowsort
 SELECT 93 FROM tab2 AS cor0 GROUP BY cor0.col1, cor0.col0
@@ -25502,7 +25502,7 @@ SELECT + ( cor0.col0 ) / - cor0.col2 AS col1 FROM tab0 AS cor0 GROUP BY cor0.col
 0
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-3529
+query R rowsort label-3529
 SELECT DISTINCT + cor0.col0 + - CAST( NULL AS DECIMAL ) * - ( + 63 ) FROM tab1 AS cor0 CROSS JOIN tab0 AS cor1 GROUP BY cor0.col0
 ----
 NULL
@@ -26021,12 +26021,12 @@ SELECT DISTINCT cor0.col1 * cor0.col1 FROM tab0 AS cor0 GROUP BY col1, col2
 0
 6561
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 97 AS col2 FROM tab2 GROUP BY tab2.col1
 ----
-97
-97
-97
+97.000
+97.000
+97.000
 
 query I rowsort
 SELECT - cor0.col2 + cor0.col2 AS col0 FROM tab1 AS cor0 GROUP BY col2
@@ -26036,7 +26036,7 @@ SELECT - cor0.col2 + cor0.col2 AS col0 FROM tab1 AS cor0 GROUP BY col2
 0
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-3597
+query R rowsort label-3597
 SELECT CAST( NULL AS DECIMAL ) col1 FROM tab2 AS cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -26237,12 +26237,12 @@ SELECT DISTINCT 31 AS col1 FROM tab2 AS cor0 GROUP BY col1
 ----
 31
 
-query I rowsort
+query R rowsort
 SELECT - - 99 FROM tab2 GROUP BY tab2.col1
 ----
-99
-99
-99
+99.000
+99.000
+99.000
 
 query I rowsort
 SELECT 1 AS col1 FROM tab0 GROUP BY tab0.col1
@@ -26523,12 +26523,12 @@ SELECT - 86 * - cor0.col0 + - 0 FROM tab1 AS cor0 GROUP BY cor0.col2, cor0.col0
 2408
 7052
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 74 AS col2 FROM tab2 GROUP BY tab2.col0
 ----
-74
-74
-74
+74.000
+74.000
+74.000
 
 query I rowsort
 SELECT ALL + 4 FROM tab2 GROUP BY tab2.col2
@@ -26776,12 +26776,12 @@ SELECT DISTINCT 59 FROM tab2 AS cor0 GROUP BY cor0.col1
 ----
 59
 
-query I rowsort
+query R rowsort
 SELECT cor0.col1 * - ( - 99 ) FROM tab1 AS cor0 GROUP BY cor0.col1
 ----
-4356
-5643
-594
+594.000
+5643.000
+4356.000
 
 query I rowsort
 SELECT DISTINCT col1 AS col2 FROM tab0 AS cor0 GROUP BY cor0.col0, cor0.col1
@@ -26920,7 +26920,7 @@ SELECT cor0.col1 - cor0.col0 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col0, cor0.
 46
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-3720
+query R rowsort label-3720
 SELECT DISTINCT CAST( NULL AS DECIMAL ) AS col1 FROM tab1 AS cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -27055,12 +27055,12 @@ SELECT - 80 FROM tab2 AS cor0 CROSS JOIN tab1 AS cor1 GROUP BY cor0.col2, cor1.c
 ----
 9 values hashing to 4dde3bd5652d30396b9cadd0e2cfb680
 
-query I rowsort
+query R rowsort
 SELECT - - 70 FROM tab0 GROUP BY tab0.col2
 ----
-70
-70
-70
+70.000
+70.000
+70.000
 
 query I rowsort
 SELECT DISTINCT 6 * cor0.col1 AS col1 FROM tab1 AS cor0 GROUP BY cor0.col1, cor0.col1
@@ -27707,12 +27707,12 @@ SELECT ALL ( - cor0.col0 ) * cor0.col0 FROM tab0 AS cor0 GROUP BY cor0.col2, cor
 -676
 -6889
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 29 + + 63 FROM tab1 GROUP BY col1
 ----
-92
-92
-92
+92.000
+92.000
+92.000
 
 query I rowsort
 SELECT ALL 71 FROM tab0 AS cor0 GROUP BY cor0.col1, cor0.col0
@@ -27728,12 +27728,12 @@ SELECT DISTINCT - cor0.col1 + - col1 AS col1 FROM tab0 AS cor0 GROUP BY col1
 0
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 36 * + 87 + - tab0.col0 col0 FROM tab0 GROUP BY col0
 ----
-3049
-3089
-3106
+3049.000
+3089.000
+3106.000
 
 query I rowsort
 SELECT ALL + - 19 FROM tab1 GROUP BY tab1.col2
@@ -28056,7 +28056,7 @@ SELECT DISTINCT cor0.col0 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col1, cor0.col
 82
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-3873
+query R rowsort label-3873
 SELECT CAST( NULL AS DECIMAL ) FROM tab2 AS cor0 CROSS JOIN tab2 AS cor1 GROUP BY cor1.col1
 ----
 NULL
@@ -28198,7 +28198,7 @@ NULL
 NULL
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-3891
+query R rowsort label-3891
 SELECT ALL + CAST( NULL AS DECIMAL ) FROM tab2 AS cor0 GROUP BY cor0.col0
 ----
 NULL
@@ -28543,7 +28543,7 @@ SELECT cor0.col1 AS col0 FROM tab2, tab0 AS cor0 GROUP BY cor0.col1
 81
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-3937
+query R rowsort label-3937
 SELECT DISTINCT + CAST( NULL AS DECIMAL ) FROM tab0 cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -28589,12 +28589,12 @@ SELECT - 43 + - 82 AS col2 FROM tab2 GROUP BY tab2.col2
 -125
 -125
 
-query I rowsort
+query R rowsort
 SELECT - - 83 AS col1 FROM tab0 GROUP BY tab0.col0
 ----
-83
-83
-83
+83.000
+83.000
+83.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -29075,10 +29075,10 @@ SELECT ALL + 58 AS col2 FROM tab1 GROUP BY tab1.col1
 58
 58
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 34 AS col1 FROM tab1 GROUP BY tab1.col1
 ----
-34
+34.000
 
 query I rowsort
 SELECT 9 AS col0 FROM tab0 AS cor0 GROUP BY col1
@@ -29581,12 +29581,12 @@ SELECT DISTINCT + 90 FROM tab2 GROUP BY col1
 ----
 90
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 68 AS col1 FROM tab2 GROUP BY tab2.col1
 ----
-68
-68
-68
+68.000
+68.000
+68.000
 
 query I rowsort
 SELECT ALL ( - 28 ) AS col1 FROM tab0 AS cor0 CROSS JOIN tab1 AS cor1 GROUP BY cor0.col1
@@ -29713,7 +29713,7 @@ SELECT DISTINCT - cor0.col0 * - cor0.col1 AS col1 FROM tab1 AS cor0 GROUP BY cor
 3608
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-4096
+query R rowsort label-4096
 SELECT + CAST( NULL AS DECIMAL ) + tab0.col1 AS col1 FROM tab0 GROUP BY tab0.col1
 ----
 NULL
@@ -30102,7 +30102,7 @@ SELECT col1 col2 FROM tab0 AS cor0 GROUP BY cor0.col1
 81
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-4148
+query R rowsort label-4148
 SELECT CAST( NULL AS DECIMAL ) FROM tab0 AS cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -30714,12 +30714,12 @@ SELECT ALL 57 FROM tab0 cor0 GROUP BY cor0.col2
 57
 57
 
-query I rowsort
+query R rowsort
 SELECT + - ( - 51 ) FROM tab0 GROUP BY tab0.col2
 ----
-51
-51
-51
+51.000
+51.000
+51.000
 
 query I rowsort
 SELECT - NULLIF ( cor0.col2, cor0.col2 ) FROM tab2 AS cor0 GROUP BY cor0.col2
@@ -30754,12 +30754,12 @@ SELECT - col0 * col0 FROM tab0 AS cor0 GROUP BY col0
 -676
 -6889
 
-query I rowsort
+query R rowsort
 SELECT - - 35 FROM tab2 GROUP BY tab2.col2
 ----
-35
-35
-35
+35.000
+35.000
+35.000
 
 query I rowsort
 SELECT DISTINCT + 82 AS col2 FROM tab1 GROUP BY tab1.col1
@@ -30827,12 +30827,12 @@ SELECT - 1 col1 FROM tab2 GROUP BY tab2.col0
 -1
 -1
 
-query I rowsort
+query R rowsort
 SELECT - - 51 FROM tab2 GROUP BY tab2.col0
 ----
-51
-51
-51
+51.000
+51.000
+51.000
 
 query I rowsort
 SELECT + cor0.col0 - cor0.col0 FROM tab2 AS cor0 GROUP BY cor0.col0
@@ -31369,12 +31369,12 @@ SELECT DISTINCT 92 FROM tab0 cor0 GROUP BY cor0.col2
 92
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-4322
+query R rowsort label-4322
 SELECT DISTINCT + cor0.col1 + - CAST( - 83 AS SIGNED ) * - cor0.col1 FROM tab1 cor0 GROUP BY cor0.col2, cor0.col1, col2
 ----
--3608
--4674
--492
+-4674.000
+-3608.000
+-492.000
 
 skipif mysql # not compatible
 query I rowsort label-4322
@@ -31539,7 +31539,7 @@ SELECT ALL + cor0.col0 * COALESCE ( 94 * cor0.col2, cor0.col0 + cor0.col2 ) FROM
 547268
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-4343
+query R rowsort label-4343
 SELECT CAST( NULL AS DECIMAL ) col0 FROM tab2 AS cor0 GROUP BY cor0.col0, cor0.col2
 ----
 NULL
@@ -32720,7 +32720,7 @@ SELECT - 29 FROM tab2 GROUP BY tab2.col0
 -29
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-4511
+query R rowsort label-4511
 SELECT DISTINCT CAST( NULL AS DECIMAL ) FROM tab2 AS cor0 GROUP BY cor0.col2
 ----
 NULL
@@ -32790,12 +32790,12 @@ SELECT + cor0.col1 * - cor0.col1 + + cor0.col1 AS col0 FROM tab1 AS cor0 GROUP B
 -30
 -3192
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 21 AS col1 FROM tab2 GROUP BY tab2.col1
 ----
-21
-21
-21
+21.000
+21.000
+21.000
 
 query I rowsort
 SELECT DISTINCT + 55 * cor0.col0 AS col2 FROM tab0 AS cor0 GROUP BY cor0.col0, cor0.col1
@@ -33221,7 +33221,7 @@ SELECT DISTINCT col1 AS col0 FROM tab0 cor0 GROUP BY cor0.col1, col1
 81
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-4578
+query R rowsort label-4578
 SELECT ALL cor0.col0 + CAST( NULL AS DECIMAL ) FROM tab2 cor0 GROUP BY cor0.col0
 ----
 NULL
@@ -33996,10 +33996,10 @@ SELECT COALESCE ( cor0.col0, 64, cor0.col2 ) FROM tab0 AS cor0 GROUP BY cor0.col
 83
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 83 col1 FROM tab2 GROUP BY col2
 ----
-83
+83.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -34421,7 +34421,7 @@ SELECT ALL + cor0.col0 * cor0.col0 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col0
 8464
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT DISTINCT cor0.col1 / cor0.col1 + cor0.col1 col1 FROM tab2 AS cor0 GROUP BY col1 HAVING NULL = ( NULL )
 ----
 
@@ -35050,7 +35050,7 @@ SELECT + 64 AS col0 FROM tab0 AS cor0 GROUP BY cor0.col2, cor0.col0, cor0.col0
 64
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-4828
+query R rowsort label-4828
 SELECT ALL - CAST( NULL AS SIGNED ) / - col0 + cor0.col0 FROM tab0 AS cor0 GROUP BY cor0.col0
 ----
 NULL
@@ -35575,7 +35575,7 @@ SELECT ALL 40 AS col0 FROM tab2 GROUP BY col1
 40
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-4898
+query R rowsort label-4898
 SELECT CAST( NULL AS DECIMAL ) col1 FROM tab0 AS cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -35642,7 +35642,7 @@ SELECT DISTINCT - 28 AS col2 FROM tab1 cor0 GROUP BY cor0.col2, cor0.col1
 -28
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-4907
+query R rowsort label-4907
 SELECT + CAST( NULL AS DECIMAL ) FROM tab1 AS cor0 GROUP BY cor0.col2
 ----
 NULL
@@ -35855,7 +35855,7 @@ SELECT ALL cor0.col2 AS col2 FROM tab1 AS cor0 GROUP BY cor0.col2, cor0.col0
 8
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-4938
+query R rowsort label-4938
 SELECT DISTINCT cor0.col0 * - CAST( NULL AS DECIMAL ) FROM tab0 AS cor0 GROUP BY cor0.col0, cor0.col2
 ----
 NULL
@@ -36406,12 +36406,12 @@ SELECT 48 * 10 - + cor0.col0 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col0
 389
 465
 
-query I rowsort
+query R rowsort
 SELECT - - 61 * + 43 FROM tab2 GROUP BY tab2.col2
 ----
-2623
-2623
-2623
+2623.000
+2623.000
+2623.000
 
 query I rowsort
 SELECT DISTINCT cor0.col1 * cor0.col1 FROM tab0 AS cor0 GROUP BY cor0.col1
@@ -36531,7 +36531,7 @@ SELECT 71 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col0
 71
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-5031
+query R rowsort label-5031
 SELECT + CAST( NULL AS DECIMAL ) FROM tab2 AS cor0 GROUP BY cor0.col2, cor0.col1
 ----
 NULL
@@ -36552,12 +36552,12 @@ SELECT DISTINCT - cor0.col1 * + cor0.col1 FROM tab0 AS cor0 GROUP BY cor0.col1
 -6561
 0
 
-query I rowsort
+query R rowsort
 SELECT - - ( - 86 ) FROM tab0 GROUP BY col2
 ----
--86
--86
--86
+-86.000
+-86.000
+-86.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -36858,7 +36858,7 @@ SELECT ALL - 5 FROM tab1 GROUP BY tab1.col1
 -5
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-5076
+query R rowsort label-5076
 SELECT col2 / - CAST( NULL AS SIGNED ) FROM tab1 cor0 GROUP BY cor0.col2, cor0.col0
 ----
 NULL
@@ -36905,7 +36905,7 @@ SELECT cor0.col0 AS col1 FROM tab2 AS cor0 GROUP BY cor0.col1, cor0.col0
 92
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-5082
+query R rowsort label-5082
 SELECT cor0.col2 / CAST( NULL AS SIGNED ) + cor0.col2 * + 97 AS col1 FROM tab2 cor0 GROUP BY cor0.col1, cor0.col2, cor0.col1
 ----
 NULL
@@ -37604,7 +37604,7 @@ SELECT - 24 AS col2 FROM tab2 GROUP BY tab2.col0
 -24
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-5170
+query R rowsort label-5170
 SELECT DISTINCT + CAST( NULL AS DECIMAL ) + - 53 FROM tab2 cor0 GROUP BY cor0.col0
 ----
 NULL
@@ -37839,7 +37839,7 @@ SELECT col1 * cor0.col1 AS col1 FROM tab1 cor0 GROUP BY cor0.col1
 3249
 36
 
-query I rowsort
+query R rowsort
 SELECT ALL + cor0.col0 / - cor0.col0 FROM tab2 AS cor0 WHERE ( NULL ) IS NOT NULL GROUP BY cor0.col0
 ----
 
@@ -38481,12 +38481,12 @@ SELECT ALL cor0.col2 * + 97 FROM tab1 AS cor0 GROUP BY cor0.col2
 6887
 776
 
-query I rowsort
+query R rowsort
 SELECT - - 42 AS col1 FROM tab2 GROUP BY tab2.col0
 ----
-42
-42
-42
+42.000
+42.000
+42.000
 
 query I rowsort
 SELECT 44 FROM tab2 AS cor0 GROUP BY col2, cor0.col1
@@ -38814,12 +38814,12 @@ SELECT ALL 46 FROM tab2 AS cor0 GROUP BY cor0.col2
 46
 46
 
-query I rowsort
+query R rowsort
 SELECT - - 50 FROM tab2 GROUP BY tab2.col0
 ----
-50
-50
-50
+50.000
+50.000
+50.000
 
 query I rowsort
 SELECT DISTINCT + ( - 20 ) AS col0 FROM tab1 GROUP BY tab1.col0
@@ -38943,10 +38943,10 @@ SELECT ALL + cor0.col2 * + cor0.col2 FROM tab1 AS cor0 GROUP BY cor0.col2, cor0.
 5041
 64
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 39 FROM tab0, tab1 cor0 GROUP BY cor0.col0
 ----
-39
+39.000
 
 query I rowsort
 SELECT ALL cor0.col2 AS col2 FROM tab2 AS cor0 GROUP BY col2
@@ -38976,10 +38976,10 @@ SELECT DISTINCT + col1 + - cor0.col2 * - cor0.col2 FROM tab2 AS cor0 GROUP BY co
 6300
 7630
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 23 + 2 * 67 AS col1 FROM tab0 GROUP BY tab0.col0
 ----
-157
+157.000
 
 query I rowsort
 SELECT ALL - cor0.col0 * 11 AS col2 FROM tab0 AS cor0 GROUP BY cor0.col0
@@ -39556,12 +39556,12 @@ SELECT ALL + 94 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col0
 94
 94
 
-query I rowsort
+query R rowsort
 SELECT - - 43 - - tab1.col2 AS col1 FROM tab1 GROUP BY col2
 ----
-114
-51
-88
+51.000
+88.000
+114.000
 
 query I rowsort
 SELECT DISTINCT cor0.col2 FROM tab0 AS cor0 GROUP BY cor0.col0, col2
@@ -41005,11 +41005,11 @@ SELECT + col0 AS col1 FROM tab1 AS cor0 GROUP BY col0, cor0.col1
 28
 82
 
-query I rowsort
+query R rowsort
 SELECT ALL - ( - 78 ) AS col2 FROM tab0 AS cor0 GROUP BY cor0.col1
 ----
-78
-78
+78.000
+78.000
 
 query I rowsort
 SELECT + + 55 AS col0 FROM tab1 GROUP BY tab1.col2
@@ -41686,11 +41686,11 @@ SELECT + 69 col2 FROM tab0 AS cor0 GROUP BY cor0.col0
 69
 69
 
-query I rowsort
+query R rowsort
 SELECT - - 47 FROM tab0 GROUP BY tab0.col1
 ----
-47
-47
+47.000
+47.000
 
 query I rowsort
 SELECT + 62 AS col1 FROM tab2 GROUP BY tab2.col1
@@ -41733,12 +41733,12 @@ SELECT ALL - 60 AS col2 FROM tab1 AS cor0 GROUP BY cor0.col1, cor0.col2
 -60
 -60
 
-query I rowsort
+query R rowsort
 SELECT ALL - ( - ( - 86 ) ) AS col0 FROM tab1 cor0 GROUP BY cor0.col0
 ----
--86
--86
--86
+-86.000
+-86.000
+-86.000
 
 query I rowsort
 SELECT DISTINCT + cor0.col1 + - col1 FROM tab1 AS cor0 GROUP BY cor0.col1
@@ -41864,7 +41864,7 @@ SELECT DISTINCT - 7 FROM tab0 GROUP BY col0
 -7
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-5749
+query R rowsort label-5749
 SELECT DISTINCT cor0.col2 + CAST( NULL AS SIGNED ) / + 19 FROM tab2 AS cor0 GROUP BY col2
 ----
 NULL
@@ -41908,12 +41908,12 @@ SELECT - 29 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col2
 -29
 -29
 
-query I rowsort
+query R rowsort
 SELECT - - 47 AS col0 FROM tab2 GROUP BY tab2.col1
 ----
-47
-47
-47
+47.000
+47.000
+47.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -43087,11 +43087,11 @@ SELECT + cor1.col1 - + cor1.col1 FROM tab1 AS cor0 CROSS JOIN tab0 AS cor1 GROUP
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT - - 20 AS col2 FROM tab0 GROUP BY col1
 ----
-20
-20
+20.000
+20.000
 
 query I rowsort
 SELECT DISTINCT 22 * 82 AS col0 FROM tab2 AS cor0 GROUP BY cor0.col1
@@ -43392,7 +43392,7 @@ SELECT DISTINCT cor0.col0 / - col0 FROM tab1 AS cor0 GROUP BY cor0.col0, cor0.co
 ----
 -1
 
-query I rowsort
+query R rowsort
 SELECT ALL NULLIF ( + cor0.col0, + cor0.col0 ) / - cor0.col1 AS col1 FROM tab1 AS cor0 GROUP BY cor0.col0, cor0.col1
 ----
 NULL
@@ -43460,7 +43460,7 @@ SELECT DISTINCT + cor0.col1 AS col2 FROM tab0 AS cor0 GROUP BY cor0.col2, cor0.c
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT ALL + cor0.col1 / - cor0.col1 FROM tab2 AS cor0 GROUP BY cor0.col1 HAVING NOT + cor0.col1 IS NULL AND NULL NOT BETWEEN NULL AND NULL
 ----
 
@@ -43577,7 +43577,7 @@ SELECT - 32 + + cor0.col0 FROM tab2 AS cor0 GROUP BY cor0.col0, cor0.col2
 60
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-5984
+query R rowsort label-5984
 SELECT CAST( NULL AS DECIMAL ) * + 2 FROM tab0 AS cor0 GROUP BY cor0.col0
 ----
 NULL
@@ -44407,7 +44407,7 @@ SELECT DISTINCT cor0.col2 - ( 28 ) AS col2 FROM tab0 AS cor0 GROUP BY cor0.col2
 51
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-6097
+query R rowsort label-6097
 SELECT ALL + ( cor0.col2 ) / col2 + CAST( NULL AS SIGNED ) FROM tab0 cor0 GROUP BY cor0.col2
 ----
 NULL
@@ -44472,12 +44472,12 @@ SELECT ALL - 81 FROM tab1 GROUP BY col0
 -81
 -81
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 52 FROM tab2 GROUP BY col0
 ----
-52
-52
-52
+52.000
+52.000
+52.000
 
 query I rowsort
 SELECT - + 34 AS col1 FROM tab2 GROUP BY tab2.col0
@@ -45161,7 +45161,7 @@ SELECT ALL - cor0.col0 * - cor0.col0 FROM tab0 AS cor0 GROUP BY col0, cor0.col0
 6889
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-6202
+query R rowsort label-6202
 SELECT DISTINCT CAST( NULL AS DECIMAL ) FROM tab1 AS cor0 GROUP BY cor0.col0
 ----
 NULL
@@ -45256,7 +45256,7 @@ SELECT 39 FROM tab1 AS cor0 GROUP BY col0
 39
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-6214
+query R rowsort label-6214
 SELECT + CAST( NULL AS DECIMAL ) + - 22 * cor0.col0 AS col1 FROM tab1 AS cor0 GROUP BY cor0.col2, cor0.col0
 ----
 NULL
@@ -45934,12 +45934,12 @@ NULL
 NULL
 NULL
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 95 AS col1 FROM tab0 GROUP BY tab0.col2
 ----
-95
-95
-95
+95.000
+95.000
+95.000
 
 query I rowsort
 SELECT + cor0.col2 + 5 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col2
@@ -46804,10 +46804,10 @@ SELECT - 79 FROM tab1 GROUP BY tab1.col1
 -79
 -79
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 89 AS col2 FROM tab1 GROUP BY tab1.col0
 ----
-89
+89.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -47301,11 +47301,11 @@ SELECT 90 FROM tab1 GROUP BY tab1.col2
 90
 90
 
-query I rowsort
+query R rowsort
 SELECT - ( - 63 ) FROM tab0 AS cor0 GROUP BY cor0.col1, cor0.col1
 ----
-63
-63
+63.000
+63.000
 
 query I rowsort
 SELECT ALL + 7 AS col2 FROM tab0, tab2 AS cor0 GROUP BY cor0.col2
@@ -47335,7 +47335,7 @@ SELECT 76 AS col0 FROM tab2 GROUP BY col2
 76
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-6495
+query R rowsort label-6495
 SELECT CAST( NULL AS DECIMAL ) / cor0.col1 + cor0.col1 AS col0 FROM tab2 AS cor0 GROUP BY col1
 ----
 NULL
@@ -48361,7 +48361,7 @@ SELECT 13 FROM tab2 AS cor0 CROSS JOIN tab0 cor1 GROUP BY cor0.col2
 13
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-6641
+query R rowsort label-6641
 SELECT CAST( NULL AS DECIMAL ) FROM tab1 AS cor0 GROUP BY cor0.col2
 ----
 NULL
@@ -48393,10 +48393,10 @@ SELECT 74 / 68 FROM tab2 AS cor0 GROUP BY cor0.col2
 1
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 95 col2 FROM tab0 GROUP BY tab0.col1
 ----
-95
+95.000
 
 query I rowsort
 SELECT 43 + + cor0.col0 FROM tab0 AS cor0 GROUP BY col0
@@ -48459,12 +48459,12 @@ SELECT DISTINCT + 39 AS col0 FROM tab2 GROUP BY tab2.col1
 ----
 39
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 69 + tab0.col2 AS col1 FROM tab0 GROUP BY tab0.col2
 ----
-107
-148
-93
+93.000
+107.000
+148.000
 
 query I rowsort
 SELECT - col0 AS col1 FROM tab0 cor0 GROUP BY cor0.col2, cor0.col0
@@ -49133,12 +49133,12 @@ SELECT + 27 * + 92 AS col2 FROM tab1 GROUP BY tab1.col0
 2484
 2484
 
-query I rowsort
+query R rowsort
 SELECT - ( - ( 1 ) ) FROM tab2 GROUP BY tab2.col0
 ----
-1
-1
-1
+1.000
+1.000
+1.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -50273,12 +50273,12 @@ SELECT ALL - cor0.col0 + cor0.col0 * 89 FROM tab2 AS cor0 GROUP BY cor0.col0
 8008
 8096
 
-query I rowsort
+query R rowsort
 SELECT - - 27 - 31 FROM tab1 GROUP BY tab1.col0
 ----
--4
--4
--4
+-4.000
+-4.000
+-4.000
 
 query I rowsort
 SELECT - cor0.col2 * + 33 FROM tab1 AS cor0 GROUP BY cor0.col2, cor0.col2
@@ -50685,12 +50685,12 @@ SELECT ALL + cor0.col0 AS col0 FROM tab0 AS cor0 GROUP BY cor0.col0, col0
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT ALL + - ( - 16 ) FROM tab2 GROUP BY col2
 ----
-16
-16
-16
+16.000
+16.000
+16.000
 
 query I rowsort
 SELECT cor0.col2 + + cor0.col2 FROM tab2 AS cor0 GROUP BY col2
@@ -51095,10 +51095,10 @@ SELECT DISTINCT + 42 AS col0 FROM tab0 GROUP BY tab0.col0
 ----
 42
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 86 FROM tab0 GROUP BY tab0.col2
 ----
-86
+86.000
 
 query I rowsort
 SELECT - 41 + - tab1.col0 FROM tab1 GROUP BY tab1.col0
@@ -51637,10 +51637,10 @@ SELECT DISTINCT 88 FROM tab1 GROUP BY col1
 ----
 88
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - ( - 32 ) FROM tab0 GROUP BY tab0.col0
 ----
--32
+-32.000
 
 query I rowsort
 SELECT DISTINCT + - 10 + tab0.col0 * tab0.col0 AS col1 FROM tab0 GROUP BY tab0.col0
@@ -51741,12 +51741,12 @@ SELECT + cor0.col0 * 95 FROM tab0 AS cor0 GROUP BY cor0.col1, cor0.col0
 7885
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT - - 35 col0 FROM tab0 GROUP BY tab0.col2
 ----
-35
-35
-35
+35.000
+35.000
+35.000
 
 query I rowsort
 SELECT DISTINCT 97 FROM tab1 cor0 CROSS JOIN tab0 AS cor1 GROUP BY cor0.col1
@@ -52555,10 +52555,10 @@ SELECT - col2 * 75 col1 FROM tab0 AS cor0 GROUP BY col2
 -2850
 -5925
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - ( - 26 ) AS col0 FROM tab2 GROUP BY col1
 ----
--26
+-26.000
 
 query I rowsort
 SELECT - cor0.col2 * - 37 FROM tab0 AS cor0 GROUP BY cor0.col2
@@ -53049,10 +53049,10 @@ SELECT - 62 AS col0 FROM tab1 GROUP BY tab1.col2
 -62
 -62
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 35 AS col2 FROM tab1 GROUP BY col0
 ----
-35
+35.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -54785,10 +54785,10 @@ SELECT - cor0.col0 + + COALESCE ( - cor0.col0, cor0.col0 * - col0 + cor0.col0 ) 
 -184
 -30
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 28 FROM tab2 GROUP BY tab2.col2
 ----
-28
+28.000
 
 query I rowsort
 SELECT DISTINCT col1 FROM tab1 AS cor0 GROUP BY cor0.col1, col2
@@ -55355,12 +55355,12 @@ SELECT - col1 * - tab2.col1 FROM tab2 GROUP BY col1
 3721
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT - - 33 col2 FROM tab1 GROUP BY col1
 ----
-33
-33
-33
+33.000
+33.000
+33.000
 
 query I rowsort
 SELECT DISTINCT 95 * 79 FROM tab1 GROUP BY tab1.col2
@@ -56234,12 +56234,12 @@ query I rowsort
 SELECT ALL + tab2.col1 AS col1 FROM tab2 GROUP BY tab2.col1 HAVING NOT NULL IS NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT - - 45 FROM tab1 GROUP BY tab1.col1
 ----
-45
-45
-45
+45.000
+45.000
+45.000
 
 query I rowsort
 SELECT + COALESCE ( + 46, - col0 ) * cor0.col0 FROM tab2 AS cor0 GROUP BY cor0.col0
@@ -56468,12 +56468,12 @@ SELECT DISTINCT cor0.col1 + cor0.col1 * col1 AS col0 FROM tab2 cor0 GROUP BY col
 3540
 3782
 
-query I rowsort
+query R rowsort
 SELECT - - 27 FROM tab1 GROUP BY tab1.col1
 ----
-27
-27
-27
+27.000
+27.000
+27.000
 
 query I rowsort
 SELECT ALL - col2 FROM tab0 AS cor0 GROUP BY cor0.col2, cor0.col1
@@ -56501,12 +56501,12 @@ SELECT + 60 AS col2 FROM tab0 GROUP BY tab0.col2
 60
 60
 
-query I rowsort
+query R rowsort
 SELECT - - 19 * + tab1.col2 FROM tab1 GROUP BY tab1.col2
 ----
-1349
-152
-855
+152.000
+855.000
+1349.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -56909,7 +56909,7 @@ SELECT DISTINCT + - 85 FROM tab0 GROUP BY tab0.col0
 -85
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-7820
+query R rowsort label-7820
 SELECT DISTINCT CAST( NULL AS SIGNED ) / + tab1.col1 FROM tab1 GROUP BY col1
 ----
 NULL
@@ -57033,7 +57033,7 @@ SELECT + 65 / col2 FROM tab2 cor0 GROUP BY cor0.col2, cor0.col1
 1
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-7833
+query R rowsort label-7833
 SELECT CAST( NULL AS DECIMAL ) / 74 AS col2 FROM tab0 AS cor0 GROUP BY col2, cor0.col0
 ----
 NULL
@@ -57607,12 +57607,12 @@ SELECT + - tab2.col2 / tab2.col2 AS col2 FROM tab2 GROUP BY tab2.col2
 -1
 -1
 
-query I rowsort
+query R rowsort
 SELECT - - 96 AS col0 FROM tab2 GROUP BY tab2.col0
 ----
-96
-96
-96
+96.000
+96.000
+96.000
 
 query I rowsort
 SELECT ALL cor0.col2 FROM tab1 AS cor0 GROUP BY cor0.col2, col0
@@ -57778,7 +57778,7 @@ SELECT - + ( 10 ) AS col1 FROM tab2 GROUP BY tab2.col0
 -10
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-7929
+query R rowsort label-7929
 SELECT DISTINCT - tab2.col2 / + CAST( NULL AS SIGNED ) AS col2 FROM tab2 GROUP BY tab2.col2
 ----
 NULL
@@ -57799,12 +57799,12 @@ SELECT DISTINCT - 3 FROM tab1 GROUP BY tab1.col1
 ----
 -3
 
-query I rowsort
+query R rowsort
 SELECT - - 51 FROM tab1 GROUP BY tab1.col2
 ----
-51
-51
-51
+51.000
+51.000
+51.000
 
 query I rowsort
 SELECT ALL 92 FROM tab1 GROUP BY tab1.col2
@@ -58585,12 +58585,12 @@ SELECT ALL - 22 FROM tab0 GROUP BY tab0.col1
 -22
 -22
 
-query I rowsort
+query R rowsort
 SELECT - - 6 AS col0 FROM tab2, tab0 AS cor0 GROUP BY tab2.col2
 ----
-6
-6
-6
+6.000
+6.000
+6.000
 
 query I rowsort
 SELECT DISTINCT + 65 FROM tab1 GROUP BY tab1.col1
@@ -58934,10 +58934,10 @@ SELECT ALL 5 col2 FROM tab1 AS cor0 GROUP BY cor0.col0
 5
 5
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 18 FROM tab0 GROUP BY tab0.col1
 ----
-18
+18.000
 
 query I rowsort
 SELECT ALL 50 FROM tab2 GROUP BY tab2.col0
@@ -59363,12 +59363,12 @@ SELECT + cor0.col2 + - 96 FROM tab0 AS cor0 GROUP BY cor0.col2
 -58
 -72
 
-query I rowsort
+query R rowsort
 SELECT - - 13 AS col0 FROM tab0 GROUP BY tab0.col2
 ----
-13
-13
-13
+13.000
+13.000
+13.000
 
 query I rowsort
 SELECT + + 55 AS col2 FROM tab0, tab0 AS cor0 GROUP BY tab0.col1
@@ -59377,7 +59377,7 @@ SELECT + + 55 AS col2 FROM tab0, tab0 AS cor0 GROUP BY tab0.col1
 55
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-8151
+query R rowsort label-8151
 SELECT DISTINCT + tab2.col1 / CAST( NULL AS SIGNED ) AS col0 FROM tab2 GROUP BY tab2.col1
 ----
 NULL
@@ -59396,12 +59396,12 @@ SELECT DISTINCT - - tab1.col1 + + tab1.col1 col0 FROM tab1 GROUP BY tab1.col1
 12
 88
 
-query I rowsort
+query R rowsort
 SELECT - - 15 AS col2 FROM tab1 GROUP BY tab1.col1
 ----
-15
-15
-15
+15.000
+15.000
+15.000
 
 onlyif mysql # DIV for integer division: 
 query I rowsort label-8154
@@ -59657,12 +59657,12 @@ SELECT 50 - - cor0.col2 FROM tab2 AS cor0 GROUP BY cor0.col0, cor0.col2
 129
 137
 
-query I rowsort
+query R rowsort
 SELECT - - 60 AS col0 FROM tab1 GROUP BY tab1.col1
 ----
-60
-60
-60
+60.000
+60.000
+60.000
 
 query I rowsort
 SELECT 70 + tab2.col2 AS col1 FROM tab2 GROUP BY tab2.col2
@@ -59777,19 +59777,19 @@ SELECT 77 AS col2 FROM tab2 GROUP BY tab2.col0
 77
 77
 
-query I rowsort
+query R rowsort
 SELECT - - 97 * ( tab0.col2 * tab0.col2 ) FROM tab0 GROUP BY tab0.col2
 ----
-140068
-55872
-605377
+140068.000
+605377.000
+55872.000
 
-query I rowsort
+query R rowsort
 SELECT - - 74 AS col2 FROM tab2 GROUP BY tab2.col0
 ----
-74
-74
-74
+74.000
+74.000
+74.000
 
 query I rowsort
 SELECT tab2.col2 * - tab2.col2 + ( + 73 ) FROM tab2 GROUP BY tab2.col2
@@ -60127,7 +60127,7 @@ SELECT + tab2.col2 / - 9 AS col0 FROM tab2 GROUP BY tab2.col2
 -9
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-8248
+query R rowsort label-8248
 SELECT - CAST( NULL AS DECIMAL ) FROM tab1 GROUP BY tab1.col2
 ----
 NULL
@@ -60363,11 +60363,11 @@ SELECT + 83 FROM tab1 GROUP BY tab1.col0
 83
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-8279
+query R rowsort label-8279
 SELECT - CAST( - 13 AS SIGNED ) + 33 col0 FROM tab0 AS cor0 GROUP BY col1
 ----
-46
-46
+46.000
+46.000
 
 skipif mysql # not compatible
 skipif postgresql # PostgreSQL requires AS when renaming output columns
@@ -61020,10 +61020,10 @@ SELECT DISTINCT 79 AS col2 FROM tab1 AS cor0 GROUP BY col1
 ----
 79
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - ( - 43 ) AS col0 FROM tab2 AS cor0 GROUP BY cor0.col2
 ----
-43
+43.000
 
 query I rowsort
 SELECT DISTINCT - 25 - 68 AS col2 FROM tab1 GROUP BY tab1.col1
@@ -61658,12 +61658,12 @@ SELECT + - 89 + 19 AS col0 FROM tab0 GROUP BY tab0.col1
 -70
 -70
 
-query I rowsort
+query R rowsort
 SELECT - - 27 + 60 AS col1 FROM tab0 GROUP BY tab0.col0
 ----
-87
-87
-87
+87.000
+87.000
+87.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -61714,12 +61714,12 @@ SELECT ALL - tab0.col0 AS col1 FROM tab0 GROUP BY col0
 -43
 -83
 
-query I rowsort
+query R rowsort
 SELECT - - 95 * + tab0.col2 AS col2 FROM tab0 GROUP BY tab0.col2
 ----
-2280
-3610
-7505
+3610.000
+7505.000
+2280.000
 
 query I rowsort
 SELECT - col2 + + tab0.col2 AS col0 FROM tab0 GROUP BY tab0.col2
@@ -61982,10 +61982,10 @@ SELECT + 43 FROM tab1 GROUP BY tab1.col0
 43
 43
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 90 FROM tab0 GROUP BY tab0.col2
 ----
-90
+90.000
 
 query I rowsort
 SELECT - 26 FROM tab0 GROUP BY tab0.col0
@@ -62464,7 +62464,7 @@ SELECT col2 AS col1 FROM tab0 cor0 GROUP BY col2, cor0.col2
 79
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-8570
+query R rowsort label-8570
 SELECT + - CAST( NULL AS DECIMAL ) + 82 AS col1 FROM tab1 GROUP BY tab1.col0
 ----
 NULL
@@ -63206,12 +63206,12 @@ SELECT DISTINCT + col1 / + 33 FROM tab2 GROUP BY tab2.col1
 ----
 1
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 41 FROM tab0, tab1 AS cor0 GROUP BY cor0.col0
 ----
-41
-41
-41
+41.000
+41.000
+41.000
 
 query I rowsort
 SELECT ALL + tab1.col1 * tab1.col1 FROM tab1 GROUP BY tab1.col1
@@ -63400,12 +63400,12 @@ SELECT ALL - CAST ( - tab2.col1 AS INTEGER ) FROM tab2 GROUP BY tab2.col1
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT - - 11 FROM tab2 GROUP BY tab2.col2
 ----
-11
-11
-11
+11.000
+11.000
+11.000
 
 onlyif mysql # CAST syntax: SIGNED type: 
 query I rowsort label-8697
@@ -63477,7 +63477,7 @@ SELECT + + 25 col1 FROM tab0 GROUP BY tab0.col0
 25
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-8706
+query R rowsort label-8706
 SELECT ALL CAST( NULL AS DECIMAL ) FROM tab2 GROUP BY tab2.col2
 ----
 NULL
@@ -63545,7 +63545,7 @@ SELECT + cor0.col1 / + 92 AS col0 FROM tab1 cor0 GROUP BY cor0.col1
 0
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-8713
+query R rowsort label-8713
 SELECT - cor0.col0 / + CAST( NULL AS SIGNED ) FROM tab0 AS cor0 GROUP BY cor0.col0
 ----
 NULL
@@ -63589,7 +63589,7 @@ SELECT 67 * col1 FROM tab0 AS cor0 GROUP BY cor0.col1
 5427
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-8718
+query R rowsort label-8718
 SELECT DISTINCT CAST( NULL AS DECIMAL ) * + cor0.col1 AS col1 FROM tab0 AS cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -63986,12 +63986,12 @@ SELECT ALL - 31 col0 FROM tab2 GROUP BY col2
 -31
 -31
 
-query I rowsort
+query R rowsort
 SELECT - - 38 AS col1 FROM tab2 GROUP BY tab2.col1
 ----
-38
-38
-38
+38.000
+38.000
+38.000
 
 onlyif mysql # CAST syntax: SIGNED type: 
 query I rowsort label-8770
@@ -64517,12 +64517,12 @@ SELECT ALL 94 AS col0 FROM tab2 AS cor0 GROUP BY cor0.col0
 94
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-8841
+query R rowsort label-8841
 SELECT - + CAST( - 53 AS SIGNED ) * + tab1.col2 FROM tab1 GROUP BY tab1.col2
 ----
-2385
-3763
-424
+424.000
+2385.000
+3763.000
 
 skipif mysql # not compatible
 query I rowsort label-8841
@@ -64537,12 +64537,12 @@ SELECT DISTINCT 6 AS col0 FROM tab1 AS cor0 GROUP BY cor0.col2
 ----
 6
 
-query I rowsort
+query R rowsort
 SELECT - - 59 + tab2.col2 FROM tab2 GROUP BY tab2.col2
 ----
-117
-138
-146
+146.000
+138.000
+117.000
 
 query I rowsort
 SELECT ALL - 15 FROM tab1 GROUP BY tab1.col0
@@ -64796,7 +64796,7 @@ SELECT ALL COALESCE ( + 7, - tab2.col2 ) FROM tab2 GROUP BY tab2.col2
 7
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-8879
+query R rowsort label-8879
 SELECT - COALESCE ( - 76, + col1, + ( 16 ) - - tab2.col0 ) + + CAST( NULL AS DECIMAL ) AS col1 FROM tab2 GROUP BY tab2.col0
 ----
 NULL
@@ -64840,7 +64840,7 @@ SELECT - + tab0.col1 + - 63 FROM tab0 GROUP BY tab0.col1
 -63
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT tab2.col1 / tab2.col1 col0 FROM tab2 GROUP BY tab2.col1 HAVING NOT NULL <> NULL
 ----
 
@@ -64909,11 +64909,11 @@ SELECT ALL + + tab2.col1 + tab2.col1 AS col2 FROM tab2 GROUP BY tab2.col1
 122
 82
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 45 AS col0 FROM tab0 GROUP BY tab0.col1
 ----
-45
-45
+45.000
+45.000
 
 query I rowsort
 SELECT - col0 * 33 AS col1 FROM tab1 AS cor0 GROUP BY cor0.col0
@@ -65155,12 +65155,12 @@ SELECT ALL + + tab0.col1 + - tab0.col1 FROM tab0 GROUP BY tab0.col1
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 82 * tab0.col0 FROM tab0 GROUP BY tab0.col0
 ----
-2132
-3526
-6806
+6806.000
+2132.000
+3526.000
 
 query I rowsort
 SELECT tab2.col1 - - tab2.col1 FROM tab2 GROUP BY tab2.col1
@@ -65241,12 +65241,12 @@ SELECT DISTINCT + 34 + + 73 AS col1 FROM tab1 AS cor0 GROUP BY cor0.col0
 ----
 107
 
-query I rowsort
+query R rowsort
 SELECT - - 86 AS col1 FROM tab2 GROUP BY tab2.col1
 ----
-86
-86
-86
+86.000
+86.000
+86.000
 
 skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
@@ -65408,12 +65408,12 @@ SELECT + 30 + 28 * - col2 FROM tab2 cor0 GROUP BY cor0.col2
 -2406
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT - - 57 col0 FROM tab1 GROUP BY tab1.col2
 ----
-57
-57
-57
+57.000
+57.000
+57.000
 
 query I rowsort
 SELECT ALL - col2 AS col1 FROM tab1 GROUP BY tab1.col2
@@ -65672,10 +65672,10 @@ SELECT + tab2.col2 col1 FROM tab2 GROUP BY tab2.col2
 79
 87
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 7 AS col2 FROM tab1 GROUP BY tab1.col2
 ----
-7
+7.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -65813,19 +65813,19 @@ SELECT ALL + + COALESCE ( - 49, tab0.col2, tab0.col0 ) FROM tab0 GROUP BY tab0.c
 -49
 -49
 
-query I rowsort
+query R rowsort
 SELECT - - 6 FROM tab2 GROUP BY tab2.col1
 ----
-6
-6
-6
+6.000
+6.000
+6.000
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 81 FROM tab1 GROUP BY tab1.col1
 ----
-81
-81
-81
+81.000
+81.000
+81.000
 
 query I rowsort
 SELECT DISTINCT - + tab1.col2 AS col2 FROM tab1 GROUP BY tab1.col2
@@ -66184,12 +66184,12 @@ SELECT ALL 89 AS col2 FROM tab1 GROUP BY tab1.col2
 89
 89
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 29 FROM tab2 GROUP BY tab2.col2
 ----
-29
-29
-29
+29.000
+29.000
+29.000
 
 query I rowsort
 SELECT - 82 * cor0.col1 AS col1 FROM tab1 AS cor0 GROUP BY cor0.col1, cor0.col1
@@ -66233,10 +66233,10 @@ SELECT ALL + 46 AS col2 FROM tab2 GROUP BY tab2.col0
 46
 46
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 2 AS col1 FROM tab1 GROUP BY tab1.col0
 ----
-2
+2.000
 
 query I rowsort
 SELECT DISTINCT tab2.col2 - tab2.col2 FROM tab2 GROUP BY tab2.col2
@@ -66502,12 +66502,12 @@ SELECT - 69 FROM tab0 GROUP BY tab0.col2
 -69
 -69
 
-query I rowsort
+query R rowsort
 SELECT - - 61 AS col2 FROM tab2 GROUP BY tab2.col2
 ----
-61
-61
-61
+61.000
+61.000
+61.000
 
 query I rowsort
 SELECT DISTINCT 5 AS col2 FROM tab2 GROUP BY tab2.col1
@@ -66597,11 +66597,11 @@ SELECT 59 AS col2 FROM tab2 GROUP BY tab2.col1
 59
 59
 
-query I rowsort
+query R rowsort
 SELECT - - 75 FROM tab0 GROUP BY tab0.col1
 ----
-75
-75
+75.000
+75.000
 
 query I rowsort
 SELECT DISTINCT - ( + 3 ) FROM tab0 AS cor0 GROUP BY col0
@@ -66727,7 +66727,7 @@ SELECT cor0.col0 + 57 FROM tab2 AS cor0 CROSS JOIN tab0 AS cor1 GROUP BY cor0.co
 149
 72
 
-query I rowsort
+query R rowsort
 SELECT ALL - cor0.col0 * cor0.col0 + + cor0.col0 / - CASE - 59 WHEN cor0.col0 THEN NULL WHEN cor0.col1 THEN - col0 END FROM tab2 AS cor0 GROUP BY cor0.col1, col0
 ----
 NULL
@@ -67105,7 +67105,7 @@ SELECT ALL 22 FROM tab2 cor0 GROUP BY cor0.col2, col2
 22
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-9206
+query R rowsort label-9206
 SELECT CAST( NULL AS DECIMAL ) * 57 col0 FROM tab1 AS cor0 CROSS JOIN tab0 AS cor1 GROUP BY cor0.col2
 ----
 NULL
@@ -67421,7 +67421,7 @@ SELECT ALL 48 AS col2 FROM tab2 AS cor0 GROUP BY cor0.col1, cor0.col0
 48
 48
 
-query I rowsort
+query R rowsort
 SELECT - CASE + col0 WHEN cor0.col1 THEN cor0.col0 + cor0.col1 / cor0.col2 WHEN 85 THEN NULL END AS col2 FROM tab0 AS cor0 GROUP BY cor0.col1, cor0.col0, col2
 ----
 NULL
@@ -67672,12 +67672,12 @@ NULL
 NULL
 NULL
 
-query I rowsort
+query R rowsort
 SELECT - - 48 FROM tab1 GROUP BY tab1.col0
 ----
-48
-48
-48
+48.000
+48.000
+48.000
 
 onlyif mysql # DIV for integer division: 
 query I rowsort label-9283
@@ -69328,12 +69328,12 @@ SELECT DISTINCT COALESCE ( 61, tab0.col1 ) * + CAST ( NULL AS INTEGER ) FROM tab
 ----
 NULL
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 44 - tab2.col2 * tab2.col2 FROM tab2 GROUP BY tab2.col2
 ----
--3320
--6197
--7525
+-7525.000
+-6197.000
+-3320.000
 
 query I rowsort
 SELECT ALL - 42 FROM tab0 cor0 GROUP BY cor0.col1
@@ -69805,12 +69805,12 @@ SELECT ALL + 79 / tab1.col2 AS col2 FROM tab1 GROUP BY tab1.col2
 1
 9
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 84 * tab1.col1 AS col1 FROM tab1 GROUP BY tab1.col1
 ----
-3696
-4788
-504
+504.000
+3696.000
+4788.000
 
 query I rowsort
 SELECT - 41 FROM tab1 AS cor0 GROUP BY col0
@@ -72012,12 +72012,12 @@ SELECT col1 + + tab2.col1 FROM tab2 GROUP BY tab2.col1
 122
 82
 
-query I rowsort
+query R rowsort
 SELECT - - 74 FROM tab1 GROUP BY tab1.col2
 ----
-74
-74
-74
+74.000
+74.000
+74.000
 
 skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
 query I rowsort
@@ -72041,7 +72041,7 @@ SELECT + 61 FROM tab0 cor0 CROSS JOIN tab0 AS cor1 GROUP BY cor0.col1
 61
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-9873
+query R rowsort label-9873
 SELECT DISTINCT + CAST( NULL AS DECIMAL ) + + 37 * cor0.col0 FROM tab2 AS cor0 GROUP BY cor0.col0
 ----
 NULL
@@ -72205,7 +72205,7 @@ SELECT ALL + tab0.col2 * - ( col2 ) AS col1 FROM tab0 GROUP BY tab0.col2
 -6241
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-9893
+query R rowsort label-9893
 SELECT DISTINCT + tab1.col0 / CAST( NULL AS SIGNED ) AS col0 FROM tab1 GROUP BY tab1.col0
 ----
 NULL
@@ -72473,11 +72473,11 @@ SELECT ALL - tab0.col1 + + tab0.col1 col0 FROM tab0 GROUP BY tab0.col1
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 1 * tab0.col1 FROM tab0 GROUP BY tab0.col1
 ----
-0
-81
+0.000
+81.000
 
 query I rowsort
 SELECT - tab1.col1 + tab1.col1 FROM tab1 GROUP BY tab1.col1
@@ -72591,7 +72591,7 @@ SELECT + tab0.col1 + tab0.col1 AS col1 FROM tab0 GROUP BY tab0.col1
 162
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-9948
+query R rowsort label-9948
 SELECT - - tab2.col1 + CAST( NULL AS DECIMAL ) AS col0 FROM tab2 GROUP BY col1
 ----
 NULL
@@ -72688,12 +72688,12 @@ SELECT DISTINCT + cor0.col2 AS col1 FROM tab2 AS cor0 GROUP BY col2
 79
 87
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 2 - 80 FROM tab2 GROUP BY col2
 ----
--78
--78
--78
+-78.000
+-78.000
+-78.000
 
 query I rowsort
 SELECT DISTINCT 14 AS col2 FROM tab1 cor0 GROUP BY cor0.col0
@@ -72890,12 +72890,12 @@ SELECT 41 AS col1 FROM tab2 AS cor0 GROUP BY cor0.col0
 41
 41
 
-query I rowsort
+query R rowsort
 SELECT - ( - 99 ) FROM tab0 AS cor0 GROUP BY cor0.col2
 ----
-99
-99
-99
+99.000
+99.000
+99.000
 
 query I rowsort
 SELECT + + 30 FROM tab0 GROUP BY tab0.col2
@@ -72921,10 +72921,10 @@ SELECT - cor0.col0 / ( + 20 * cor0.col0 ) FROM tab1 AS cor0 GROUP BY cor0.col0
 0
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - 41 col2 FROM tab2 GROUP BY tab2.col2
 ----
-41
+41.000
 
 query I rowsort
 SELECT + 22 + + 68 FROM tab1 GROUP BY col2

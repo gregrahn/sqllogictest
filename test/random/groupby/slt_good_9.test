@@ -190,7 +190,7 @@ SELECT DISTINCT - col2 col0 FROM tab1 GROUP BY col2
 -8
 
 skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
-query I rowsort
+query R rowsort
 SELECT - AVG ( + + col0 ) AS col1 FROM tab2 AS cor0 GROUP BY col0 HAVING NOT col1 IS NULL AND NOT NULL IS NULL
 ----
 
@@ -615,7 +615,7 @@ SELECT DISTINCT col1 AS col2 FROM tab2 AS cor0 GROUP BY col1, col0
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT ALL - AVG ( DISTINCT - + col1 ) FROM tab2 AS cor0 GROUP BY col1 HAVING NULL NOT BETWEEN NULL AND NULL
 ----
 
@@ -1171,7 +1171,7 @@ SELECT DISTINCT - + col1 AS col1 FROM tab2 cor0 GROUP BY col1
 -59
 -61
 
-query I rowsort
+query R rowsort
 SELECT - col1 * + AVG ( - col1 ) + - col1 AS col0 FROM tab0 GROUP BY col1, col1 HAVING NOT NULL = - col1
 ----
 
@@ -1460,7 +1460,7 @@ SELECT - col0 col2 FROM tab2 GROUP BY col0
 -91
 -92
 
-query I rowsort
+query R rowsort
 SELECT ALL - col0 - + col0 / + col0 AS col1 FROM tab2 AS cor0 GROUP BY col0 HAVING ( NULL ) NOT BETWEEN NULL AND NULL
 ----
 
@@ -2888,7 +2888,7 @@ SELECT ALL + - col0 col2 FROM tab0 AS cor0 WHERE NOT ( NULL ) IS NOT NULL GROUP 
 -43
 -83
 
-query I rowsort
+query R rowsort
 SELECT + col0 / - + col0 + col0 * - - col0 FROM tab1 AS cor0 WHERE NULL IS NOT NULL GROUP BY col0
 ----
 
@@ -3963,7 +3963,7 @@ query I rowsort
 SELECT - col2 col2 FROM tab2 cor0 GROUP BY col2 HAVING ( NULL ) <> NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL - col0 / - - col0 AS col1 FROM tab0 GROUP BY col0, col0 HAVING NULL IS NOT NULL
 ----
 
@@ -4151,7 +4151,7 @@ SELECT - col0 * + - col0 FROM tab2 GROUP BY col0, col1
 8281
 8464
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( DISTINCT + col0 ) FROM tab2 WHERE NULL <= ( + col2 ) GROUP BY col0
 ----
 
@@ -4511,7 +4511,7 @@ SELECT ALL - col2 AS col1 FROM tab1 GROUP BY col2, col1 HAVING NOT NULL IS NOT N
 -71
 -8
 
-query I rowsort
+query R rowsort
 SELECT - col0 / + col0 FROM tab2 GROUP BY col0 HAVING NULL BETWEEN NULL AND col0
 ----
 
@@ -5717,7 +5717,7 @@ SELECT col2 - + + col1 * - col1, - col1 col0 FROM tab2 GROUP BY col1, col2
 3808
 -61
 
-query I rowsort
+query R rowsort
 SELECT ALL + - AVG ( - col2 ) FROM tab0 WHERE NULL IS NOT NULL GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -5949,7 +5949,7 @@ SELECT DISTINCT - - col0 * + col0 * col0 FROM tab0 cor0 GROUP BY col0, col0
 571787
 79507
 
-query I rowsort
+query R rowsort
 SELECT + col1 / - col0 FROM tab0 cor0 WHERE NOT NULL NOT IN ( col0 ) GROUP BY col0, col1
 ----
 
@@ -6041,7 +6041,7 @@ SELECT ALL + col1 * col1 col0 FROM tab1 AS cor0 GROUP BY col0, col1
 3249
 36
 
-query I rowsort
+query R rowsort
 SELECT AVG ( + - col1 ) AS col0 FROM tab2 GROUP BY col1, col1 HAVING NOT ( NULL ) <= NULL
 ----
 
@@ -6328,7 +6328,7 @@ SELECT ALL + col1 AS col0 FROM tab0 GROUP BY col1, col1
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT AVG ( ALL - col0 ) AS col1 FROM tab2 WHERE NOT NULL IS NULL GROUP BY col0
 ----
 
@@ -6595,7 +6595,7 @@ SELECT ALL col1 AS col0 FROM tab1 AS cor0 GROUP BY col0, col1
 57
 6
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - col2 * - AVG ( DISTINCT + + col2 ) FROM tab1 AS cor0 GROUP BY col2 HAVING NOT ( NULL ) IS NULL
 ----
 
@@ -6892,7 +6892,7 @@ SELECT + col0 FROM tab0 AS cor0 GROUP BY col0, col2
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT col1 * + AVG ( col1 ) FROM tab0 AS cor0 WHERE NULL IS NOT NULL GROUP BY col1
 ----
 
@@ -8267,15 +8267,15 @@ SELECT col2 + + col2 FROM tab0 GROUP BY col2
 48
 76
 
-query II rowsort
+query RI rowsort
 SELECT DISTINCT + - AVG ( ALL - - col2 ) AS col1, col2 AS col1 FROM tab0 AS cor0 GROUP BY col2
 ----
--24
-24
--38
+-38.000
 38
--79
+-79.000
 79
+-24.000
+24
 
 query I rowsort
 SELECT - col0 + - + col0 + - col0 FROM tab0 GROUP BY col0
@@ -8586,7 +8586,7 @@ SELECT + col0, + col0 FROM tab0 cor0 GROUP BY col0
 83
 83
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + col0 / - col0 * + col0 - col0 AS col0 FROM tab0 AS cor0 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
@@ -8652,7 +8652,7 @@ SELECT + col0, col0 FROM tab0 AS cor0 GROUP BY col0
 83
 83
 
-query I rowsort
+query R rowsort
 SELECT ALL col0 * - col0 / - - col0 FROM tab2 AS cor0 GROUP BY col1, col0 HAVING NULL IS NOT NULL
 ----
 
@@ -8913,7 +8913,7 @@ SELECT - + col2, + col2 AS col2 FROM tab1 AS cor0 GROUP BY col2, col2
 -8
 8
 
-query I rowsort
+query R rowsort
 SELECT AVG ( - col0 ) FROM tab0 AS cor0 WHERE ( NULL ) >= + - col1 * - col0 GROUP BY col0, col0
 ----
 
@@ -9428,7 +9428,7 @@ SELECT DISTINCT - col2 + col2 / col0 FROM tab2 GROUP BY col2, col0
 -79
 -82
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( DISTINCT + col2 ) FROM tab0 AS cor0 GROUP BY col1, col2 HAVING ( col1 ) BETWEEN col1 AND NULL
 ----
 
@@ -9492,15 +9492,15 @@ query I rowsort
 SELECT + col1 FROM tab0 WHERE NOT NULL IS NULL GROUP BY col1
 ----
 
-query II rowsort
+query RI rowsort
 SELECT DISTINCT col2 / col2 AS col1, - col0 AS col1 FROM tab1 AS cor0 GROUP BY col0, col2
 ----
-1
--22
-1
--28
-1
+1.000
 -82
+1.000
+-28
+1.000
+-22
 
 query I rowsort
 SELECT - col0 AS col1 FROM tab0 cor0 GROUP BY col0 HAVING NULL IS NULL
@@ -10171,7 +10171,7 @@ SELECT col1 AS col2 FROM tab2 GROUP BY col0, col2, col1
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT - col2 / - col2 AS col1 FROM tab2 AS cor0 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -10228,7 +10228,7 @@ SELECT DISTINCT - col1 * - col0 + + col0 AS col2 FROM tab0 AS cor0 GROUP BY col1
 3526
 83
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + col2 * - col0 / - col2 * AVG ( DISTINCT - col2 ) FROM tab0 AS cor0 GROUP BY col2, col0 HAVING NULL IS NOT NULL
 ----
 
@@ -10268,7 +10268,7 @@ SELECT - col0 AS col0 FROM tab1 GROUP BY col0, col1
 -28
 -82
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( + + col1 ) AS col0 FROM tab2 GROUP BY col1 HAVING AVG ( - col2 ) <> NULL
 ----
 
@@ -10705,7 +10705,7 @@ SELECT ALL col0 + + col0 FROM tab0 cor0 GROUP BY col0
 52
 86
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( DISTINCT + col0 ) FROM tab2 GROUP BY col0, col0 HAVING NOT NULL IS NULL
 ----
 
@@ -10833,7 +10833,7 @@ SELECT ALL - col0 AS col2 FROM tab0 AS cor0 GROUP BY col0, col1
 -43
 -83
 
-query I rowsort
+query R rowsort
 SELECT col1 - - AVG ( + + col1 ) FROM tab0 GROUP BY col1 HAVING NOT NULL IS NULL
 ----
 
@@ -11005,7 +11005,7 @@ SELECT DISTINCT - col0 FROM tab0 AS cor0 GROUP BY col2, col0
 -43
 -83
 
-query I rowsort
+query R rowsort
 SELECT + col1 / + col1 AS col0 FROM tab0 AS cor0 WHERE NULL IS NOT NULL GROUP BY col1
 ----
 
@@ -11231,7 +11231,7 @@ SELECT DISTINCT + col1, col1 col0 FROM tab1 AS cor0 GROUP BY col1
 6
 6
 
-query I rowsort
+query R rowsort
 SELECT AVG ( + col2 ) FROM tab1 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -11331,7 +11331,7 @@ SELECT col1 + + col1 AS col2 FROM tab0 GROUP BY col1
 0
 162
 
-query I rowsort
+query R rowsort
 SELECT ALL + col1 / - col1 FROM tab0 GROUP BY col1 HAVING NOT ( NULL ) BETWEEN NULL AND NULL
 ----
 
@@ -11500,7 +11500,7 @@ SELECT + col2 / + col2 col1 FROM tab2 GROUP BY col2 HAVING NOT NULL IS NOT NULL
 1
 1
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - AVG ( col0 ) AS col2 FROM tab1 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
@@ -12014,7 +12014,7 @@ query I rowsort
 SELECT + col1 col1 FROM tab1 cor0 WHERE NULL IS NOT NULL GROUP BY col1
 ----
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( ALL col1 ) + col1 / + - col1 FROM tab1 WHERE NULL > col0 + - - col1 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
@@ -12291,7 +12291,7 @@ query I rowsort
 SELECT ALL col1 FROM tab2 GROUP BY col1, col2 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( - col2 ) FROM tab2 WHERE NOT NULL >= col1 GROUP BY col2
 ----
 
@@ -12621,7 +12621,7 @@ SELECT DISTINCT col1 AS col2 FROM tab2 AS cor0 GROUP BY col0, col1
 61
 
 skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
-query I rowsort
+query R rowsort
 SELECT DISTINCT col1 * + + AVG ( DISTINCT - col2 ) AS col0 FROM tab0 GROUP BY col2, col1 HAVING NOT NULL < + col0 + - col1
 ----
 
@@ -12887,7 +12887,7 @@ SELECT DISTINCT - + col1 / - col1 FROM tab2 AS cor0 GROUP BY col1, col1
 ----
 1
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( + + col1 ) FROM tab2 GROUP BY col1, col1 HAVING NOT - AVG ( DISTINCT + col0 ) IS NOT NULL
 ----
 
@@ -12909,7 +12909,7 @@ SELECT ALL col0 FROM tab0 GROUP BY col2, col0, col0
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT ALL col2 / - col2 AS col1 FROM tab0 WHERE NULL IS NOT NULL GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
@@ -13033,7 +13033,7 @@ query II rowsort
 SELECT - col0, + col0 FROM tab2 AS cor0 GROUP BY col0 HAVING AVG ( ALL + col1 ) < NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT - + AVG ( ALL + col0 ) AS col2 FROM tab1 cor0 GROUP BY col0, col0 HAVING NOT col0 * - + col0 BETWEEN NULL AND NULL
 ----
 
@@ -13048,7 +13048,7 @@ query I rowsort
 SELECT DISTINCT - col2 AS col0 FROM tab1 cor0 WHERE NOT NULL IS NULL GROUP BY col2
 ----
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( ALL - - col2 ) AS col1 FROM tab2 AS cor0 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -13085,7 +13085,7 @@ query I rowsort
 SELECT DISTINCT col1 AS col0 FROM tab2 cor0 WHERE NOT ( NULL ) > NULL GROUP BY col1
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( DISTINCT - col0 ) FROM tab0 AS cor0 WHERE NOT NULL >= ( NULL ) GROUP BY col0, col0
 ----
 
@@ -13175,7 +13175,7 @@ SELECT ALL + col2 AS col2 FROM tab2 GROUP BY col2 HAVING NULL IS NULL
 79
 87
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( - col0 ) AS col2 FROM tab0 GROUP BY col0 HAVING NOT ( NULL ) IS NULL
 ----
 
@@ -13845,12 +13845,12 @@ SELECT ALL 63 FROM tab1 AS cor0 GROUP BY cor0.col2
 63
 63
 
-query I rowsort
+query R rowsort
 SELECT - ( - 2 ) FROM tab1 AS cor0 GROUP BY cor0.col2
 ----
-2
-2
-2
+2.000
+2.000
+2.000
 
 query I rowsort
 SELECT ALL - cor0.col2 * + cor0.col2 + - cor0.col2 AS col0 FROM tab0, tab1 AS cor0 GROUP BY cor0.col2
@@ -14395,12 +14395,12 @@ SELECT 35 col1 FROM tab0 AS cor0 GROUP BY cor0.col1
 35
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT ALL - - 32 * + cor0.col0 col2 FROM tab1, tab0 AS cor0 GROUP BY cor0.col0
 ----
-1376
-2656
-832
+2656.000
+832.000
+1376.000
 
 query I rowsort
 SELECT DISTINCT - 1 AS col2 FROM tab0 AS cor0 CROSS JOIN tab2 AS cor1 GROUP BY cor0.col0
@@ -15187,12 +15187,12 @@ SELECT DISTINCT ( - cor0.col0 ) AS col1 FROM tab0 AS cor0 GROUP BY cor0.col0, co
 -43
 -83
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 76 * - col0 AS col0 FROM tab1 GROUP BY tab1.col0
 ----
--1672
--2128
--6232
+-1672.000
+-2128.000
+-6232.000
 
 query I rowsort
 SELECT DISTINCT - tab2.col2 AS col2 FROM tab2 GROUP BY tab2.col2
@@ -15768,7 +15768,7 @@ SELECT - cor0.col1 AS col0 FROM tab0 AS cor0 GROUP BY cor0.col2, cor0.col1
 0
 
 onlyif mysql # CAST syntax: SIGNED type: 
-query I rowsort label-2302
+query R rowsort label-2302
 SELECT - 47 * - cor0.col1 / + CAST( NULL AS SIGNED ) AS col0 FROM tab1 AS cor0 GROUP BY cor0.col1, cor0.col0
 ----
 NULL
@@ -16572,7 +16572,7 @@ SELECT - col2 FROM tab1 AS cor0 GROUP BY cor0.col2
 -8
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-2403
+query R rowsort label-2403
 SELECT + CAST( NULL AS DECIMAL ) * ( + cor0.col0 ) FROM tab2 AS cor0 GROUP BY cor0.col1, cor0.col2, cor0.col0
 ----
 NULL
@@ -16606,7 +16606,7 @@ SELECT DISTINCT + 75 FROM tab0 AS cor0 GROUP BY col0
 75
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-2407
+query R rowsort label-2407
 SELECT - CAST( NULL AS DECIMAL ) * - 13 AS col2 FROM tab0, tab0 AS cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -16730,12 +16730,12 @@ SELECT DISTINCT cor0.col0 * - cor0.col0 AS col2 FROM tab0 AS cor0 GROUP BY cor0.
 -676
 -6889
 
-query I rowsort
+query R rowsort
 SELECT - - 89 FROM tab1 GROUP BY tab1.col2
 ----
-89
-89
-89
+89.000
+89.000
+89.000
 
 query I rowsort
 SELECT + cor0.col2 AS col1 FROM tab1, tab0 AS cor0 GROUP BY cor0.col2
@@ -16940,7 +16940,7 @@ SELECT + cor0.col2 FROM tab0 cor0 GROUP BY col0, cor0.col2
 79
 
 onlyif mysql # CAST syntax: DECIMAL type: 
-query I rowsort label-2452
+query R rowsort label-2452
 SELECT ALL CAST( NULL AS DECIMAL ) AS col1 FROM tab0 AS cor0 GROUP BY cor0.col1
 ----
 NULL
@@ -17553,12 +17553,12 @@ SELECT cor0.col1 * cor0.col1 + - cor0.col1 FROM tab0 AS cor0 GROUP BY col1
 0
 6480
 
-query I rowsort
+query R rowsort
 SELECT ALL - - 31 AS col0 FROM tab0 GROUP BY tab0.col0
 ----
-31
-31
-31
+31.000
+31.000
+31.000
 
 query I rowsort
 SELECT tab2.col0 AS col1 FROM tab2 GROUP BY tab2.col0
@@ -18229,7 +18229,7 @@ SELECT DISTINCT col0 AS col1 FROM tab1 GROUP BY col0 HAVING NOT NULL IS NOT NULL
 28
 82
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT col2 / col2 AS col0 FROM tab2 GROUP BY col0, col2 HAVING NOT NULL IS NULL
 ----
 
@@ -18266,7 +18266,7 @@ SELECT ALL - col0 - + col0 AS col0 FROM tab2 AS cor0 GROUP BY col0
 -184
 -30
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( DISTINCT + + col1 ) AS col2 FROM tab2 GROUP BY col1, col0 HAVING NULL < - col1 + + AVG ( + col0 )
 ----
 
@@ -18411,7 +18411,7 @@ query I rowsort
 SELECT DISTINCT - col1 AS col1 FROM tab2 AS cor0 WHERE NOT - col1 * - col2 IS NOT NULL GROUP BY col1
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - AVG ( ALL + col1 ) FROM tab2 AS cor0 WHERE - col1 IS NULL GROUP BY col1
 ----
 
@@ -18558,7 +18558,7 @@ SELECT + col1 AS col0 FROM tab2 AS cor0 GROUP BY col1, col1, col1
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( DISTINCT - - col1 ) FROM tab2 GROUP BY col1, col0 HAVING NOT NULL IS NULL
 ----
 
@@ -18783,7 +18783,7 @@ SELECT ALL + + col2 AS col1 FROM tab0 cor0 GROUP BY col2
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( - col1 ) FROM tab0 AS cor0 GROUP BY col0, col1 HAVING NOT NULL IS NULL
 ----
 
@@ -18935,7 +18935,7 @@ SELECT ALL col1 AS col1 FROM tab0 GROUP BY col1 HAVING ( NULL IS NULL )
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( DISTINCT + + col2 ) FROM tab0 WHERE NOT + col0 + col0 IS NOT NULL GROUP BY col2
 ----
 
@@ -19365,7 +19365,7 @@ SELECT - col1 col1 FROM tab1 AS cor0 GROUP BY col1
 -57
 -6
 
-query I rowsort
+query R rowsort
 SELECT ALL + + AVG ( col1 ) AS col0 FROM tab2 AS cor0 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
@@ -19418,7 +19418,7 @@ query I rowsort
 SELECT DISTINCT col2 FROM tab0 GROUP BY col2 HAVING NULL < ( NULL )
 ----
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( ALL col2 ) AS col1 FROM tab0 WHERE NOT NULL IS NOT NULL GROUP BY col2 HAVING NOT ( NULL ) IS NULL
 ----
 
@@ -19441,7 +19441,7 @@ SELECT + col0 AS col0 FROM tab2 AS cor0 GROUP BY col0, col2 HAVING NULL IS NULL
 91
 92
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( + - col1 ) FROM tab2 AS cor0 GROUP BY col1, col0 HAVING + - col0 > NULL
 ----
 
@@ -19594,7 +19594,7 @@ SELECT + - col2 AS col0 FROM tab0 AS cor0 GROUP BY col2, col2 HAVING NOT - col0 
 ----
 
 skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
-query I rowsort
+query R rowsort
 SELECT ALL - + AVG ( DISTINCT col0 ) AS col1 FROM tab0 AS cor0 GROUP BY col0 HAVING NOT - col1 <= ( NULL )
 ----
 
@@ -19639,7 +19639,7 @@ SELECT ALL - - col0 AS col1 FROM tab0 AS cor0 GROUP BY col0, col2
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT + col2 - - AVG ( ALL - col2 ) FROM tab0 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -20357,18 +20357,18 @@ SELECT DISTINCT + - col2 * + col2 FROM tab1 AS cor0 GROUP BY col0, col2
 -5041
 -64
 
-query I rowsort
+query R rowsort
 SELECT + col0 / - col0 AS col0 FROM tab0 AS cor0 WHERE + col2 IS NULL GROUP BY col0 HAVING NOT ( NULL ) IS NOT NULL
 ----
 
-query II rowsort
+query RI rowsort
 SELECT - + AVG ( ALL - col0 ) AS col1, - col0 AS col1 FROM tab2 AS cor0 GROUP BY col0
 ----
-15
+15.000
 -15
-91
+91.000
 -91
-92
+92.000
 -92
 
 query I rowsort
@@ -20421,7 +20421,7 @@ query I rowsort
 SELECT col1 FROM tab2 AS cor0 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL + - AVG ( ALL col2 ) FROM tab1 AS cor0 WHERE NOT ( NULL ) IS NULL GROUP BY col2
 ----
 
@@ -20788,7 +20788,7 @@ SELECT ALL + col2 col2 FROM tab0 GROUP BY col0, col1, col2 HAVING ( NULL ) IS NU
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT - col1 / - col1 FROM tab1 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
@@ -20879,7 +20879,7 @@ SELECT ALL + - col2 AS col1 FROM tab2 AS cor0 GROUP BY col2, col2
 -79
 -87
 
-query II rowsort
+query RI rowsort
 SELECT - AVG ( DISTINCT col1 ), - col1 * - col1 * + col1 + col1 FROM tab1 AS cor0 GROUP BY col1 HAVING NOT - col1 > NULL
 ----
 
@@ -20973,7 +20973,7 @@ query I rowsort
 SELECT DISTINCT col0 col1 FROM tab1 AS cor0 WHERE NOT + col1 IS NOT NULL GROUP BY col0, col1
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( ALL col1 ) FROM tab2 GROUP BY col1, col1 HAVING NULL IS NOT NULL
 ----
 
@@ -21049,7 +21049,7 @@ SELECT - col0 AS col2 FROM tab0 GROUP BY col0, col0
 -43
 -83
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + col2 / + + col2 FROM tab1 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -21456,7 +21456,7 @@ query I rowsort
 SELECT ALL - - col0 AS col0 FROM tab1 AS cor0 GROUP BY col0, col2 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT - col2 + + AVG ( + col2 ) FROM tab0 cor0 WHERE ( NULL ) IS NOT NULL GROUP BY col2
 ----
 
@@ -21818,7 +21818,7 @@ SELECT ALL col0 AS col2 FROM tab2 GROUP BY col2, col0 HAVING NOT NULL IS NOT NUL
 91
 92
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( + - col2 ) FROM tab1 GROUP BY col2 HAVING NOT NULL < NULL
 ----
 
@@ -22102,7 +22102,7 @@ SELECT + col2 * - + col2 AS col0 FROM tab2 GROUP BY col1, col2
 -6241
 -7569
 
-query I rowsort
+query R rowsort
 SELECT col2 / col2 AS col2 FROM tab0 WHERE NOT NULL IS NOT NULL GROUP BY col2 HAVING NULL NOT BETWEEN NULL AND NULL
 ----
 
@@ -22161,7 +22161,7 @@ SELECT col0 FROM tab1 AS cor0 WHERE NULL IS NULL GROUP BY col0
 28
 82
 
-query I rowsort
+query R rowsort
 SELECT col1 / col1 AS col2 FROM tab2 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
@@ -22327,7 +22327,7 @@ SELECT ALL - col2 col2 FROM tab1 AS cor0 GROUP BY col2
 -71
 -8
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( + + col2 ) FROM tab2 GROUP BY col2 HAVING NOT NULL >= col2
 ----
 
@@ -22472,7 +22472,7 @@ query I rowsort
 SELECT ALL + col2 AS col0 FROM tab0 WHERE NOT NULL IS NULL GROUP BY col2, col2 HAVING ( NULL IS NULL )
 ----
 
-query II rowsort
+query IR rowsort
 SELECT - col2 AS col0, - AVG ( DISTINCT - - col2 ) + + col1 FROM tab2 WHERE NULL >= NULL GROUP BY col2, col2, col1
 ----
 
@@ -22537,7 +22537,7 @@ query I rowsort
 SELECT - col2 AS col0 FROM tab0 AS cor0 GROUP BY col2, col0 HAVING NULL <= + + col0
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( col0 ) + col0 AS col1 FROM tab1 cor0 WHERE NOT ( NULL ) NOT IN ( + col1 + col1 ) GROUP BY col0
 ----
 
@@ -22614,7 +22614,7 @@ SELECT - + col2 AS col2 FROM tab0 AS cor0 GROUP BY col1, col2
 -38
 -79
 
-query I rowsort
+query R rowsort
 SELECT col1 * + AVG ( DISTINCT col1 ) + + col1 + + - col1 FROM tab1 AS cor0 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
@@ -22766,7 +22766,7 @@ SELECT DISTINCT - + col2 * - col2 FROM tab0 AS cor0 GROUP BY col2
 576
 6241
 
-query I rowsort
+query R rowsort
 SELECT col1 / col1 AS col2 FROM tab1 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
@@ -22857,7 +22857,7 @@ query I rowsort
 SELECT ALL - col2 - - col2 FROM tab2 WHERE NULL NOT BETWEEN NULL AND NULL GROUP BY col2
 ----
 
-query I rowsort
+query R rowsort
 SELECT + col2 / + col2 * + col2 FROM tab0 AS cor0 WHERE NULL IS NULL GROUP BY col2 HAVING NOT - col2 IS NOT NULL
 ----
 
@@ -22925,7 +22925,7 @@ SELECT + + col0 AS col2 FROM tab0 AS cor0 GROUP BY col0, col2, col1 HAVING + - c
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT AVG ( ALL - col2 ) FROM tab2 GROUP BY col2 HAVING NOT ( + col2 ) > NULL
 ----
 
@@ -23080,7 +23080,7 @@ query I rowsort
 SELECT + + col2 AS col1 FROM tab1 AS cor0 GROUP BY col2 HAVING NOT ( ( NOT NULL IS NOT NULL ) )
 ----
 
-query I rowsort
+query R rowsort
 SELECT + + AVG ( - col1 ) AS col0 FROM tab2 AS cor0 GROUP BY col1 HAVING NOT NULL IS NULL
 ----
 
@@ -23258,7 +23258,7 @@ query I rowsort
 SELECT ALL - col0 AS col2 FROM tab0 WHERE NOT col0 IS NOT NULL GROUP BY col0
 ----
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( - col0 ) FROM tab0 AS cor0 GROUP BY col0 HAVING NULL IS NOT NULL
 ----
 
@@ -23437,7 +23437,7 @@ SELECT ALL + col1 FROM tab0 WHERE - col0 IS NOT NULL GROUP BY col1 HAVING NULL I
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT col1 + AVG ( - col1 ) FROM tab1 AS cor0 GROUP BY col1 HAVING ( NULL ) IS NOT NULL
 ----
 
@@ -23697,7 +23697,7 @@ SELECT - - col1 FROM tab2 AS cor0 GROUP BY col2, col1 HAVING NOT NULL IS NOT NUL
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT col0 / + col2 / - col2 FROM tab0 AS cor0 WHERE NULL IS NULL GROUP BY col2, col0 HAVING NOT NULL IS NULL
 ----
 
@@ -23970,7 +23970,7 @@ SELECT DISTINCT + - col2 AS col1 FROM tab2 AS cor0 GROUP BY col2
 -79
 -87
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( ALL col0 ) FROM tab1 WHERE NULL > + - col0 GROUP BY col0, col1 HAVING - col0 IS NULL
 ----
 
@@ -24137,7 +24137,7 @@ SELECT - + col0 AS col1, col0 FROM tab0 AS cor0 GROUP BY col0
 -83
 83
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( col2 ) AS col1 FROM tab0 GROUP BY col2 HAVING NOT NULL <= NULL
 ----
 
@@ -24547,7 +24547,7 @@ SELECT DISTINCT col0 AS col1 FROM tab2 GROUP BY col0, col2
 91
 92
 
-query I rowsort
+query R rowsort
 SELECT ALL + - col2 / + - col2 AS col2 FROM tab1 cor0 GROUP BY col0, col2 HAVING NOT NULL IS NULL
 ----
 
@@ -24683,7 +24683,7 @@ SELECT col2 - - col2 AS col1 FROM tab0 WHERE NOT NULL IS NOT NULL GROUP BY col2,
 48
 76
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( + col1 ) FROM tab1 GROUP BY col1, col0 HAVING NULL IS NOT NULL
 ----
 
@@ -24930,7 +24930,7 @@ query I rowsort
 SELECT ALL + col0 AS col0 FROM tab0 AS cor0 GROUP BY col0, col0 HAVING NULL <= NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT AVG ( ALL - - col1 ) AS col0 FROM tab1 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
@@ -25524,7 +25524,7 @@ SELECT - - col2 AS col1 FROM tab1 AS cor0 GROUP BY col2
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT - col0 / col1 FROM tab1 GROUP BY col1, col0 HAVING NOT ( col0 <> NULL )
 ----
 
@@ -25630,7 +25630,7 @@ SELECT DISTINCT + col0 + - col0 AS col1 FROM tab0 AS cor0 GROUP BY col0, col0, c
 ----
 0
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( - col1 ) FROM tab2 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
@@ -25733,7 +25733,7 @@ SELECT - col0 FROM tab1 AS cor0 GROUP BY col0 HAVING NOT ( NULL ) IS NOT NULL
 -28
 -82
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( - col2 ) * + col2 FROM tab0 AS cor0 WHERE NOT NULL IS NULL GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
@@ -25745,7 +25745,7 @@ SELECT DISTINCT - + col0 FROM tab1 AS cor0 GROUP BY col0
 -82
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT ALL col2 / col0 col0 FROM tab1 AS cor0 GROUP BY col1, col0, col2 HAVING - col2 IS NULL
 ----
 
@@ -25761,7 +25761,7 @@ SELECT col2 AS col1 FROM tab0 GROUP BY col1, col2
 79
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT ALL + col1 * + col1 + - + col1 / + col1 col0 FROM tab2 WHERE NULL IS NOT NULL GROUP BY col1 HAVING NULL IS NULL
 ----
 
@@ -25803,7 +25803,7 @@ query I rowsort
 SELECT - col1 FROM tab1 AS cor0 WHERE NULL IS NOT NULL GROUP BY col1, col1
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL col1 + - col0 / col0 / - col1 FROM tab0 GROUP BY col0, col1 HAVING NULL IS NOT NULL
 ----
 
@@ -25822,7 +25822,7 @@ SELECT ALL - col0 FROM tab0 cor0 GROUP BY col2, col0
 -43
 -83
 
-query I rowsort
+query R rowsort
 SELECT AVG ( DISTINCT + col0 ) FROM tab1 AS cor0 WHERE NOT NULL > ( NULL ) GROUP BY col0, col0
 ----
 
@@ -26016,7 +26016,7 @@ query I rowsort
 SELECT ALL col0 FROM tab2 AS cor0 WHERE ( col2 ) IS NULL GROUP BY col0
 ----
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( - col2 ) FROM tab1 WHERE NOT + col2 > NULL GROUP BY col2
 ----
 
@@ -26117,7 +26117,7 @@ SELECT DISTINCT + col1 AS col2 FROM tab2 AS cor0 GROUP BY col2, col1
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT - col0 / col0 FROM tab2 AS cor0 WHERE NULL <> ( NULL ) GROUP BY col0
 ----
 
@@ -26141,7 +26141,7 @@ SELECT col1 * - col1 + col1 FROM tab0 GROUP BY col1, col0
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT ALL col1 / col2 AS col2 FROM tab0 GROUP BY col1, col2 HAVING NULL IS NOT NULL
 ----
 
@@ -26245,7 +26245,7 @@ SELECT ALL + + col1 FROM tab0 cor0 GROUP BY col2, col1
 0
 81
 
-query II rowsort
+query RI rowsort
 SELECT col1 / col2 AS col2, + col2 FROM tab1 cor0 GROUP BY col2, col1 HAVING NOT NULL IS NULL
 ----
 
@@ -26253,11 +26253,11 @@ query I rowsort
 SELECT + col0 AS col1 FROM tab2 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT - col2 / - col2 FROM tab1 GROUP BY col2, col2 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT + + AVG ( DISTINCT col1 ) + - col1 FROM tab0 AS cor0 WHERE NULL > ( NULL ) GROUP BY col1
 ----
 
@@ -26274,7 +26274,7 @@ SELECT DISTINCT + col1 * - col1 FROM tab0 AS cor0 GROUP BY col1, col1 HAVING NUL
 -6561
 0
 
-query I rowsort
+query R rowsort
 SELECT + + AVG ( col2 ) FROM tab1 cor0 GROUP BY col2, col2, col2 HAVING NULL IS NOT NULL
 ----
 
@@ -26392,7 +26392,7 @@ SELECT + col1 * col1 FROM tab2 GROUP BY col1
 3481
 3721
 
-query I rowsort
+query R rowsort
 SELECT + col0 / - col0 AS col0 FROM tab2 WHERE NOT NULL IS NULL OR - col2 IS NULL GROUP BY col2, col0
 ----
 
@@ -26486,7 +26486,7 @@ query I rowsort
 SELECT ALL - + col0 AS col2 FROM tab0 AS cor0 GROUP BY col0 HAVING NULL IS NOT NULL
 ----
 
-query II rowsort
+query RI rowsort
 SELECT + col1 / + col0 AS col2, col1 AS col2 FROM tab0 AS cor0 WHERE NOT NULL IS NULL GROUP BY col0, col1
 ----
 
@@ -27153,7 +27153,7 @@ SELECT col1 AS col2, col1 AS col0 FROM tab0 GROUP BY col1
 81
 81
 
-query I rowsort
+query R rowsort
 SELECT AVG ( - + col0 ) AS col2 FROM tab0 AS cor0 GROUP BY col0, col0 HAVING ( NULL ) IS NOT NULL
 ----
 
@@ -27283,7 +27283,7 @@ SELECT DISTINCT - col1 - - - col1 col2 FROM tab1 cor0 GROUP BY col1, col1
 -12
 -88
 
-query I rowsort
+query R rowsort
 SELECT AVG ( DISTINCT + col0 ) FROM tab2 AS cor0 GROUP BY col0 HAVING NULL IS NOT NULL
 ----
 
@@ -27886,7 +27886,7 @@ SELECT col0 AS col1 FROM tab0 GROUP BY col1, col0
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT + + AVG ( ALL col1 ) FROM tab0 AS cor0 GROUP BY col1, col0, col0 HAVING NULL IS NOT NULL
 ----
 
@@ -27898,7 +27898,7 @@ query I rowsort
 SELECT col2 FROM tab0 WHERE NOT col1 / - col0 IS NOT NULL GROUP BY col1, col2
 ----
 
-query I rowsort
+query R rowsort
 SELECT - col2 / + col2 AS col2 FROM tab2 AS cor0 GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
@@ -28073,7 +28073,7 @@ SELECT - col1 FROM tab0 GROUP BY col0, col1
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( DISTINCT + + col2 ) FROM tab1 AS cor0 GROUP BY col2 HAVING NOT NULL >= NULL
 ----
 
@@ -28288,7 +28288,7 @@ query I rowsort
 SELECT col0 FROM tab1 GROUP BY col0, col2 HAVING NOT NULL >= ( - col2 )
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - AVG ( DISTINCT + col2 ) * + col0 FROM tab2 GROUP BY col0, col2 HAVING NOT NULL IS NULL
 ----
 
@@ -28303,7 +28303,7 @@ SELECT ALL col0 AS col1 FROM tab0 GROUP BY col0, col0
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( DISTINCT - - col0 ) AS col1 FROM tab1 AS cor0 GROUP BY col2, col0 HAVING NOT NULL > NULL
 ----
 
@@ -28448,7 +28448,7 @@ query I rowsort
 SELECT + + col0 FROM tab0 cor0 GROUP BY col0, col1 HAVING ( NULL ) IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( + col1 ) AS col2 FROM tab2 AS cor0 GROUP BY col1, col1 HAVING NOT col1 > ( NULL )
 ----
 
@@ -28544,7 +28544,7 @@ SELECT ALL + col1, - col1 * + - col1 FROM tab0 AS cor0 GROUP BY col1
 81
 6561
 
-query I rowsort
+query R rowsort
 SELECT AVG ( - - col0 ) FROM tab0 GROUP BY col1, col0 HAVING ( NULL <> NULL )
 ----
 
@@ -29723,7 +29723,7 @@ SELECT - - col2 FROM tab1 cor0 GROUP BY col2, col1
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - + AVG ( + col1 ) * - col1 * + - col1 FROM tab0 AS cor0 WHERE col2 <= NULL GROUP BY col1
 ----
 
@@ -30281,7 +30281,7 @@ SELECT ALL + col2 FROM tab1 cor0 GROUP BY col2, col2
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT + col0 - AVG ( - + col0 ) FROM tab1 AS cor0 GROUP BY col1, col0 HAVING NULL BETWEEN NULL AND NULL
 ----
 
@@ -30383,7 +30383,7 @@ SELECT + col2 + + col2 AS col0 FROM tab2 AS cor0 GROUP BY col2
 158
 174
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( + col0 ) FROM tab2 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
@@ -30460,7 +30460,7 @@ SELECT + col1 * - + col1 AS col0 FROM tab1 GROUP BY col1 HAVING NULL IS NULL
 -36
 
 skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
-query I rowsort
+query R rowsort
 SELECT AVG ( ALL - col0 ) AS col2 FROM tab1 AS cor0 GROUP BY col0 HAVING + - col2 <= NULL
 ----
 
@@ -31682,7 +31682,7 @@ query I rowsort
 SELECT DISTINCT + col0 FROM tab0 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL col1 + + col1 / + col1 FROM tab1 AS cor0 GROUP BY col1, col1 HAVING ( NULL ) IS NOT NULL
 ----
 
@@ -31796,7 +31796,7 @@ query I rowsort
 SELECT + + col2 col2 FROM tab0 AS cor0 GROUP BY col0, col2, col0 HAVING NOT NULL IS NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT col0 * - col0 / - col0 FROM tab2 GROUP BY col0 HAVING NOT ( NULL ) <> AVG ( DISTINCT col1 )
 ----
 
@@ -31894,7 +31894,7 @@ SELECT col0 AS col0 FROM tab0 WHERE NULL IS NULL GROUP BY col0, col0, col0
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + - AVG ( ALL + col1 ) AS col2 FROM tab0 AS cor0 GROUP BY col1 HAVING col1 IS NULL
 ----
 
@@ -32337,7 +32337,7 @@ query II rowsort
 SELECT ALL col2 AS col1, col2 AS col0 FROM tab2 GROUP BY col2 HAVING NOT ( NULL ) <> NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( DISTINCT - col0 ) FROM tab2 WHERE col1 > NULL GROUP BY col0
 ----
 
@@ -32391,7 +32391,7 @@ SELECT + col1 AS col2 FROM tab0 AS cor0 GROUP BY col1, col1, col0
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT AVG ( ALL - col2 ) + - col2 FROM tab2 AS cor0 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -32548,7 +32548,7 @@ query I rowsort
 SELECT + col1 FROM tab1 GROUP BY col1 HAVING NULL >= NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + AVG ( ALL col0 ) FROM tab1 GROUP BY col0, col2 HAVING NOT NULL > - col0
 ----
 
@@ -32769,7 +32769,7 @@ SELECT + col0 + + col0 FROM tab2 cor0 GROUP BY col0, col1
 184
 30
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + col2 / - col2 + + + col1 AS col2 FROM tab0 AS cor0 WHERE NULL IS NOT NULL GROUP BY col1, col2
 ----
 
@@ -32959,7 +32959,7 @@ SELECT ALL - - col0 FROM tab1 cor0 GROUP BY col0 HAVING NULL IS NULL
 28
 82
 
-query I rowsort
+query R rowsort
 SELECT AVG ( - col0 ) FROM tab2 GROUP BY col0, col0 HAVING ( NULL ) IS NOT NULL
 ----
 
@@ -33199,7 +33199,7 @@ SELECT + - col1 + + - col0 AS col1 FROM tab0 AS cor0 GROUP BY col1, col0 HAVING 
 -26
 -83
 
-query I rowsort
+query R rowsort
 SELECT ALL - col1 / col1 FROM tab1 GROUP BY col1 HAVING NOT NULL >= - col1
 ----
 
@@ -33357,7 +33357,7 @@ query I rowsort
 SELECT ALL + col1 AS col2 FROM tab0 AS cor0 GROUP BY col1, col2 HAVING NOT - - col2 IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL + - AVG ( - + col1 ) FROM tab2 AS cor0 GROUP BY col1 HAVING NOT NULL IS NULL
 ----
 
@@ -33445,7 +33445,7 @@ query I rowsort
 SELECT col2 FROM tab2 AS cor0 WHERE NOT NULL IS NOT NULL GROUP BY col0, col2 HAVING NOT ( NULL ) >= NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT AVG ( - col2 ) FROM tab0 GROUP BY col2, col1 HAVING NOT NULL IS NULL
 ----
 
@@ -33683,7 +33683,7 @@ query I rowsort
 SELECT ALL - col1 col1 FROM tab0 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + - AVG ( - col2 ) AS col1 FROM tab1 WHERE - - col2 IS NULL GROUP BY col2
 ----
 
@@ -33900,7 +33900,7 @@ SELECT col1 AS col1 FROM tab2 WHERE NOT NULL IS NOT NULL GROUP BY col1
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT ALL - + AVG ( DISTINCT col0 ) / + col0 FROM tab1 cor0 GROUP BY col0, col0 HAVING NOT NULL IS NULL
 ----
 
@@ -33960,7 +33960,7 @@ SELECT ALL - col2 AS col2 FROM tab1 GROUP BY col2, col1 HAVING NULL IS NULL
 -71
 -8
 
-query I rowsort
+query R rowsort
 SELECT + col2 / col2 AS col2 FROM tab2 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -34952,7 +34952,7 @@ SELECT col1 AS col2 FROM tab1 AS cor0 GROUP BY col1, col0
 57
 6
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( ALL + - col0 ) + col1 FROM tab0 AS cor0 GROUP BY col0, col1 HAVING NULL <= NULL
 ----
 
@@ -35007,7 +35007,7 @@ SELECT DISTINCT + col0 AS col0 FROM tab2 GROUP BY col0, col0 HAVING NULL IS NULL
 91
 92
 
-query I rowsort
+query R rowsort
 SELECT AVG ( + - col1 ) FROM tab0 GROUP BY col0, col1 HAVING NOT col0 IS NOT NULL
 ----
 
@@ -35229,7 +35229,7 @@ SELECT col0 AS col2 FROM tab2 WHERE NULL IS NULL GROUP BY col0
 91
 92
 
-query I rowsort
+query R rowsort
 SELECT ALL - AVG ( ALL + col2 ) FROM tab0 GROUP BY col2 HAVING NULL NOT BETWEEN NULL AND ( AVG ( DISTINCT - col2 ) )
 ----
 
@@ -35437,7 +35437,7 @@ SELECT ALL col2 col1 FROM tab1 GROUP BY col2, col2
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT ALL col0 + + AVG ( + col0 ) FROM tab2 GROUP BY col0, col0, col1 HAVING NULL >= NULL
 ----
 
@@ -36046,7 +36046,7 @@ query I rowsort
 SELECT col1 AS col1 FROM tab2 GROUP BY col1, col1 HAVING NULL > ( NULL )
 ----
 
-query I rowsort
+query R rowsort
 SELECT AVG ( ALL - col0 ) AS col1 FROM tab0 GROUP BY col0 HAVING NOT ( NULL ) IS NULL
 ----
 
@@ -36160,7 +36160,7 @@ SELECT + col2 AS col2 FROM tab2 AS cor0 GROUP BY col2, col0
 79
 87
 
-query I rowsort
+query R rowsort
 SELECT AVG ( DISTINCT - - col1 ) FROM tab1 GROUP BY col1 HAVING NOT - - col1 IS NOT NULL
 ----
 
@@ -36260,7 +36260,7 @@ SELECT DISTINCT - col2 col1 FROM tab2 AS cor0 GROUP BY col2, col2
 -79
 -87
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( col2 ) FROM tab2 AS cor0 GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
@@ -36272,7 +36272,7 @@ SELECT DISTINCT - col1 FROM tab2 cor0 GROUP BY col1
 -61
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT DISTINCT - AVG ( + + col0 ) * - col0 col1 FROM tab0 GROUP BY col0 HAVING NOT ( NULL ) IS NULL
 ----
 
@@ -36534,7 +36534,7 @@ query I rowsort
 SELECT DISTINCT col0 FROM tab0 AS cor0 GROUP BY col0 HAVING NULL < NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL + col1 / + col1 FROM tab0 WHERE NOT NULL IS NULL GROUP BY col1
 ----
 
@@ -36912,7 +36912,7 @@ SELECT col2 + + col1 AS col1 FROM tab0 GROUP BY col1, col2, col1
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT ALL + - AVG ( + col1 ) FROM tab2 AS cor0 GROUP BY col1 HAVING NULL NOT IN ( col1 )
 ----
 
@@ -37105,7 +37105,7 @@ query I rowsort
 SELECT ALL col2 FROM tab1 AS cor0 GROUP BY col2, col0 HAVING NULL IS NULL AND NOT ( NOT ( NULL ) IS NOT NULL )
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL + col0 / - col2 FROM tab0 GROUP BY col2, col0 HAVING ( NULL ) IS NOT NULL
 ----
 
@@ -37443,7 +37443,7 @@ SELECT col0 FROM tab0 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT DISTINCT - col0 / - col1 + - col1 col2 FROM tab2 AS cor0 GROUP BY col0, col1 HAVING NOT NULL NOT BETWEEN + col2 AND NULL
 ----
 
@@ -37505,7 +37505,7 @@ SELECT DISTINCT col1 FROM tab2 cor0 GROUP BY col1, col1
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT ALL col1 / col1 FROM tab2 GROUP BY col1, col1 HAVING NOT + AVG ( col0 ) IS NOT NULL
 ----
 
@@ -37536,7 +37536,7 @@ SELECT DISTINCT + - col2 FROM tab2 AS cor0 GROUP BY col2 HAVING NOT NULL IS NOT 
 -79
 -87
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - - AVG ( - col2 ) + + col2 FROM tab1 AS cor0 GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
@@ -38037,10 +38037,10 @@ SELECT - col2 - - + col0 FROM tab0 GROUP BY col0, col2
 19
 45
 
-query III rowsort
+query IRI rowsort
 SELECT ALL col2 AS col1, - AVG ( - col2 ) AS col1, - col2 AS col1 FROM tab0 AS cor0 GROUP BY col2
 ----
-9 values hashing to 783727379615b8f9ae967fb1ef978f27
+9 values hashing to be2316769020254867c51ad425ce59ba
 
 query I rowsort
 SELECT - col0 + col0 FROM tab2 GROUP BY col0 HAVING NOT NULL IS NULL
@@ -38157,7 +38157,7 @@ SELECT DISTINCT - col0 AS col0 FROM tab0 AS cor0 GROUP BY col0, col2
 -43
 -83
 
-query I rowsort
+query R rowsort
 SELECT ALL col0 / col0 AS col0 FROM tab0 WHERE NOT ( NOT NULL <= ( - col2 ) ) GROUP BY col0
 ----
 
@@ -38175,7 +38175,7 @@ SELECT ALL col1 FROM tab1 GROUP BY col1, col2 HAVING NOT ( NULL ) IS NOT NULL
 57
 6
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( ALL col0 ) FROM tab1 AS cor0 GROUP BY col0, col1 HAVING NOT NULL IS NULL
 ----
 
@@ -38419,7 +38419,7 @@ SELECT - col2 * col2 FROM tab1 GROUP BY col2
 -5041
 -64
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( ALL - col2 ) * + col2 AS col0 FROM tab1 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -38465,7 +38465,7 @@ SELECT ALL + + col2 col2 FROM tab1 AS cor0 GROUP BY col2
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT - col1 / col1 AS col1 FROM tab2 AS cor0 WHERE + col0 >= NULL GROUP BY col1
 ----
 
@@ -38688,7 +38688,7 @@ SELECT ALL col2 FROM tab0 AS cor0 GROUP BY col2 HAVING NOT NULL IS NOT NULL
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT col1 * - - col1 * + - AVG ( + col1 ) FROM tab0 GROUP BY col1, col1 HAVING NULL IS NOT NULL
 ----
 
@@ -38902,7 +38902,7 @@ query I rowsort
 SELECT - - col1 AS col1 FROM tab2 WHERE NULL < - col2 GROUP BY col1 HAVING NULL NOT BETWEEN NULL AND NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT AVG ( col0 ) AS col2 FROM tab1 AS cor0 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
@@ -39059,7 +39059,7 @@ SELECT - col2 FROM tab0 AS cor0 GROUP BY col2 HAVING NOT NULL IS NOT NULL
 -38
 -79
 
-query I rowsort
+query R rowsort
 SELECT ALL - + col1 / - col1 FROM tab0 WHERE NOT NULL < - - col0 GROUP BY col1, col0
 ----
 
@@ -39344,7 +39344,7 @@ SELECT DISTINCT + col2 AS col2 FROM tab1 AS cor0 GROUP BY col2, col2
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( - col0 ) FROM tab2 AS cor0 GROUP BY col0, col0 HAVING NOT NULL = NULL
 ----
 
@@ -39471,7 +39471,7 @@ SELECT + - col2 AS col1 FROM tab2 AS cor0 GROUP BY col2, col0
 -79
 -87
 
-query I rowsort
+query R rowsort
 SELECT AVG ( + col0 ) AS col1 FROM tab0 WHERE NOT NULL <= NULL GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
@@ -39481,7 +39481,7 @@ SELECT ALL + col1 AS col1 FROM tab0 GROUP BY col1, col1
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT - + col0 / col0 FROM tab2 AS cor0 GROUP BY col0 HAVING NULL IS NOT NULL
 ----
 
@@ -39887,7 +39887,7 @@ query I rowsort
 SELECT col0 FROM tab0 WHERE NULL IS NOT NULL GROUP BY col0
 ----
 
-query I rowsort
+query R rowsort
 SELECT AVG ( col2 ) FROM tab1 WHERE NOT NULL IS NULL GROUP BY col2
 ----
 
@@ -39940,7 +39940,7 @@ query I rowsort
 SELECT + col1 FROM tab0 AS cor0 GROUP BY col0, col1 HAVING NOT NULL IS NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( DISTINCT - + col2 ) FROM tab2 GROUP BY col2 HAVING NOT NULL IS NULL AND NOT NULL IS NULL
 ----
 
@@ -40349,7 +40349,7 @@ SELECT col0 * + col0 AS col2 FROM tab1 GROUP BY col0
 6724
 784
 
-query I rowsort
+query R rowsort
 SELECT col1 / col1 + + - col1 AS col0 FROM tab1 GROUP BY col1 HAVING NOT NULL >= NULL
 ----
 
@@ -40501,7 +40501,7 @@ SELECT - col2 / - col2 FROM tab2 GROUP BY col2
 1
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT DISTINCT + AVG ( col1 ) col0 FROM tab1 WHERE NULL < NULL GROUP BY col1
 ----
 
@@ -40930,7 +40930,7 @@ SELECT col2 FROM tab0 AS cor0 GROUP BY col1, col2, col2
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT col1 * AVG ( DISTINCT col0 ) FROM tab2 GROUP BY col1, col0 HAVING NOT NULL IS NULL
 ----
 
@@ -41384,7 +41384,7 @@ query I rowsort
 SELECT ALL - col1 FROM tab0 AS cor0 WHERE NOT - col2 IS NULL GROUP BY col1 HAVING NULL < NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( DISTINCT col2 ) AS col1 FROM tab0 WHERE NOT NULL IS NULL GROUP BY col2
 ----
 
@@ -41728,7 +41728,7 @@ SELECT col2, col2 FROM tab0 GROUP BY col2 HAVING NULL IS NULL
 79
 79
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( + col2 ) - col1 FROM tab2 AS cor0 WHERE NOT NULL <= + col2 GROUP BY col1, col2, col2
 ----
 
@@ -41843,7 +41843,7 @@ SELECT DISTINCT - col2 AS col0 FROM tab0 GROUP BY col0, col2
 -79
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( + col1 ) col2 FROM tab2 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
@@ -42418,7 +42418,7 @@ SELECT ALL col2 FROM tab0 GROUP BY col1, col2 HAVING NULL IS NULL
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( DISTINCT + - col0 ) FROM tab0 AS cor0 WHERE NOT NULL IS NULL GROUP BY col0, col1
 ----
 
@@ -43055,7 +43055,7 @@ SELECT ALL col1 col0 FROM tab1 GROUP BY col1, col1
 57
 6
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( - col2 ) AS col1 FROM tab0 WHERE NOT NULL IS NULL GROUP BY col2
 ----
 
@@ -43394,7 +43394,7 @@ SELECT DISTINCT - col2 AS col0 FROM tab2 cor0 GROUP BY col1, col2, col1
 -79
 -87
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( + col2 ) FROM tab0 AS cor0 GROUP BY col2, col1 HAVING NOT ( NULL ) < ( NULL )
 ----
 
@@ -43600,7 +43600,7 @@ SELECT col0 * + col0 AS col1 FROM tab0 AS cor0 GROUP BY col0, col0
 676
 6889
 
-query I rowsort
+query R rowsort
 SELECT + col2 / + col2 AS col2 FROM tab1 GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
@@ -44146,7 +44146,7 @@ SELECT DISTINCT - - col1 AS col2 FROM tab1 AS cor0 GROUP BY col1
 57
 6
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( - col0 ) FROM tab1 AS cor0 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
@@ -44742,7 +44742,7 @@ SELECT ALL col0 + + col0 AS col0 FROM tab0 GROUP BY col0
 52
 86
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( + col2 ) + + col2 FROM tab2 GROUP BY col0, col2 HAVING NULL IS NOT NULL
 ----
 
@@ -44979,7 +44979,7 @@ SELECT - col2 AS col2 FROM tab1 WHERE NULL IS NULL GROUP BY col2
 -8
 
 skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( + col1 ) AS col0 FROM tab2 GROUP BY col1 HAVING NOT NULL <> col0
 ----
 
@@ -45049,7 +45049,7 @@ query I rowsort
 SELECT ALL - col0 + col0 FROM tab2 GROUP BY col0 HAVING NOT NULL = NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( + col0 ) AS col1 FROM tab1 AS cor0 GROUP BY col0 HAVING ( NULL ) > NULL
 ----
 
@@ -45291,7 +45291,7 @@ SELECT DISTINCT - + col2 col2 FROM tab0 AS cor0 GROUP BY col2
 -38
 -79
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( ALL - col0 ) FROM tab2 AS cor0 GROUP BY col0 HAVING NULL >= + col0
 ----
 
@@ -45350,7 +45350,7 @@ query I rowsort
 SELECT - col1 * + - col2 col0 FROM tab1 WHERE NULL IS NOT NULL GROUP BY col1, col2
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL - AVG ( DISTINCT + col1 ) FROM tab0 WHERE - + col1 IS NULL GROUP BY col1
 ----
 
@@ -45616,7 +45616,7 @@ SELECT DISTINCT + col1 FROM tab1 cor0 GROUP BY col1
 57
 6
 
-query I rowsort
+query R rowsort
 SELECT ALL + - AVG ( ALL + col2 ) FROM tab1 cor0 GROUP BY col2 HAVING NOT NULL < NULL
 ----
 
@@ -45849,7 +45849,7 @@ query I rowsort
 SELECT DISTINCT col0 FROM tab0 GROUP BY col0 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT col2 / - AVG ( ALL + col0 ) FROM tab2 cor0 GROUP BY col2, col0, col1 HAVING NULL IS NOT NULL
 ----
 
@@ -46376,7 +46376,7 @@ query I rowsort
 SELECT - col0 AS col0 FROM tab0 AS cor0 GROUP BY col0 HAVING NULL NOT BETWEEN ( NULL ) AND col0
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - col1 * - - AVG ( - + col1 ) AS col2 FROM tab2 WHERE ( NULL ) > NULL GROUP BY col1
 ----
 
@@ -47071,7 +47071,7 @@ SELECT ALL col1 col0 FROM tab0 GROUP BY col1, col1
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( ALL - + col1 ) AS col2 FROM tab1 GROUP BY col1 HAVING NOT NULL <> NULL
 ----
 
@@ -47247,7 +47247,7 @@ query I rowsort
 SELECT - - col0 AS col2 FROM tab0 AS cor0 WHERE NOT col0 IS NULL GROUP BY col2, col0 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL + + AVG ( col0 ) FROM tab1 AS cor0 GROUP BY col0, col2 HAVING NULL IS NOT NULL
 ----
 
@@ -47320,7 +47320,7 @@ query I rowsort
 SELECT ALL col2 AS col0 FROM tab2 GROUP BY col1, col2 HAVING ( NULL IS NOT NULL )
 ----
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( ALL + - col2 ) + - col2 AS col0 FROM tab0 AS cor0 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -47390,7 +47390,7 @@ SELECT ALL + col0 AS col1 FROM tab2 AS cor0 GROUP BY col2, col0
 91
 92
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( + col2 ) FROM tab0 WHERE NULL IS NOT NULL GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -48847,7 +48847,7 @@ SELECT DISTINCT - col2 AS col1 FROM tab2 GROUP BY col0, col2
 -79
 -87
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( DISTINCT - - col2 ) FROM tab2 WHERE NULL IS NOT NULL GROUP BY col1, col2
 ----
 
@@ -49197,7 +49197,7 @@ SELECT col1 * - col1 FROM tab2 GROUP BY col2, col1
 -3481
 -3721
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( DISTINCT - + col2 ) AS col1 FROM tab0 AS cor0 GROUP BY col0, col2 HAVING NOT NULL IS NULL
 ----
 
@@ -49522,7 +49522,7 @@ query I rowsort
 SELECT ALL + col0 FROM tab2 GROUP BY col0 HAVING NULL < NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL col1 * + col1 / - - col1 FROM tab1 AS cor0 WHERE NOT NULL < NULL GROUP BY col1
 ----
 
@@ -49566,7 +49566,7 @@ SELECT - col2 FROM tab0 AS cor0 GROUP BY col2, col2 HAVING NULL IS NULL
 -38
 -79
 
-query I rowsort
+query R rowsort
 SELECT AVG ( ALL col2 ) * - col2 + + col2 + - col2 FROM tab1 AS cor0 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -49913,7 +49913,7 @@ SELECT ALL col0 FROM tab0 GROUP BY col0 HAVING ( NOT NULL IS NOT NULL )
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + col0 / AVG ( ALL + col0 ) FROM tab0 AS cor0 WHERE NOT ( NULL ) IS NULL GROUP BY col0
 ----
 
@@ -50040,7 +50040,7 @@ SELECT DISTINCT - - col0 AS col1 FROM tab0 AS cor0 GROUP BY col0, col1
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT ALL col1 / - col1 AS col0 FROM tab2 AS cor0 GROUP BY col1, col2 HAVING NULL IS NOT NULL
 ----
 
@@ -50969,7 +50969,7 @@ query I rowsort
 SELECT DISTINCT + col1 AS col1 FROM tab0 AS cor0 GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - AVG ( ALL - col0 ) * col0 * - col0 + - + col0 FROM tab0 AS cor0 WHERE NOT NULL = ( NULL ) GROUP BY col0
 ----
 
@@ -51120,7 +51120,7 @@ SELECT DISTINCT - col0 AS col1 FROM tab1 AS cor0 GROUP BY col1, col0
 -28
 -82
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( DISTINCT - col2 ) AS col0 FROM tab2 GROUP BY col2 HAVING NULL <> col2
 ----
 
@@ -51271,7 +51271,7 @@ SELECT DISTINCT col1 col0 FROM tab2 GROUP BY col1, col2
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT + col1 / + col1 AS col0 FROM tab0 GROUP BY col1 HAVING ( NOT ( NOT NULL BETWEEN NULL AND NULL ) )
 ----
 
@@ -51421,7 +51421,7 @@ SELECT DISTINCT + + col2 AS col2 FROM tab2 cor0 GROUP BY col2
 79
 87
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - AVG ( DISTINCT - - col1 ) FROM tab2 AS cor0 GROUP BY col1, col2 HAVING ( NULL <= ( NULL ) )
 ----
 
@@ -52453,7 +52453,7 @@ SELECT + col0 AS col1 FROM tab0 cor0 GROUP BY col0
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT col2 * - col2 * AVG ( col2 ) FROM tab0 cor0 GROUP BY col2 HAVING NOT NULL IS NULL
 ----
 
@@ -52538,7 +52538,7 @@ SELECT col1 FROM tab0 AS cor0 GROUP BY col1, col2, col0 HAVING NOT ( NOT ( NULL 
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT ALL - AVG ( col2 ) FROM tab0 AS cor0 GROUP BY col2 HAVING - col2 IS NULL
 ----
 
@@ -53417,7 +53417,7 @@ SELECT - col2 + - col2 FROM tab0 GROUP BY col2
 -48
 -76
 
-query I rowsort
+query R rowsort
 SELECT ALL + + col2 / col1 FROM tab2 AS cor0 GROUP BY col2, col1, col0 HAVING NULL IS NOT NULL
 ----
 
@@ -53490,7 +53490,7 @@ SELECT DISTINCT col1 + + col1 * + col1 AS col0 FROM tab0 GROUP BY col1
 6642
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT + AVG ( + col0 ) + + + col0 col1 FROM tab2 AS cor0 GROUP BY col0 HAVING NOT + col0 <> ( NULL )
 ----
 
@@ -53740,7 +53740,7 @@ SELECT ALL - col1 - + col1 AS col2 FROM tab1 GROUP BY col1
 -12
 -88
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + col0 + AVG ( ALL + + col1 ) / col1 FROM tab0 WHERE - col2 < NULL GROUP BY col1, col0
 ----
 
@@ -54038,7 +54038,7 @@ query I rowsort
 SELECT col2 AS col0 FROM tab2 AS cor0 GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL - col2 + - AVG ( ALL - - col2 ) FROM tab2 AS cor0 GROUP BY col2 HAVING + AVG ( + - col1 ) IS NULL
 ----
 
@@ -54661,7 +54661,7 @@ query I rowsort
 SELECT ALL + col1 FROM tab0 AS cor0 WHERE NULL IS NOT NULL GROUP BY col1
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL - col2 / - col2 FROM tab1 AS cor0 WHERE NULL IS NOT NULL GROUP BY col2
 ----
 
@@ -55394,7 +55394,7 @@ SELECT - col2 + - - col2 col0 FROM tab1 AS cor0 GROUP BY col2
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT ALL - col1 * + + AVG ( col1 ) * + + col1 FROM tab0 GROUP BY col1, col1 HAVING NULL NOT BETWEEN NULL AND NULL
 ----
 
@@ -55611,7 +55611,7 @@ SELECT DISTINCT col2 / - col2 AS col2 FROM tab0 GROUP BY col2
 ----
 -1
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( + col2 ) AS col0 FROM tab0 cor0 GROUP BY col2 HAVING NOT ( NOT ( NULL ) < NULL )
 ----
 
@@ -55635,7 +55635,7 @@ SELECT - col2 col0 FROM tab1 WHERE + col0 NOT IN ( + + col2 ) GROUP BY col1, col
 -71
 -8
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( col0 ) AS col2 FROM tab0 WHERE NOT NULL NOT BETWEEN NULL AND NULL GROUP BY col0
 ----
 
@@ -55867,7 +55867,7 @@ SELECT DISTINCT col0 AS col0 FROM tab2 AS cor0 WHERE NOT ( NULL ) IS NULL GROUP 
 ----
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( DISTINCT + col0 ) col2 FROM tab2 AS cor0 WHERE NOT NULL NOT BETWEEN NULL AND NULL GROUP BY col0
 ----
 
@@ -56266,7 +56266,7 @@ SELECT + + col2 col2 FROM tab0 cor0 GROUP BY col2
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( + col2 ) * - + col2 FROM tab0 GROUP BY col2 HAVING AVG ( ALL col2 ) IS NULL
 ----
 
@@ -56544,7 +56544,7 @@ SELECT DISTINCT + - col0 FROM tab0 AS cor0 GROUP BY col0
 -43
 -83
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( DISTINCT col1 ) FROM tab1 AS cor0 WHERE NOT col2 IS NULL GROUP BY col1 HAVING NULL NOT IN ( col1 )
 ----
 
@@ -56564,7 +56564,7 @@ query I rowsort
 SELECT DISTINCT col0 FROM tab1 AS cor0 GROUP BY col0 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT + col0 * + col2 / + col2 AS col1 FROM tab1 AS cor0 GROUP BY col2, col0, col0 HAVING NOT NULL IS NULL
 ----
 
@@ -56601,7 +56601,7 @@ SELECT ALL + col2 FROM tab0 AS cor0 GROUP BY col2, col1 HAVING col2 IS NOT NULL
 38
 79
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( DISTINCT - col0 ) FROM tab2 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
@@ -56719,7 +56719,7 @@ query I rowsort
 SELECT col0 + + col0 FROM tab1 GROUP BY col0 HAVING NULL IS NOT NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( - col2 ) AS col1 FROM tab0 GROUP BY col2, col0, col2 HAVING NOT NULL IS NULL
 ----
 
@@ -56847,7 +56847,7 @@ query I rowsort
 SELECT + col2 + - col2 FROM tab1 GROUP BY col2, col1 HAVING NOT NULL IS NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT col0 + AVG ( DISTINCT - col0 ) FROM tab0 GROUP BY col0, col1 HAVING NULL < NULL
 ----
 
@@ -57093,7 +57093,7 @@ query I rowsort
 SELECT DISTINCT col1 * col0 FROM tab2 GROUP BY col1, col0, col0, col0 HAVING ( + col1 ) IS NULL
 ----
 
-query II rowsort
+query RI rowsort
 SELECT AVG ( DISTINCT - col2 ), col2 FROM tab1 GROUP BY col2 HAVING NOT NULL BETWEEN ( NULL ) AND NULL
 ----
 
@@ -57541,7 +57541,7 @@ SELECT DISTINCT - - col2 AS col0 FROM tab2 AS cor0 GROUP BY col2
 79
 87
 
-query I rowsort
+query R rowsort
 SELECT + col2 / + + col1 AS col2 FROM tab1 AS cor0 GROUP BY col1, col2 HAVING NOT NULL IS NULL
 ----
 
@@ -57791,7 +57791,7 @@ query II rowsort
 SELECT col0 * - col0 AS col2, col0 + + col0 FROM tab2 GROUP BY col0 HAVING NOT NULL < ( NULL )
 ----
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( DISTINCT - - col1 ) AS col0 FROM tab2 AS cor0 GROUP BY col1, col2 HAVING NULL IS NOT NULL
 ----
 
@@ -57971,7 +57971,7 @@ SELECT DISTINCT + col2 AS col1, + col2 * - col2 col1 FROM tab2 AS cor0 GROUP BY 
 87
 -7569
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( + col0 ) + col0 AS col1 FROM tab2 GROUP BY col0, col0 HAVING NULL = NULL
 ----
 
@@ -58151,7 +58151,7 @@ SELECT DISTINCT - col1 * + + col1 AS col1 FROM tab0 GROUP BY col1, col0
 -6561
 0
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - AVG ( + col0 ) AS col1 FROM tab2 WHERE ( NOT NULL >= + col0 ) GROUP BY col0
 ----
 
@@ -58218,7 +58218,7 @@ SELECT + - col2 col2 FROM tab2 cor0 GROUP BY col2
 -79
 -87
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( DISTINCT + col0 ) FROM tab2 GROUP BY col0, col0 HAVING NOT ( NULL ) > ( NULL )
 ----
 
@@ -58329,7 +58329,7 @@ SELECT ALL + col2 / - + col2 AS col1 FROM tab0 GROUP BY col2
 -1
 -1
 
-query I rowsort
+query R rowsort
 SELECT ALL - AVG ( ALL + col0 ) AS col1 FROM tab0 GROUP BY col0 HAVING + AVG ( DISTINCT - col2 ) IS NULL
 ----
 
@@ -58425,7 +58425,7 @@ SELECT + col0 AS col0 FROM tab0 GROUP BY col0 HAVING NULL IS NULL
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + AVG ( + + col2 ) FROM tab2 AS cor0 GROUP BY col2, col0 HAVING NOT NULL IS NULL
 ----
 
@@ -58578,7 +58578,7 @@ SELECT ALL + + col1 FROM tab0 AS cor0 GROUP BY col1, col0, col1
 0
 81
 
-query I rowsort
+query R rowsort
 SELECT ALL + AVG ( col2 ) FROM tab2 GROUP BY col2 HAVING NULL = NULL
 ----
 
@@ -59127,15 +59127,15 @@ SELECT col2 + + col2 col2 FROM tab2 GROUP BY col2
 158
 174
 
-query II rowsort
+query RI rowsort
 SELECT ALL + AVG ( col1 ), - col1 AS col0 FROM tab0 GROUP BY col1, col2 HAVING NOT NULL IS NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( - col1 ) / + col1 + col1 FROM tab2 WHERE NULL IS NOT NULL GROUP BY col1
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( DISTINCT + col1 ) FROM tab0 AS cor0 GROUP BY col1, col2 HAVING NOT NULL IS NULL
 ----
 
@@ -59144,7 +59144,7 @@ query I rowsort
 SELECT - col1 col1 FROM tab0 GROUP BY col2, col1 HAVING NOT ( NULL ) IS NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT - + AVG ( ALL - col0 ) FROM tab1 AS cor0 GROUP BY col0, col0 HAVING NOT NULL <> NULL
 ----
 
@@ -59504,7 +59504,7 @@ SELECT ALL + - col1 AS col1 FROM tab2 AS cor0 GROUP BY col1
 -59
 -61
 
-query I rowsort
+query R rowsort
 SELECT ALL - AVG ( ALL - col0 ) AS col2 FROM tab0 AS cor0 GROUP BY col0 HAVING + + col0 IS NULL
 ----
 
@@ -59666,7 +59666,7 @@ query I rowsort
 SELECT + col2 FROM tab2 AS cor0 GROUP BY col2 HAVING NOT NULL >= NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - + col0 + + col0 + - AVG ( DISTINCT col0 ) * col0 + + + col0 FROM tab1 AS cor0 WHERE NOT col1 * col2 IS NOT NULL GROUP BY col0
 ----
 
@@ -59749,7 +59749,7 @@ SELECT col0 AS col1 FROM tab0 GROUP BY col0 HAVING NULL IS NULL
 43
 83
 
-query I rowsort
+query R rowsort
 SELECT ALL - AVG ( + col0 ) AS col1 FROM tab1 GROUP BY col0 HAVING NOT + + col0 IS NOT NULL
 ----
 
@@ -59891,7 +59891,7 @@ SELECT col2 / - col0 AS col0 FROM tab1 GROUP BY col0, col2
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT ALL AVG ( - - col1 ) FROM tab1 AS cor0 GROUP BY col1, col2 HAVING NOT NULL = NULL
 ----
 
@@ -60027,7 +60027,7 @@ SELECT ALL - col0 * - + col0 FROM tab1 cor0 GROUP BY col0
 6724
 784
 
-query I rowsort
+query R rowsort
 SELECT - col1 + AVG ( ALL + col1 ) AS col0 FROM tab0 AS cor0 GROUP BY col1 HAVING NOT NULL IS NULL
 ----
 
@@ -60234,7 +60234,7 @@ SELECT + col0 col0 FROM tab2 AS cor0 GROUP BY col0
 91
 92
 
-query I rowsort
+query R rowsort
 SELECT AVG ( DISTINCT - col0 ) FROM tab1 AS cor0 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
@@ -60639,7 +60639,7 @@ SELECT ALL + col1 AS col0 FROM tab2 AS cor0 GROUP BY col1, col2
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT col0 / col0 FROM tab2 GROUP BY col0, col0 HAVING ( + col0 ) IS NULL
 ----
 
@@ -60720,7 +60720,7 @@ SELECT col2 FROM tab1 GROUP BY col0, col2 HAVING NULL IS NULL
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT ALL col2 + + + AVG ( DISTINCT - col2 ) AS col1 FROM tab1 AS cor0 WHERE NULL <= NULL GROUP BY col2
 ----
 
@@ -60995,7 +60995,7 @@ query I rowsort
 SELECT DISTINCT - - col1 FROM tab1 cor0 GROUP BY col1, col2 HAVING NOT NULL IS NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( + col2 ) AS col0 FROM tab2 AS cor0 GROUP BY col2 HAVING NOT - col2 IS NOT NULL
 ----
 
@@ -61146,7 +61146,7 @@ SELECT DISTINCT col1 AS col1 FROM tab1 GROUP BY col1, col1
 57
 6
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + AVG ( DISTINCT + col0 ) FROM tab2 GROUP BY col0 HAVING NOT ( NOT NULL IS NOT NULL )
 ----
 
@@ -61386,7 +61386,7 @@ SELECT DISTINCT + col2 FROM tab1 WHERE NULL IS NULL GROUP BY col2, col0
 71
 8
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( col1 ) FROM tab0 WHERE NULL IS NOT NULL GROUP BY col1, col1, col2
 ----
 
@@ -61475,7 +61475,7 @@ query I rowsort
 SELECT + col2 FROM tab2 AS cor0 GROUP BY col2 HAVING ( NULL ) <> NULL
 ----
 
-query II rowsort
+query IR rowsort
 SELECT ALL - col2, + col2 / col2 / - col2 FROM tab2 WHERE NOT ( NULL ) > NULL GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
@@ -61722,7 +61722,7 @@ SELECT - col1 - + col1 AS col2 FROM tab2 GROUP BY col1
 -122
 -82
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( DISTINCT - col1 ) FROM tab2 AS cor0 GROUP BY col1, col1, col0 HAVING col0 IS NULL
 ----
 
@@ -61912,7 +61912,7 @@ SELECT DISTINCT + - col2 + + col2 AS col1 FROM tab2 AS cor0 GROUP BY col2, col2
 ----
 0
 
-query I rowsort
+query R rowsort
 SELECT - - AVG ( DISTINCT col1 ) AS col0 FROM tab0 AS cor0 GROUP BY col1 HAVING NOT NULL NOT BETWEEN NULL AND NULL
 ----
 
@@ -61985,7 +61985,7 @@ query I rowsort
 SELECT + + col0 AS col1 FROM tab1 AS cor0 WHERE ( NULL ) IS NOT NULL GROUP BY col0
 ----
 
-query I rowsort
+query R rowsort
 SELECT - AVG ( - col2 ) AS col0 FROM tab2 AS cor0 GROUP BY col2, col1 HAVING ( NOT ( NULL ) = NULL )
 ----
 
@@ -62008,7 +62008,7 @@ SELECT col0 * col0 AS col1 FROM tab2 GROUP BY col0
 8281
 8464
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( DISTINCT - col0 ) FROM tab2 GROUP BY col0, col2 HAVING ( NULL ) NOT BETWEEN - col0 AND ( NULL )
 ----
 
@@ -62123,7 +62123,7 @@ query I rowsort
 SELECT ALL - col1 FROM tab1 GROUP BY col1 HAVING NOT NULL > col1
 ----
 
-query I rowsort
+query R rowsort
 SELECT ALL - - AVG ( DISTINCT + + col2 ) FROM tab1 AS cor0 GROUP BY col2 HAVING NULL IS NOT NULL
 ----
 
@@ -63114,7 +63114,7 @@ SELECT col2 AS col2 FROM tab2 AS cor0 GROUP BY col0, col2
 79
 87
 
-query II rowsort
+query RI rowsort
 SELECT + col2 / col2, + col2 FROM tab2 WHERE col0 * - - col2 + + - col1 + - col0 IS NULL GROUP BY col2
 ----
 
@@ -63247,7 +63247,7 @@ SELECT ALL - col1 FROM tab1 AS cor0 GROUP BY col0, col1
 -57
 -6
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT + col2 / col2 AS col2 FROM tab2 AS cor0 GROUP BY col2, col2 HAVING NOT NULL IS NULL
 ----
 
@@ -63393,7 +63393,7 @@ SELECT col1 FROM tab0 GROUP BY col1, col0 HAVING NULL IS NULL
 81
 
 skipif postgresql # PostgreSQL has strict column usage for GROUP BY clauses
-query I rowsort
+query R rowsort
 SELECT - + col2 / + col2 AS col1 FROM tab1 AS cor0 GROUP BY col2 HAVING ( + col1 ) = ( NULL )
 ----
 
@@ -63547,7 +63547,7 @@ SELECT col1 AS col0 FROM tab2 GROUP BY col1, col1, col0
 59
 61
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT col1 * + col2 / - col1 * - col2 AS col0 FROM tab2 GROUP BY col2, col1 HAVING NULL IS NOT NULL
 ----
 
@@ -63765,7 +63765,7 @@ query I rowsort
 SELECT + + col2 AS col2 FROM tab2 AS cor0 GROUP BY col2 HAVING ( NULL ) < NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - AVG ( DISTINCT - col1 ) FROM tab1 AS cor0 GROUP BY col1 HAVING NOT NULL IS NULL
 ----
 
@@ -63797,7 +63797,7 @@ query I rowsort
 SELECT DISTINCT - col2 FROM tab0 AS cor0 GROUP BY col2, col1 HAVING NOT NULL >= NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - col0 * - + AVG ( + col0 ) FROM tab1 AS cor0 WHERE NULL IS NOT NULL GROUP BY col0
 ----
 
@@ -64017,7 +64017,7 @@ SELECT ALL - col1 + + - col1 * - col1 AS col0 FROM tab2 AS cor0 GROUP BY col1
 3422
 3660
 
-query I rowsort
+query R rowsort
 SELECT AVG ( - col0 ) FROM tab1 AS cor0 GROUP BY col0 HAVING NULL IS NOT NULL
 ----
 
@@ -64217,7 +64217,7 @@ SELECT + - col2 + + col2 AS col1 FROM tab1 AS cor0 GROUP BY col2, col2
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT - col0 * AVG ( - col0 ) FROM tab0 GROUP BY col0 HAVING NOT NULL > NULL
 ----
 
@@ -64329,7 +64329,7 @@ SELECT col2 AS col0 FROM tab0 AS cor0 GROUP BY col1, col2
 38
 79
 
-query II rowsort
+query RI rowsort
 SELECT - col2 / - col2 AS col2, col1 AS col2 FROM tab0 GROUP BY col2, col1 HAVING NULL IS NOT NULL
 ----
 
@@ -64355,7 +64355,7 @@ query I rowsort
 SELECT DISTINCT + + col1 + + col1 FROM tab1 cor0 GROUP BY col1 HAVING NULL > NULL
 ----
 
-query I rowsort
+query R rowsort
 SELECT DISTINCT - AVG ( ALL col0 ) FROM tab2 cor0 WHERE NOT NULL IS NULL OR - col1 * col2 IS NULL GROUP BY col0, col0
 ----
 
@@ -65078,7 +65078,7 @@ SELECT col0 + - col0 AS col0 FROM tab1 GROUP BY col0, col2
 0
 0
 
-query I rowsort
+query R rowsort
 SELECT + AVG ( ALL + - col0 ) AS col2 FROM tab0 GROUP BY col0, col1 HAVING NOT col0 * + col0 IS NOT NULL
 ----
 
@@ -65090,7 +65090,7 @@ SELECT col0 AS col1 FROM tab2 GROUP BY col0, col1
 92
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
-query I rowsort
+query R rowsort
 SELECT DISTINCT AVG ( - col0 ) col2 FROM tab1 cor0 GROUP BY col0 HAVING NOT NULL IS NULL
 ----
 
@@ -65195,7 +65195,7 @@ SELECT col1 * - - col1 FROM tab2 GROUP BY col1
 3481
 3721
 
-query I rowsort
+query R rowsort
 SELECT ALL - + AVG ( DISTINCT - col1 ) FROM tab1 WHERE + + col0 IS NOT NULL GROUP BY col1 HAVING NULL IS NOT NULL
 ----
 
