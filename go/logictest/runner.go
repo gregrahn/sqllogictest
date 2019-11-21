@@ -121,7 +121,7 @@ func generateTestFile(harness Harness, f string) {
 		schema, records, _, err := executeRecord(harness, record)
 		for scanner.Scan() && scanner.LineNum < record.LineNum() - 1 {
 			line := scanner.Text()
-			writeLine(wr, /*"Copying: " + */line)
+			writeLine(wr, line)
 		}
 
 		if record.Type() == parser.Statement {
@@ -137,9 +137,8 @@ func generateTestFile(harness Harness, f string) {
 					sb.WriteString(" ")
 					sb.WriteString(record.Label())
 				}
-				writeLine(wr, /*"computed: " + */sb.String())
+				writeLine(wr, sb.String())
 
-//				scanner.Scan()                    // skip "query" line
 				copyUntilSeparator(scanner, wr)   // copy the query and separator
 				writeResults(record, records, wr) // write the result
 				skipUntilEndOfRecord(scanner, wr) // advance until the next record
@@ -149,6 +148,16 @@ func generateTestFile(harness Harness, f string) {
 
 	for scanner.Scan() {
 		writeLine(wr, scanner.Text())
+	}
+
+	err  = wr.Flush()
+	if err != nil {
+		panic(err)
+	}
+
+	err = generatedFile.Close()
+	if err != nil {
+		panic(err)
 	}
 }
 
@@ -165,10 +174,10 @@ func writeResults(record *parser.Record, results []string, wr *bufio.Writer) {
 		if err != nil {
 			panic(err)
 		}
-		writeLine(wr, /*"writeResults:" + */fmt.Sprintf("%d values hashing to %s", len(results), hash))
+		writeLine(wr, fmt.Sprintf("%d values hashing to %s", len(results), hash))
 	} else {
 		for _, result := range results {
-			writeLine(wr, /*"writeResults:" + */fmt.Sprintf("%s", result))
+			writeLine(wr, fmt.Sprintf("%s", result))
 		}
 	}
 }
@@ -176,7 +185,7 @@ func writeResults(record *parser.Record, results []string, wr *bufio.Writer) {
 func copyUntilSeparator(scanner *parser.LineScanner, wr *bufio.Writer) {
 	for scanner.Scan() {
 		line := scanner.Text()
-		writeLine(wr, /*"copyuntilseparator: " + */line)
+		writeLine(wr, line)
 
 		if strings.TrimSpace(line) == parser.Separator {
 			break
