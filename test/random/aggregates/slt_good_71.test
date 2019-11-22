@@ -445,9 +445,9 @@ SELECT - col1 FROM tab2 AS cor0 WHERE + col1 IS NULL
 query R rowsort
 SELECT - ( - col0 ) * - col2 - + col1 + - - 14 FROM tab0 AS cor0
 ----
--9590.000
 -772.000
 -877.000
+-9590.000
 
 query I rowsort
 SELECT 13 AS col0 FROM tab0 cor0 CROSS JOIN tab0 AS cor1
@@ -691,8 +691,8 @@ query R rowsort label-69
 SELECT DISTINCT 77 * - CAST( - 15 AS SIGNED ) * CAST( - - col2 AS SIGNED ) FROM tab0
 ----
 114345.000
-54285.000
 11550.000
+54285.000
 
 skipif mysql # not compatible
 query I rowsort label-69
@@ -2139,9 +2139,9 @@ SELECT DISTINCT - 96 + - col2 col1 FROM tab2 AS cor0
 query R rowsort
 SELECT ALL - 87 * 93 * - - 76 + + col0 FROM tab1 cor0
 ----
--614865.000
--614831.000
 -614825.000
+-614831.000
+-614865.000
 
 query I rowsort
 SELECT col0 * 30 FROM tab1 cor0 WHERE ( NULL IS NULL )
@@ -2465,8 +2465,8 @@ query R rowsort
 SELECT DISTINCT - col2 + - - 59 FROM tab1
 ----
 -37.000
-0.000
 -9.000
+0.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-258
@@ -2516,9 +2516,9 @@ SELECT DISTINCT col1 * - col0 - - ( - + col0 ) FROM tab0
 query R rowsort
 SELECT 46 + + col2 + - - 50 * + - col1 FROM tab0 AS cor0
 ----
-95.000
 -3957.000
 -994.000
+95.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -2724,8 +2724,8 @@ SELECT MIN ( DISTINCT 26 ) + + COUNT ( - col2 ) AS col1 FROM tab1 AS cor0
 query R rowsort
 SELECT DISTINCT - - 91 - + + col0 FROM tab2 AS cor0
 ----
-27.000
 16.000
+27.000
 45.000
 
 query I rowsort
@@ -4712,9 +4712,9 @@ onlyif mysql # CAST syntax: SIGNED type:
 query R rowsort label-500
 SELECT - 81 + + CAST( col1 AS SIGNED ) + - + 40 + - - CAST( + 24 AS SIGNED ) FROM tab1
 ----
+-50.000
 -83.000
 -92.000
--50.000
 
 skipif mysql # not compatible
 query I rowsort label-500
@@ -5015,9 +5015,9 @@ SELECT col1 AS col0, - col2 + + - 55 + + col2 - - - col2 + col1 * col1 * - - CAS
 ----
 14
 NULL
-5
-NULL
 47
+NULL
+5
 NULL
 
 skipif mysql # not compatible
@@ -5059,9 +5059,9 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query R rowsort
 SELECT - ( - + col0 ) * + + col2 * - col1 * - - 1 col0 FROM tab1
 ----
--68544.000
 -25075.000
 -290836.000
+-68544.000
 
 onlyif mysql # CAST syntax: SIGNED type: 
 query II rowsort label-540
@@ -6039,11 +6039,11 @@ onlyif mysql # CAST syntax: SIGNED type:
 query RI rowsort label-650
 SELECT ALL CAST( + col1 AS SIGNED ) + - - 64, + 88 AS col0 FROM tab1 AS cor0
 ----
-78.000
+111.000
 88
 69.000
 88
-111.000
+78.000
 88
 
 skipif mysql # not compatible
@@ -6359,8 +6359,8 @@ SELECT DISTINCT COUNT ( * ) * - CAST ( 10 AS INTEGER ) col2 FROM tab0
 query R rowsort
 SELECT ALL - col1 * - - 20 AS col2 FROM tab0
 ----
--20.000
 -1620.000
+-20.000
 -420.000
 
 onlyif mysql # CAST syntax: SIGNED type: 
@@ -6549,9 +6549,9 @@ onlyif mysql # CAST syntax: SIGNED type:
 query R rowsort label-707
 SELECT DISTINCT - CAST( + - 29 AS SIGNED ) + + col0 FROM tab0 cor0
 ----
+116.000
 126.000
 44.000
-116.000
 
 skipif mysql # not compatible
 query I rowsort label-707
@@ -6788,9 +6788,9 @@ onlyif mysql # DIV for integer division:
 query R rowsort label-736
 SELECT ALL col0 DIV - col2 + + col2 * - ( - 26 ) FROM tab0 cor0
 ----
-2574.000
 1222.000
 252.000
+2574.000
 
 skipif mysql # not compatible
 query I rowsort label-736
@@ -6960,9 +6960,9 @@ SELECT ( - 21 ) + - - col2 AS col2 FROM tab1 WHERE + 91 IS NOT NULL
 query R rowsort
 SELECT DISTINCT 41 + - - 2 + + col2 FROM tab1 AS cor0
 ----
-139.000
 102.000
 111.000
+139.000
 
 query I rowsort
 SELECT ALL col2 * + 8 + + 69 + + col2 FROM tab1 AS cor0
@@ -7632,9 +7632,9 @@ onlyif mysql # CAST syntax: SIGNED type:
 query R rowsort label-828
 SELECT DISTINCT CAST( - col0 AS SIGNED ) - - 2 * - - ( - - 59 ) AS col1 FROM tab1 AS cor0
 ----
-67.000
-33.000
 27.000
+33.000
+67.000
 
 skipif mysql # not compatible
 query I rowsort label-828
@@ -7745,12 +7745,12 @@ NULL
 query IR rowsort
 SELECT DISTINCT + 71 * - - col1 AS col0, - 1 - - col1 + - - 89 * + col2 FROM tab2
 ----
-5467
-3636.000
-4757
-5228.000
 3621
 2097.000
+4757
+5228.000
+5467
+3636.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
@@ -8303,12 +8303,12 @@ onlyif mysql # CAST syntax: SIGNED type:
 query IR rowsort label-901
 SELECT + + 92 + - CAST( - col1 AS SIGNED ) AS col1, + col0 - + col1 + + col2 + - - 25 col1 FROM tab0 cor0
 ----
-93
-220.000
-173
-6.000
 113
 101.000
+173
+6.000
+93
+220.000
 
 skipif mysql # not compatible
 skipif postgresql # PostgreSQL requires AS when renaming output columns
@@ -8671,9 +8671,9 @@ SELECT MIN ( DISTINCT + ( + col0 ) ) col0 FROM tab0
 query R rowsort
 SELECT DISTINCT - - 3 + - col2 FROM tab0 AS cor0
 ----
--96.000
 -44.000
 -7.000
+-96.000
 
 query I rowsort
 SELECT col1 + 40 + - ( col2 ) AS col0 FROM tab2
@@ -8852,8 +8852,8 @@ query R rowsort
 SELECT DISTINCT 42 * - - 64 + col2 + + + col1 * col1 AS col2 FROM tab0
 ----
 2788.000
-9296.000
 3139.000
+9296.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
@@ -9059,11 +9059,11 @@ query RI rowsort
 SELECT ALL - 69 * - - 85 AS col0, col2 AS col1 FROM tab0 AS cor0
 ----
 -5865.000
-99
+10
 -5865.000
 47
 -5865.000
-10
+99
 
 query III rowsort
 SELECT * FROM tab0 AS cor0 WHERE NOT ( NOT NULL <> NULL )
@@ -9133,12 +9133,12 @@ SELECT ALL COUNT ( * ) AS col0, - ( + ( - 69 ) ) FROM tab2
 query RI rowsort
 SELECT DISTINCT col2 * - - ( + - 83 ), - 47 * + col1 AS col0 FROM tab1
 ----
--7968.000
--658
 -4897.000
 -235
 -5644.000
 -2209
+-7968.000
+-658
 
 query I rowsort
 SELECT DISTINCT + ( + + col0 ) FROM tab1
@@ -9267,8 +9267,8 @@ SELECT + + col2 FROM tab2 WHERE NULL IS NOT NULL
 query R rowsort
 SELECT + col1 * - - 35 AS col0 FROM tab0
 ----
-35.000
 2835.000
+35.000
 735.000
 
 onlyif mysql # DIV for integer division: 
@@ -9517,9 +9517,9 @@ onlyif mysql # DIV for integer division:
 query R rowsort label-1034
 SELECT DISTINCT + - col1 DIV 95 + + col1 - col1 + col1 + - - 41 + + col1 FROM tab2 AS cor0
 ----
-195.000
-175.000
 143.000
+175.000
+195.000
 
 skipif mysql # not compatible
 query I rowsort label-1034
@@ -9566,11 +9566,11 @@ query RI rowsort label-1038
 SELECT DISTINCT col1 + 67 * - CAST( NULL AS DECIMAL ) AS col1, col2 AS col0 FROM tab0 AS cor0
 ----
 NULL
-99
+10
 NULL
 47
 NULL
-10
+99
 
 skipif mysql # not compatible
 query II rowsort label-1038
@@ -10590,9 +10590,9 @@ SELECT col1 + + 45 AS col0 FROM tab2 AS cor0
 query R rowsort
 SELECT ALL - - 65 + + + ( + col0 ) FROM tab0 AS cor0
 ----
+152.000
 162.000
 80.000
-152.000
 
 query III rowsort
 SELECT * FROM tab0 AS cor0 WHERE NOT NULL BETWEEN col1 * + col0 / col2 AND - col2 / 96
@@ -10904,11 +10904,11 @@ onlyif mysql # CAST syntax: SIGNED type:
 query IR rowsort label-1191
 SELECT - col0, - 88 - + ( col2 ) + col1 / - - CAST( NULL AS SIGNED ) + col2 col0 FROM tab0
 ----
--97
-NULL
 -15
 NULL
 -87
+NULL
+-97
 NULL
 
 skipif mysql # not compatible
@@ -12678,11 +12678,11 @@ query RI rowsort label-1378
 SELECT col1 / - CAST( NULL AS SIGNED ), + ( col2 ) FROM tab0
 ----
 NULL
-99
+10
 NULL
 47
 NULL
-10
+99
 
 skipif mysql # not compatible
 query II rowsort label-1378
@@ -13548,8 +13548,8 @@ SELECT ALL - col2 * col1 + col0 + 7 + 70 + 87 * col1 col0 FROM tab2
 query R rowsort
 SELECT - - 17 - - - col2 + + + col0 FROM tab0 AS cor0
 ----
-15.000
 -15.000
+15.000
 94.000
 
 query I rowsort
@@ -13963,9 +13963,9 @@ SELECT ALL * FROM tab1 WHERE ( col2 * col0 ) IS NOT NULL
 query R rowsort
 SELECT ALL - col0 + - - 22 AS col1 FROM tab0
 ----
+-65.000
 -75.000
 7.000
--65.000
 
 query I rowsort
 SELECT DISTINCT + col0 FROM tab0 WHERE - 82 - col1 * - col1 <> NULL
@@ -14128,9 +14128,9 @@ SELECT 89 * COUNT ( * ) * COUNT ( * ) FROM tab2, tab1 cor0
 query R rowsort
 SELECT - col0 - - - ( 60 ) * + + col0 FROM tab0
 ----
+-5307.000
 -5917.000
 -915.000
--5307.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
@@ -16450,8 +16450,8 @@ SELECT DISTINCT * FROM tab2 WHERE NOT ( CAST ( - col1 AS INTEGER ) ) IS NOT NULL
 query R rowsort
 SELECT - ( - - 77 ) * - - 57 + - + col0 - + col1 AS col2 FROM tab0 AS cor0
 ----
--4487.000
 -4485.000
+-4487.000
 -4497.000
 
 query III rowsort
@@ -17728,9 +17728,9 @@ query IR rowsort
 SELECT DISTINCT + - 67 AS col2, col2 * - - ( - 60 ) FROM tab0 cor0
 ----
 -67
--5940.000
--67
 -2820.000
+-67
+-5940.000
 -67
 -600.000
 
@@ -18382,9 +18382,9 @@ SELECT + 13 + + col2 AS col2 FROM tab2 AS cor0
 query R rowsort
 SELECT - - 59 + col2 * + 75 FROM tab1 AS cor0
 ----
-7259.000
 4484.000
 5159.000
+7259.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -20161,9 +20161,9 @@ SELECT * FROM tab2 AS cor0 WHERE NOT CAST ( + 98 AS INTEGER ) + + 48 + - ( 17 ) 
 query R rowsort
 SELECT DISTINCT - - 88 * - col2 + col1 AS col2 FROM tab2 AS cor0
 ----
+-1973.000
 -3443.000
 -5037.000
--1973.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-2189
@@ -20493,8 +20493,8 @@ query R rowsort label-2225
 SELECT DISTINCT - - 94 + + col1 + col2 DIV 97 + 53 AS col2 FROM tab0 AS cor0
 ----
 149.000
-228.000
 168.000
+228.000
 
 skipif mysql # not compatible
 query I rowsort label-2225
@@ -20993,9 +20993,9 @@ SELECT ALL + COUNT ( * ) / - MIN ( + 6 ) + + COUNT ( * ) / ( + MAX ( DISTINCT + 
 query R rowsort
 SELECT - col2 * - ( - 10 ) * - col0 + + - col2 * + 12 + + col2 AS col0 FROM tab2 AS cor0
 ----
+10327.000
 25160.000
 42862.000
-10327.000
 
 onlyif mysql # CAST syntax: DECIMAL type: 
 query R rowsort label-2286
@@ -21820,12 +21820,12 @@ SELECT DISTINCT SUM ( DISTINCT + col0 ) * + + 40 + - + 29 FROM tab0 AS cor0
 query RI rowsort
 SELECT DISTINCT - - 81 + + ( col1 ) * col1, col2 FROM tab1 AS cor0
 ----
-277.000
-96
 106.000
 59
 2290.000
 68
+277.000
+96
 
 onlyif mysql # aggregate syntax: 
 query R rowsort label-2379
@@ -22014,9 +22014,9 @@ SELECT ALL + 33 * + + col1 AS col0 FROM tab2
 query R rowsort
 SELECT DISTINCT col0 - - - 57 FROM tab2
 ----
-7.000
-18.000
 -11.000
+18.000
+7.000
 
 onlyif mysql # DIV for integer division: 
 query I rowsort label-2401
@@ -22310,15 +22310,15 @@ query R rowsort
 SELECT - - 90 + + 79 + - col0 FROM tab2 AS cor0
 ----
 105.000
-94.000
 123.000
+94.000
 
 query R rowsort
 SELECT DISTINCT - - col0 + - - 74 AS col0 FROM tab0 AS cor0
 ----
+161.000
 171.000
 89.000
-161.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-2434
@@ -22651,9 +22651,9 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query R rowsort
 SELECT DISTINCT + col0 + - - 47 col2 FROM tab1 AS cor0
 ----
-98.000
 132.000
 138.000
+98.000
 
 query II rowsort
 SELECT col2 AS col1, col2 AS col2 FROM tab0 AS cor0
@@ -24583,9 +24583,9 @@ SELECT 31 + + - 21 FROM tab0
 query R rowsort
 SELECT col2 + - - 4 * + - col0 + + - col2 * - + 14 FROM tab2
 ----
+161.000
 344.000
 570.000
-161.000
 
 query II rowsort
 SELECT - + col2, col2 FROM tab0 AS cor0
@@ -24767,18 +24767,18 @@ query RI rowsort
 SELECT - - 88 + - 38 + 95 * + 15, col0 AS col2 FROM tab0 AS cor0
 ----
 1475.000
-97
-1475.000
 15
 1475.000
 87
+1475.000
+97
 
 query R rowsort
 SELECT ALL - - col1 - - - 75 FROM tab0 AS cor0
 ----
+-54.000
 -74.000
 6.000
--54.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-2720
@@ -24850,9 +24850,9 @@ SELECT ALL - col1 - - + col1 * col2 - - col2 + col2 AS col1 FROM tab0
 query R rowsort
 SELECT ( ( - - 20 ) ) * col1 AS col2 FROM tab2
 ----
-1540.000
-1340.000
 1020.000
+1340.000
+1540.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -25009,9 +25009,9 @@ onlyif mysql # CAST syntax: SIGNED type:
 query R rowsort label-2742
 SELECT DISTINCT + col1 * - CAST( + - 83 AS SIGNED ) + 80 FROM tab2 AS cor0
 ----
-6471.000
-5641.000
 4313.000
+5641.000
+6471.000
 
 skipif mysql # not compatible
 query I rowsort label-2742
@@ -25298,8 +25298,8 @@ query R rowsort
 SELECT DISTINCT - col2 + - - 21 AS col0 FROM tab2 cor0
 ----
 -19.000
--37.000
 -2.000
+-37.000
 
 onlyif mysql # aggregate syntax: 
 query II rowsort label-2773
@@ -26188,9 +26188,9 @@ SELECT col0 * 5 col2 FROM tab2
 query R rowsort
 SELECT ALL 80 * - - 91 * - col1 AS col2 FROM tab0
 ----
--7280.000
--589680.000
 -152880.000
+-589680.000
+-7280.000
 
 query I rowsort
 SELECT - col0 * ( - col0 ) AS col1 FROM tab2
@@ -26324,8 +26324,8 @@ SELECT + COUNT ( * ) AS col1 FROM tab0 AS cor0 WHERE NULL > - 17
 query R rowsort
 SELECT DISTINCT - ( + + col2 ) + - - 27 FROM tab0 cor0
 ----
--72.000
 -20.000
+-72.000
 17.000
 
 query I rowsort
@@ -26639,9 +26639,9 @@ SELECT DISTINCT col0 / + 7 FROM tab2
 query R rowsort
 SELECT - - 47 * col1 + + col2 + + col1 * + col1 FROM tab0 AS cor0
 ----
-147.000
 10415.000
 1438.000
+147.000
 
 query III rowsort
 SELECT * FROM tab2 AS cor0 WHERE - col0 + + - 23 >= + col2
@@ -26673,9 +26673,9 @@ SELECT ALL - ( - 96 ) * - + ( ( + col0 ) ) FROM tab1 cor0
 query R rowsort
 SELECT - col1 + - - 46 FROM tab1 cor0
 ----
+-1.000
 32.000
 41.000
--1.000
 
 query I rowsort
 SELECT + 90 + - col1 AS col0 FROM tab2 cor0
@@ -26696,11 +26696,11 @@ query RI rowsort label-2928
 SELECT DISTINCT CAST( NULL AS SIGNED ) / + col1, + col0 AS col1 FROM tab0
 ----
 NULL
-97
-NULL
 15
 NULL
 87
+NULL
+97
 
 skipif mysql # not compatible
 query II rowsort label-2928
@@ -28995,11 +28995,11 @@ query RI rowsort
 SELECT ALL 87 + - - ( 13 ) * + + 2, col2 AS col2 FROM tab0
 ----
 113.000
-99
+10
 113.000
 47
 113.000
-10
+99
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
@@ -29583,9 +29583,9 @@ NULL
 query R rowsort
 SELECT DISTINCT - - ( - 37 ) * - + ( - ( col1 ) ) FROM tab1 AS cor0
 ----
--518.000
--185.000
 -1739.000
+-185.000
+-518.000
 
 query III rowsort
 SELECT * FROM tab2 AS cor0 WHERE NOT ( + col0 ) = 60
@@ -29811,11 +29811,11 @@ onlyif mysql # CAST syntax: SIGNED type:
 query IR rowsort label-3276
 SELECT + col1 * - ( - - col0 ) AS col2, CAST( NULL AS SIGNED ) / + + col1 * + - col0 + + - 99 + - + 28 FROM tab0
 ----
--97
-NULL
 -1215
 NULL
 -1827
+NULL
+-97
 NULL
 
 skipif mysql # not compatible
@@ -30852,9 +30852,9 @@ SELECT + - col2 + col2, + 15 AS col1, col0 FROM tab0 AS cor0
 query R rowsort
 SELECT DISTINCT - - 91 + col1 FROM tab2 AS cor0
 ----
-168.000
-158.000
 142.000
+158.000
+168.000
 
 query III rowsort
 SELECT * FROM tab0 AS cor0 WHERE NOT col1 + - + col0 - + col0 + - col1 = - col0
@@ -32716,12 +32716,12 @@ SELECT ALL col0 + 70 * 77 AS col1 FROM tab2 AS cor0
 query RI rowsort
 SELECT ALL - col0 * - - 22 AS col2, 86 + + ( - - col0 ) FROM tab0 AS cor0
 ----
+-1914.000
+173
 -2134.000
 183
 -330.000
 101
--1914.000
-173
 
 query I rowsort
 SELECT 1 FROM tab1 cor0 CROSS JOIN tab2 AS cor1
@@ -32786,9 +32786,9 @@ SELECT - - MIN ( + col0 ) AS col1 FROM tab1 AS cor0
 query R rowsort
 SELECT ALL col2 * - - 86 AS col1 FROM tab1 AS cor0
 ----
-8256.000
 5074.000
 5848.000
+8256.000
 
 query III rowsort
 SELECT * FROM tab1 AS cor0 WHERE 29 + - 86 >= 97
@@ -33686,9 +33686,9 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query R rowsort
 SELECT DISTINCT + + col1 - col1 * - - 56 * + col1 col1 FROM tab0 AS cor0
 ----
--55.000
--367335.000
 -24675.000
+-367335.000
+-55.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -35084,9 +35084,9 @@ SELECT DISTINCT - + 74 col2 FROM tab0 AS cor0 WHERE - col1 - + - col1 + - col2 =
 query R rowsort
 SELECT ALL + col0 + - - 38 FROM tab0 cor0
 ----
+125.000
 135.000
 53.000
-125.000
 
 onlyif mysql # CAST syntax: SIGNED type: 
 query III rowsort label-3853
@@ -36144,12 +36144,12 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query IR rowsort
 SELECT DISTINCT - + col2 * ( - + col0 ) col0, 40 * - - 84 + + col0 AS col1 FROM tab0 AS cor0
 ----
-9603
-3457.000
 705
 3375.000
 870
 3447.000
+9603
+3457.000
 
 onlyif mysql # CAST syntax: aggregate syntax: SIGNED type: 
 query I rowsort label-3976
@@ -36743,9 +36743,9 @@ SELECT COUNT ( - + col0 ) * + - 54 * + + MAX ( col0 ) AS col0 FROM tab2
 query R rowsort
 SELECT DISTINCT - + col2 * - - 7 FROM tab2 WHERE NOT + col0 IS NULL
 ----
+-161.000
 -280.000
 -406.000
--161.000
 
 query I rowsort
 SELECT + + col0 FROM tab0 AS cor0 WHERE ( NULL ) IS NULL
@@ -36792,9 +36792,9 @@ SELECT COUNT ( * ) * COUNT ( * ) AS col1 FROM tab0 cor0
 query R rowsort
 SELECT - - 70 * + col1 FROM tab0 AS cor0
 ----
-70.000
-5670.000
 1470.000
+5670.000
+70.000
 
 query I rowsort
 SELECT DISTINCT + ( + + 79 ) AS col1 FROM tab0 AS cor0
@@ -37327,11 +37327,11 @@ query RI rowsort label-4097
 SELECT ALL + col1 / CAST( NULL AS SIGNED ), + col1 AS col1 FROM tab2 AS cor0
 ----
 NULL
-77
+51
 NULL
 67
 NULL
-51
+77
 
 skipif mysql # not compatible
 query II rowsort label-4097
@@ -38112,9 +38112,9 @@ SELECT ALL 9 * col2 + - CAST ( + 65 AS INTEGER ) + + - col2 * + col1 FROM tab2 A
 query R rowsort
 SELECT DISTINCT - - col0 - + - 12 + - - 15 * + col0 FROM tab1 cor0
 ----
-828.000
 1372.000
 1468.000
+828.000
 
 query I rowsort
 SELECT ALL + 81 + + ( - col2 ) - + col1 AS col1 FROM tab2 AS cor0
@@ -38274,9 +38274,9 @@ SELECT - col2 * - 65 * + 10 FROM tab0 AS cor0
 query R rowsort
 SELECT - - 3 * - ( - - col0 ) * col1 * + + ( + col1 ) FROM tab0 AS cor0
 ----
+-115101.000
 -291.000
 -295245.000
--115101.000
 
 query I rowsort
 SELECT ALL 36 * - col1 AS col0 FROM tab1
@@ -38482,11 +38482,11 @@ onlyif mysql # CAST syntax: SIGNED type:
 query IR rowsort label-4214
 SELECT DISTINCT col0 * + 72 AS col1, 76 * - + col0 / - CAST( NULL AS SIGNED ) - 40 FROM tab2
 ----
+3312
+NULL
 4608
 NULL
 5400
-NULL
-3312
 NULL
 
 skipif mysql # not compatible
@@ -39384,9 +39384,9 @@ SELECT - COUNT ( * ) - + 44 + - 94 AS col0 FROM tab0 AS cor0
 query R rowsort
 SELECT - ( - 22 ) * col1 FROM tab1
 ----
-308.000
-110.000
 1034.000
+110.000
+308.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -39593,9 +39593,9 @@ SELECT DISTINCT + + 11 + - 93 * col0 * - + col0 FROM tab1 AS cor0
 query R rowsort
 SELECT ALL - - 14 + + col0 FROM tab1 AS cor0
 ----
+105.000
 65.000
 99.000
-105.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -39761,9 +39761,9 @@ SELECT ALL - col1 * + CAST ( - col1 AS INTEGER ) - - CAST ( NULL AS INTEGER ) co
 query R rowsort
 SELECT DISTINCT - - 74 * + col0 AS col0 FROM tab0 AS cor0
 ----
-7178.000
 1110.000
 6438.000
+7178.000
 
 onlyif mysql # CAST syntax: SIGNED type: DECIMAL type: 
 query R rowsort label-4347
@@ -40819,8 +40819,8 @@ query R rowsort
 SELECT + - ( - 88 ) * - col1 AS col1 FROM tab1 WHERE NOT - col0 - - 51 IS NULL
 ----
 -1232.000
--440.000
 -4136.000
+-440.000
 
 query III rowsort
 SELECT DISTINCT * FROM tab0 WHERE NULL NOT IN ( + + 75 )
@@ -42238,11 +42238,11 @@ onlyif mysql # CAST syntax: SIGNED type:
 query IR rowsort label-4619
 SELECT ( + col2 ), CAST( NULL AS SIGNED ) / - col1 * + col2 AS col1 FROM tab2 AS cor0
 ----
+23
+NULL
 40
 NULL
 58
-NULL
-23
 NULL
 
 skipif mysql # not compatible
@@ -42387,9 +42387,9 @@ SELECT DISTINCT + MAX ( ( + 4 ) ) AS col0, - 96 AS col2 FROM tab0 AS cor0
 query R rowsort
 SELECT - - ( 80 ) * - col0 AS col1 FROM tab0 AS cor0
 ----
--7760.000
 -1200.000
 -6960.000
+-7760.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query II rowsort
@@ -42540,9 +42540,9 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query R rowsort
 SELECT - ( - 18 ) - + col1 col2 FROM tab1 AS cor0
 ----
-4.000
-13.000
 -29.000
+13.000
+4.000
 
 query II rowsort
 SELECT ALL 78 - - col2 + - col2 + col0 * + ( + 23 ) AS col2, col2 FROM tab0 cor0
@@ -42779,9 +42779,9 @@ SELECT col1 + + - col0 + + col0 AS col0 FROM tab0
 query R rowsort
 SELECT DISTINCT - col1 + - ( - 11 ) + 6 FROM tab2
 ----
--60.000
--50.000
 -34.000
+-50.000
+-60.000
 
 onlyif mysql # CAST syntax: SIGNED type: DIV for integer division: 
 query I rowsort label-4673
@@ -42992,8 +42992,8 @@ SELECT DISTINCT * FROM tab2 AS cor0 WHERE NOT NULL >= - col1 * + + 16
 query R rowsort
 SELECT ALL - ( - 34 ) + - 0 - - col1 + - col2 FROM tab1 WHERE col1 / + 1 IS NOT NULL
 ----
--48.000
 -20.000
+-48.000
 13.000
 
 onlyif mysql # aggregate syntax: 
@@ -43018,12 +43018,12 @@ SELECT - + col0 * - ( col0 ) AS col0 FROM tab2 AS cor0
 query IR rowsort
 SELECT - col1 AS col1, - col1 * 36 + - - 2 * + col2 - + col1 FROM tab2 AS cor0
 ----
--77
--2769.000
--67
--2363.000
 -51
 -1841.000
+-67
+-2363.000
+-77
+-2769.000
 
 query I rowsort
 SELECT col1 * + col1 - + col0 AS col2 FROM tab0 AS cor0
@@ -43323,9 +43323,9 @@ SELECT ALL MAX ( ALL 67 ) AS col0 FROM tab2 AS cor0
 query R rowsort
 SELECT DISTINCT + col2 * - - 96 * + + col1 + + col1 - - col2 FROM tab2 AS cor0
 ----
+112682.000
 295797.000
 373181.000
-112682.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-4733
@@ -43650,9 +43650,9 @@ NULL
 query R rowsort
 SELECT DISTINCT col1 * - - 22 + + 17 * - col0 AS col2 FROM tab2 AS cor0
 ----
-606.000
 199.000
 340.000
+606.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-4767
@@ -43880,9 +43880,9 @@ SELECT ALL MAX ( DISTINCT + col0 ) AS col1 FROM tab1
 query R rowsort
 SELECT - - col2 + - - 93 * + 8 AS col0 FROM tab1 AS cor0
 ----
-840.000
 803.000
 812.000
+840.000
 
 query I rowsort
 SELECT DISTINCT col0 + ( - col1 ) * col2 FROM tab2 AS cor0
@@ -44787,9 +44787,9 @@ SELECT - COUNT ( * ) * COUNT ( * ) AS col0 FROM tab2
 query R rowsort
 SELECT - col0 * - - 7 FROM tab2
 ----
+-322.000
 -448.000
 -525.000
--322.000
 
 query III rowsort
 SELECT * FROM tab0 WHERE NOT - - col0 - col2 NOT IN ( - 69 )
@@ -45490,16 +45490,16 @@ SELECT DISTINCT - col2 * col2 + col0 + 90 col0 FROM tab2 AS cor0
 query R rowsort
 SELECT + col1 - - - 82 FROM tab2 cor0
 ----
--5.000
 -15.000
 -31.000
+-5.000
 
 query R rowsort
 SELECT col1 * - col0 * + col2 + - - 93 + + col2 FROM tab0
 ----
--9411.000
--56965.000
 -18167.000
+-56965.000
+-9411.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-4970
@@ -45564,9 +45564,9 @@ SELECT * FROM tab2 cor0 WHERE NOT - 1 IS NULL
 query R rowsort
 SELECT DISTINCT - col2 * + + col2 * - 16 * - - 21 FROM tab1 AS cor0
 ----
-3096576.000
 1169616.000
 1553664.000
+3096576.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-4978
@@ -47033,9 +47033,9 @@ SELECT DISTINCT ( 59 ) AS col0, - 29 - - col0 AS col0 FROM tab1
 query R rowsort
 SELECT col2 - + - 45 + - - 84 FROM tab1 AS cor0
 ----
-225.000
 188.000
 197.000
+225.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -47339,9 +47339,9 @@ SELECT DISTINCT col1, 41 FROM tab1 AS cor0 WHERE NOT + col0 IS NOT NULL
 query R rowsort
 SELECT col0 * col0 * - - col0 + - + ( - 78 ) + - 35 FROM tab0
 ----
-912716.000
 3418.000
 658546.000
+912716.000
 
 skipif postgresql # PostgreSQL requires AS when renaming output columns
 query I rowsort
@@ -47671,9 +47671,9 @@ SELECT DISTINCT - ( col1 ) + + col0 FROM tab0 AS cor0
 query R rowsort
 SELECT - col0 + - - 87 - - - 19 FROM tab1 AS cor0
 ----
-17.000
 -17.000
 -23.000
+17.000
 
 query III rowsort
 SELECT * FROM tab2 AS cor0 WHERE - col1 * col0 NOT IN ( - 20, col1, + col2, - - 76 + + + col1, col1 )
@@ -48256,9 +48256,9 @@ SELECT DISTINCT + col0 + + 6 AS col2 FROM tab0 AS cor0
 query R rowsort
 SELECT ALL - - 14 + 85 * - col1 FROM tab0 AS cor0
 ----
--71.000
--6871.000
 -1771.000
+-6871.000
+-71.000
 
 query I rowsort
 SELECT DISTINCT + - col2 * + col2 + + col1 FROM tab2 AS cor0
@@ -48743,9 +48743,9 @@ SELECT DISTINCT - + CAST ( + + 12 AS INTEGER ) AS col0 FROM tab1 WHERE NULL = NU
 query R rowsort
 SELECT DISTINCT col0 + - - 22 AS col1 FROM tab0
 ----
+109.000
 119.000
 37.000
-109.000
 
 query III rowsort
 SELECT DISTINCT * FROM tab0 WHERE NOT ( NOT NULL < - col2 - 76 )
@@ -49487,9 +49487,9 @@ SELECT DISTINCT 57 * + - 37 + col0 AS col2 FROM tab1 AS cor0
 query R rowsort
 SELECT ALL - ( - + 33 ) + + col2 FROM tab2 AS cor0
 ----
+56.000
 73.000
 91.000
-56.000
 
 query II rowsort
 SELECT ALL - + 60 - - col2 AS col2, - col2 AS col2 FROM tab1 AS cor0
@@ -49777,9 +49777,9 @@ SELECT ALL * FROM tab1 WHERE NOT NULL = + - 87
 query R rowsort
 SELECT DISTINCT - - col2 + - - 63 - col0 * col1 FROM tab0 cor0
 ----
-65.000
 -1105.000
 -1754.000
+65.000
 
 query R rowsort
 SELECT DISTINCT - - AVG ( - - 15 ) AS col2 FROM tab0 AS cor0 WHERE NULL IN ( + col0, - 52 * - - 50, - 41 )
@@ -49810,9 +49810,9 @@ SELECT + col1 - - 44 * - col2 AS col1 FROM tab2 cor0
 query R rowsort
 SELECT - col0 - - - 66 AS col2 FROM tab0 AS cor0
 ----
+-153.000
 -163.000
 -81.000
--153.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-5453
@@ -50345,11 +50345,11 @@ query RI rowsort
 SELECT 81 + + + ( - - 31 ) AS col0, col2 FROM tab2
 ----
 112.000
+23
+112.000
 40
 112.000
 58
-112.000
-23
 
 onlyif mysql # CAST syntax: SIGNED type: 
 query II rowsort label-5511
@@ -50691,12 +50691,12 @@ onlyif mysql # CAST syntax: SIGNED type:
 query RI rowsort label-5543
 SELECT - CAST( + col2 AS SIGNED ) + - - 42, col2 FROM tab2 AS cor0
 ----
-2.000
-40
 -16.000
 58
 19.000
 23
+2.000
+40
 
 skipif mysql # not compatible
 query II rowsort label-5543
@@ -51407,8 +51407,8 @@ SELECT ALL - col1 + + col2 + col0 col1, + col2 * - col2 FROM tab0 AS cor0
 query R rowsort
 SELECT ALL + col0 + - - 14 + - col1 AS col0 FROM tab0
 ----
-110.000
 -52.000
+110.000
 80.000
 
 onlyif mysql # CAST syntax: SIGNED type: 
@@ -51670,9 +51670,9 @@ SELECT - col2 + col0 + + 3 + + ( 45 ) AS col0 FROM tab2 AS cor0
 query R rowsort
 SELECT DISTINCT - - 6 + col1 FROM tab0 AS cor0
 ----
+27.000
 7.000
 87.000
-27.000
 
 onlyif mysql # DIV for integer division: 
 query I rowsort label-5647
@@ -51972,9 +51972,9 @@ SELECT ALL + MAX ( + col2 ) + + + COUNT ( * ) AS col1 FROM tab0 AS cor0
 query R rowsort
 SELECT DISTINCT - - 33 + - + col0 AS col1 FROM tab2 AS cor0
 ----
+-13.000
 -31.000
 -42.000
--13.000
 
 onlyif mysql # CAST syntax: SIGNED type: 
 query R rowsort label-5680
@@ -52961,9 +52961,9 @@ SELECT ALL ( - COUNT ( * ) ) - + COUNT ( * ) - + COUNT ( * ) col2 FROM tab0
 query R rowsort
 SELECT ALL 32 + + col0 * - col1 * - - ( - 33 ) AS col1 FROM tab1
 ----
-23594.000
 14057.000
 141173.000
+23594.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-5782
@@ -53841,12 +53841,12 @@ SELECT + COUNT ( * ), + 5 AS col2 FROM tab2 cor0
 query IR rowsort
 SELECT - - col0 AS col0, - col0 + - - 98 - + + col2 FROM tab2 AS cor0
 ----
+46
+29.000
 64
 -6.000
 75
 -35.000
-46
-29.000
 
 query III rowsort
 SELECT DISTINCT * FROM tab0 WHERE col1 IN ( + 70 )
@@ -54493,9 +54493,9 @@ SELECT ALL + - col0 * CAST( NULL AS SIGNED ) + + col0 * - - 69, + col1 * + col1 
 NULL
 196
 NULL
-25
-NULL
 2209
+NULL
+25
 
 skipif mysql # not compatible
 query II rowsort label-5958
@@ -54547,9 +54547,9 @@ SELECT - col1, 52 + - + col1 AS col0 FROM tab0 WHERE NOT - 18 IS NULL
 query R rowsort
 SELECT DISTINCT col0 * - - 5 AS col2 FROM tab2
 ----
+230.000
 320.000
 375.000
-230.000
 
 query III rowsort
 SELECT DISTINCT * FROM tab1 AS cor0 WHERE NOT ( NULL ) NOT BETWEEN NULL AND ( col2 )
@@ -55478,9 +55478,9 @@ SELECT DISTINCT col0 + - + col1 FROM tab1 AS cor0
 query R rowsort
 SELECT ALL - col0 * - col1 + - - 29 + - - col0 AS col0 FROM tab0 AS cor0
 ----
-223.000
 1259.000
 1943.000
+223.000
 
 onlyif mysql # DIV for integer division: 
 query I rowsort label-6062
@@ -56103,11 +56103,11 @@ query RI rowsort label-6130
 SELECT - CAST( NULL AS DECIMAL ) * - col1 AS col2, - 67 * col0 AS col0 FROM tab0
 ----
 NULL
--6499
-NULL
 -1005
 NULL
 -5829
+NULL
+-6499
 
 skipif mysql # not compatible
 query II rowsort label-6130
@@ -58930,9 +58930,9 @@ SELECT COUNT ( * ) * 89 * - COUNT ( ALL - col2 ) - + 7 FROM tab0 cor0
 query R rowsort
 SELECT DISTINCT - col1 * 73 - - - 14 FROM tab0 AS cor0
 ----
--87.000
--5927.000
 -1547.000
+-5927.000
+-87.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-6448
@@ -60126,9 +60126,9 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query R rowsort
 SELECT - col2 * - col1 - - + col1 + - - 77 col0 FROM tab2 WHERE col1 * + 93 - - col0 IS NOT NULL
 ----
+1301.000
 3234.000
 4030.000
-1301.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-6579
@@ -61179,9 +61179,9 @@ SELECT DISTINCT + 93 + 28 AS col1 FROM tab2 AS cor0
 query R rowsort
 SELECT ALL - + col2 * 65 + - - 99 - col1 + - col0 + col0 FROM tab2 AS cor0
 ----
+-1447.000
 -2578.000
 -3738.000
--1447.000
 
 query III rowsort
 SELECT ALL * FROM tab1 WHERE col2 NOT IN ( - 6 * col0 / col2 / + 79 - + - ( - col0 ) + 99 * - col2 - col2, 30 * - - 52 * - 40 * + + 88 )
@@ -61442,9 +61442,9 @@ SELECT DISTINCT + col0 - - CAST( NULL AS SIGNED ) * - CAST( col2 AS SIGNED ) / +
 NULL
 1
 NULL
-81
-NULL
 21
+NULL
+81
 
 skipif mysql # not compatible
 query II rowsort label-6733
@@ -62338,11 +62338,11 @@ query RI rowsort
 SELECT DISTINCT - ( + - 99 ), - col2 AS col1 FROM tab0 AS cor0
 ----
 99.000
--99
+-10
 99.000
 -47
 99.000
--10
+-99
 
 onlyif mysql # CAST syntax: aggregate syntax: SIGNED type: 
 query R rowsort label-6840
@@ -62452,9 +62452,9 @@ SELECT DISTINCT 93 FROM tab0 AS cor0 WHERE NULL IS NOT NULL
 query R rowsort
 SELECT ALL - 7 - + col2 + - - 68 + - - col1 + - col2 * col2 * + col1 * + ( col2 ) FROM tab0 AS cor0
 ----
--970336.000
--8409568.000
 -20928.000
+-8409568.000
+-970336.000
 
 query I rowsort
 SELECT + ( 53 ) + 80 FROM tab0 AS cor0
@@ -63986,9 +63986,9 @@ SELECT - COUNT ( * ) * + 52 AS col2 FROM tab1
 query R rowsort
 SELECT DISTINCT + 83 + - + 56 * col1 * ( - - 4 ) + 81 FROM tab2
 ----
--17084.000
--14844.000
 -11260.000
+-14844.000
+-17084.000
 
 onlyif mysql # DIV for integer division: 
 query I rowsort label-7019
@@ -64070,9 +64070,9 @@ SELECT ALL - col2 AS col0 FROM tab2 WHERE NOT - + col2 * - col0 IS NOT NULL
 query R rowsort
 SELECT 88 - + col2 * - - 53 - 73 AS col0 FROM tab1
 ----
--5073.000
 -3112.000
 -3589.000
+-5073.000
 
 query I rowsort
 SELECT + 82 + col0 FROM tab0
@@ -65316,9 +65316,9 @@ SELECT ALL - - 57, col1 AS col0 FROM tab1 AS cor0
 57.000
 14
 57.000
-5
-57.000
 47
+57.000
+5
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-7169
@@ -65662,9 +65662,9 @@ SELECT - 65 * - col2 AS col2 FROM tab2 AS cor0
 query R rowsort
 SELECT + ( - - 4 ) * - 23 + + col1 * + 95 AS col2 FROM tab2 cor0 WHERE NOT NULL IS NOT NULL
 ----
-7223.000
-6273.000
 4753.000
+6273.000
+7223.000
 
 query IIIIII rowsort
 SELECT ALL * FROM tab2 AS cor0 CROSS JOIN tab1 AS cor1 WHERE NOT ( NULL IS NULL )
@@ -65689,9 +65689,9 @@ NULL
 query R rowsort
 SELECT DISTINCT col0 + - - 99 AS col0 FROM tab2
 ----
+145.000
 163.000
 174.000
-145.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-7207
@@ -67093,9 +67093,9 @@ SELECT DISTINCT + col1 AS col0 FROM tab2 WHERE NOT + + 54 BETWEEN + + ( - col2 )
 query R rowsort
 SELECT - ( + col1 ) * - col1 + + 14 * + col0 - - - 85 FROM tab2
 ----
-6740.000
-5454.000
 3160.000
+5454.000
+6740.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-7362
@@ -67246,11 +67246,11 @@ query RI rowsort label-7380
 SELECT - CAST( NULL AS DECIMAL ) AS col0, - 92 DIV col2 FROM tab0 cor0
 ----
 NULL
-0
-NULL
 -1
 NULL
 -9
+NULL
+0
 
 skipif mysql # not compatible
 query II rowsort label-7380
@@ -67964,8 +67964,8 @@ SELECT COUNT ( * ) AS col0 FROM tab0 AS cor0 WHERE col1 IS NOT NULL
 query R rowsort
 SELECT - col0 * ( col2 ) + - - 10 AS col1 FROM tab2 cor0 WHERE col1 > - - col0
 ----
--2550.000
 -1048.000
+-2550.000
 
 query III rowsort
 SELECT * FROM tab1 AS cor0 WHERE NULL > - 76
@@ -68070,9 +68070,9 @@ SELECT ALL - 77 + - 14 AS col0 FROM tab1 AS cor0
 query R rowsort
 SELECT ALL - - ( + + 45 ) * - 46 * - - col0 * + col2 AS col0 FROM tab0 AS cor0 WHERE + col1 IS NOT NULL
 ----
--19878210.000
 -1459350.000
 -1800900.000
+-19878210.000
 
 query I rowsort
 SELECT + col2 FROM tab1 AS cor0 WHERE col2 - 46 * + + col0 <= NULL
@@ -68373,8 +68373,8 @@ SELECT col0 * - 43 * - - col0 + - 37 FROM tab0 AS cor0
 query R rowsort
 SELECT - col2 + - - 71 FROM tab2 AS cor0
 ----
-31.000
 13.000
+31.000
 48.000
 
 query I rowsort
@@ -68995,8 +68995,8 @@ query R rowsort
 SELECT ALL + col0 - - - 79 AS col2 FROM tab2
 ----
 -15.000
--4.000
 -33.000
+-4.000
 
 query III rowsort
 SELECT * FROM tab0 WHERE NOT ( + 31 IS NOT NULL )
@@ -69497,9 +69497,9 @@ SELECT ALL 78 / - COUNT ( * ) FROM tab2
 query R rowsort
 SELECT - col1 * col1 + - col2 * col0 + - - 21 - + col0 + - col0 AS col1 FROM tab0
 ----
--9777.000
--7275.000
 -1464.000
+-7275.000
+-9777.000
 
 onlyif mysql # DIV for integer division: 
 query I rowsort label-7624
@@ -71498,8 +71498,8 @@ query R rowsort
 SELECT ALL + - col2 * - - 18 FROM tab0 AS cor0
 ----
 -1782.000
--846.000
 -180.000
+-846.000
 
 query I rowsort
 SELECT 49 AS col0 FROM ( tab0 AS cor0 CROSS JOIN tab0 cor1 )
@@ -72994,9 +72994,9 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query R rowsort
 SELECT ALL col0 * - + ( - 56 ) col1 FROM tab2
 ----
+2576.000
 3584.000
 4200.000
-2576.000
 
 onlyif mysql # aggregate syntax: 
 query R rowsort label-8004
@@ -73976,9 +73976,9 @@ onlyif mysql # CAST syntax: SIGNED type:
 query R rowsort label-8107
 SELECT col0 + - - CAST( 55 AS SIGNED ) + + - col1 FROM tab0
 ----
-151.000
 -11.000
 121.000
+151.000
 
 skipif mysql # not compatible
 query I rowsort label-8107
@@ -75963,9 +75963,9 @@ SELECT DISTINCT * FROM tab0 WHERE col1 * + 47 IS NOT NULL
 query R rowsort
 SELECT 17 * - - 89 + - col1 AS col1 FROM tab0
 ----
-1512.000
 1432.000
 1492.000
+1512.000
 
 onlyif mysql # CAST syntax: aggregate syntax: SIGNED type: 
 query I rowsort label-8327
@@ -76052,12 +76052,12 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query RI rowsort
 SELECT ALL + 11 * + - ( + - 94 ) + - col2 col0, - col0 * + 19 FROM tab2
 ----
-994.000
--1216
-976.000
--1425
 1011.000
 -874
+976.000
+-1425
+994.000
+-1216
 
 query I rowsort
 SELECT DISTINCT - - col1 FROM tab2 cor0 WHERE NOT col0 * - col1 IS NOT NULL
@@ -76356,9 +76356,9 @@ SELECT - col2 FROM tab0 AS cor0 WHERE 87 - - col2 - + 78 / 11 IS NOT NULL
 query R rowsort
 SELECT col1 - - 9 + - - 32 + - - col2 AS col1 FROM tab2 AS cor0
 ----
+115.000
 158.000
 166.000
-115.000
 
 query II rowsort
 SELECT DISTINCT + - col0 AS col2, col2 FROM tab1 AS cor0
@@ -77039,8 +77039,8 @@ query R rowsort
 SELECT + + col2 * + + col1 + - ( - 23 ) FROM tab0 AS cor0
 ----
 122.000
-3830.000
 233.000
+3830.000
 
 onlyif mysql # aggregate syntax: 
 query II rowsort label-8442
@@ -77286,11 +77286,11 @@ SELECT + SUM ( ALL + col1 ) FROM tab1 AS cor0
 query IR rowsort
 SELECT ALL + 67 + + col1 + + 54 * + 45 * + col2, 55 - - 77 * - ( - + 43 ) AS col1 FROM tab1 AS cor0
 ----
-233361
-3366.000
 143442
 3366.000
 165354
+3366.000
+233361
 3366.000
 
 query III rowsort
@@ -79712,9 +79712,9 @@ SELECT DISTINCT - col2 * + 96 col0 FROM tab2
 query R rowsort
 SELECT col2 - - - 58 AS col1 FROM tab1
 ----
-38.000
 1.000
 10.000
+38.000
 
 query II rowsort
 SELECT ALL col0, 89 FROM tab1
@@ -80147,11 +80147,11 @@ query RI rowsort
 SELECT ALL - - 66, - col2 AS col2 FROM tab2 AS cor0
 ----
 66.000
+-23
+66.000
 -40
 66.000
 -58
-66.000
--23
 
 query III rowsort
 SELECT DISTINCT * FROM tab0 AS cor0 WHERE ( + col1 * + col2 * - 97 ) NOT BETWEEN NULL AND NULL
@@ -81730,11 +81730,11 @@ onlyif mysql # CAST syntax: DECIMAL type:
 query IR rowsort label-8946
 SELECT ( + col1 ) AS col1, + CAST( NULL AS DECIMAL ) FROM tab2 AS cor0
 ----
-77
+51
 NULL
 67
 NULL
-51
+77
 NULL
 
 skipif mysql # not compatible
@@ -82145,9 +82145,9 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query R rowsort
 SELECT DISTINCT - - 45 - - col2 + col0 col2 FROM tab2 AS cor0
 ----
+114.000
 149.000
 178.000
-114.000
 
 query I rowsort
 SELECT ALL col1 AS col2 FROM tab1 cor0 WHERE NOT NULL IS NOT NULL
@@ -82397,9 +82397,9 @@ SELECT ALL - col2 + - 16 FROM tab1 AS cor0
 query R rowsort
 SELECT - col1 - + + col1 * - - 34 FROM tab2
 ----
--2695.000
--2345.000
 -1785.000
+-2345.000
+-2695.000
 
 query I rowsort
 SELECT DISTINCT - 21 - - - col0 * + col1 AS col0 FROM tab2 AS cor0
@@ -82415,9 +82415,9 @@ SELECT - + col0 + ( - col2 ) * - 4 FROM tab0 AS cor0 WHERE col1 IS NULL
 query R rowsort
 SELECT col1 * - ( - 59 ) * + col1 FROM tab2
 ----
-349811.000
-264851.000
 153459.000
+264851.000
+349811.000
 
 onlyif mysql # aggregate syntax: 
 query I rowsort label-9025
@@ -82975,9 +82975,9 @@ SELECT 19 + + 3 col2 FROM tab0
 query R rowsort
 SELECT ALL + col0 * - - 98 + - 57 + + - 74 FROM tab2
 ----
+4377.000
 6141.000
 7219.000
-4377.000
 
 query III rowsort
 SELECT ALL * FROM tab0 AS cor0 WHERE + 57 <> 28 * + - col0 + 55
@@ -83029,8 +83029,8 @@ SELECT ALL col0 FROM tab1 WHERE NOT - 23 + - CAST ( - col2 AS INTEGER ) > 84 + -
 query R rowsort
 SELECT DISTINCT - ( - - 95 ) * + - 45 * + col2 FROM tab0 cor0
 ----
-423225.000
 200925.000
+423225.000
 42750.000
 
 query I rowsort
@@ -83207,9 +83207,9 @@ onlyif mysql # CAST syntax: SIGNED type:
 query R rowsort label-9111
 SELECT DISTINCT - CAST( ( - 1 ) AS SIGNED ) + + 8 * col0 AS col0 FROM tab0
 ----
-777.000
 121.000
 697.000
+777.000
 
 skipif mysql # not compatible
 query I rowsort label-9111
@@ -83453,9 +83453,9 @@ SELECT * FROM tab0 AS cor0 WHERE NOT + col2 BETWEEN ( - 68 ) AND CAST ( - col0 A
 query R rowsort
 SELECT DISTINCT - - 82 * col1 AS col0 FROM tab2 AS cor0
 ----
-6314.000
-5494.000
 4182.000
+5494.000
+6314.000
 
 query I rowsort
 SELECT col0 AS col1 FROM tab0 AS cor0 WHERE NOT 83 <= NULL
@@ -84925,9 +84925,9 @@ SELECT ALL - - 78, - ( + col1 ) DIV - 48 col1 FROM tab0 AS cor0
 78.000
 0
 78.000
-1
-78.000
 0
+78.000
+1
 
 skipif mysql # not compatible
 skipif postgresql # PostgreSQL requires AS when renaming output columns
@@ -85142,8 +85142,8 @@ query R rowsort label-9325
 SELECT DISTINCT - - CAST( + 87 AS SIGNED ) + + col1 - 0 * - col0 FROM tab1 cor0
 ----
 101.000
-92.000
 134.000
+92.000
 
 skipif mysql # not compatible
 query I rowsort label-9325
@@ -85261,9 +85261,9 @@ SELECT + 27 * - + 19 + - 86 + - COUNT ( * ) AS col2 FROM tab0 cor0 WHERE col1 IS
 query R rowsort
 SELECT + col2 - - - 65 FROM tab1 AS cor0
 ----
-31.000
 -6.000
 3.000
+31.000
 
 query I rowsort
 SELECT + col2 * + col0 * col1 + - col1 + + col0 + - + 99 FROM tab2 AS cor0
@@ -85360,11 +85360,11 @@ query RI rowsort
 SELECT - - 73 AS col1, col2 FROM tab1 AS cor0
 ----
 73.000
-96
-73.000
 59
 73.000
 68
+73.000
+96
 
 onlyif mysql # CAST syntax: SIGNED type: DIV for integer division: 
 query II rowsort label-9349
@@ -86323,9 +86323,9 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query R rowsort
 SELECT DISTINCT - col2 + 23 + col2 * - ( - 94 ) col1 FROM tab2 AS cor0
 ----
+2162.000
 3743.000
 5417.000
-2162.000
 
 query I rowsort
 SELECT + 88 FROM tab2 AS cor0 WHERE NOT 50 NOT BETWEEN col1 AND NULL
@@ -86565,11 +86565,11 @@ onlyif mysql # DIV for integer division:
 query IR rowsort label-9481
 SELECT DISTINCT col2 AS col0, - 95 DIV - 74 + + - ( - 69 ) FROM tab1
 ----
-96
-70.000
 59
 70.000
 68
+70.000
+96
 70.000
 
 skipif mysql # not compatible
@@ -88752,8 +88752,8 @@ SELECT DISTINCT col0 FROM tab2 WHERE + - 82 BETWEEN - + 23 AND + + col1
 query R rowsort
 SELECT + ( + col1 ) + - - 6 FROM tab1
 ----
-20.000
 11.000
+20.000
 53.000
 
 query I rowsort
@@ -88897,9 +88897,9 @@ SELECT COUNT ( DISTINCT + col1 ) * + + 58 FROM tab1
 query R rowsort
 SELECT col2 * - - 84 FROM tab2
 ----
+1932.000
 3360.000
 4872.000
-1932.000
 
 onlyif mysql # aggregate syntax: DIV for integer division: 
 query I rowsort label-9742
@@ -90480,9 +90480,9 @@ SELECT col1 + - + col1 AS col2 FROM tab0 AS cor0
 query R rowsort
 SELECT ALL + - ( - + 5 ) + - col2 * - - col0 * + - col1 FROM tab0 AS cor0
 ----
-9608.000
-57110.000
 18275.000
+57110.000
+9608.000
 
 query II rowsort
 SELECT 27 AS col2, - col0 AS col0 FROM tab0
@@ -90812,9 +90812,9 @@ SELECT DISTINCT * FROM tab2 AS cor0 WHERE NULL BETWEEN + 2 AND NULL
 query R rowsort
 SELECT ALL - col0 - - - 12 FROM tab1 AS cor0
 ----
+-103.000
 -63.000
 -97.000
--103.000
 
 query I rowsort
 SELECT 36 + + ( - + 35 ) AS col0 FROM tab0 cor0

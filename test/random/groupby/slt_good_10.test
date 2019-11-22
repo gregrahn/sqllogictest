@@ -9906,12 +9906,12 @@ SELECT + col0 * + - col0 * - col0 AS col2 FROM tab2 AS cor0 GROUP BY col0
 query RI rowsort
 SELECT AVG ( col2 ) AS col0, - col1 AS col0 FROM tab0 AS cor0 GROUP BY col1, col2 HAVING + col2 IS NOT NULL
 ----
+24.000
+-81
 38.000
 0
 79.000
 0
-24.000
--81
 
 query I rowsort
 SELECT ALL col2 FROM tab0 AS cor0 GROUP BY col2 HAVING NOT NULL > ( NULL )
@@ -41789,12 +41789,12 @@ skipif postgresql # PostgreSQL requires AS when renaming output columns
 query RI rowsort
 SELECT DISTINCT AVG ( + col1 ) * AVG ( + + col1 ) col2, - col0 col2 FROM tab2 AS cor0 GROUP BY col1, col0
 ----
-3721.000
--15
-3481.000
--91
 1681.000
 -92
+3481.000
+-91
+3721.000
+-15
 
 query II rowsort
 SELECT col1, col1 * + col1 AS col2 FROM tab0 GROUP BY col1
@@ -54148,10 +54148,10 @@ SELECT - col2 AS col0 FROM tab2 AS cor0 WHERE NULL = NULL GROUP BY col2
 query RI rowsort
 SELECT DISTINCT - AVG ( col2 ) * - col0 AS col1, - col2 AS col1 FROM tab1 AS cor0 GROUP BY col2, col0
 ----
-176.000
--8
 1260.000
 -45
+176.000
+-8
 5822.000
 -71
 

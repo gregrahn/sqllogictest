@@ -111,7 +111,7 @@ SELECT a+b*2+c*3+d*4+e*5,
        (a+b+c+d+e)/5
   FROM t1
 ----
-60 values hashing to 27b9115607f9d50bb2df3d354c184cde
+60 values hashing to 2fa2578527a600ef66c3f251e5265621
 
 query IR rowsort x1
 SELECT a+b*2+c*3+d*4+e*5,
@@ -119,7 +119,7 @@ SELECT a+b*2+c*3+d*4+e*5,
   FROM t1
  ORDER BY 1,2
 ----
-60 values hashing to 0fbd0c3a7d70dd795242f2deb769d5e6
+60 values hashing to 2fa2578527a600ef66c3f251e5265621
 
 query IIIRI rowsort x2
 SELECT a+b*2+c*3+d*4+e*5,
@@ -133,7 +133,7 @@ SELECT a+b*2+c*3+d*4+e*5,
    AND (e>c OR e<d)
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-55 values hashing to ae5c5bcfda7c53de3a626c7dabc565e9
+55 values hashing to 1b2d0cd736122c66c1b316cab0a5598a
 
 query IIIRI rowsort x2
 SELECT a+b*2+c*3+d*4+e*5,
@@ -148,7 +148,7 @@ SELECT a+b*2+c*3+d*4+e*5,
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 2,4
 ----
-55 values hashing to 7f0f0845358522d0caccc7aac150a2bc
+55 values hashing to 1b2d0cd736122c66c1b316cab0a5598a
 
 query IIIRI rowsort x2
 SELECT a+b*2+c*3+d*4+e*5,
@@ -162,7 +162,7 @@ SELECT a+b*2+c*3+d*4+e*5,
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
    AND d>e
 ----
-55 values hashing to ae5c5bcfda7c53de3a626c7dabc565e9
+55 values hashing to 1b2d0cd736122c66c1b316cab0a5598a
 
 query IIIRI rowsort x2
 SELECT a+b*2+c*3+d*4+e*5,
@@ -177,7 +177,7 @@ SELECT a+b*2+c*3+d*4+e*5,
    AND d>e
  ORDER BY 3,2,5,1,4
 ----
-55 values hashing to 7162b2f9faab3e4f43a3c2a0f9bfd1d6
+55 values hashing to 1b2d0cd736122c66c1b316cab0a5598a
 
 query IIIRI rowsort x2
 SELECT a+b*2+c*3+d*4+e*5,
@@ -191,7 +191,7 @@ SELECT a+b*2+c*3+d*4+e*5,
    AND d>e
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-55 values hashing to ae5c5bcfda7c53de3a626c7dabc565e9
+55 values hashing to 1b2d0cd736122c66c1b316cab0a5598a
 
 query IIIRI rowsort x2
 SELECT a+b*2+c*3+d*4+e*5,
@@ -206,7 +206,7 @@ SELECT a+b*2+c*3+d*4+e*5,
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 3,2,1,5
 ----
-55 values hashing to 7162b2f9faab3e4f43a3c2a0f9bfd1d6
+55 values hashing to 1b2d0cd736122c66c1b316cab0a5598a
 
 query IIIII rowsort x3
 SELECT a,
@@ -373,7 +373,7 @@ SELECT e,
     OR d>e
  ORDER BY 3,1,5,2,4
 ----
-80 values hashing to 00539bef3da23f4b5304c1959ffc96e6
+80 values hashing to 3b7bd4f2878315d0242a8b407f7a008d
 
 query IIIRI rowsort x6
 SELECT e,
@@ -398,7 +398,7 @@ SELECT e,
     OR (c<=d-2 OR c>=d+2)
  ORDER BY 4,1,5,3,2
 ----
-80 values hashing to 9e8f0c30b0bc92a4753b5908fcdd969c
+80 values hashing to 3b7bd4f2878315d0242a8b407f7a008d
 
 query I rowsort x7
 SELECT a+b*2+c*3+d*4+e*5
@@ -489,7 +489,7 @@ SELECT abs(a),
  WHERE a>b
  ORDER BY 7,3,5,1,6
 ----
-119 values hashing to e2889a6b002309930e018bce75defb24
+119 values hashing to f99010d8530e7977301122ee9f42cf30
 
 query III rowsort x11
 SELECT d,
@@ -517,7 +517,7 @@ SELECT d-e,
     OR e+d BETWEEN a+b-10 AND c+130
     OR b>c
 ----
-72 values hashing to cb1271a11c5c391c3bdd0a394186f55b
+72 values hashing to 513b5e9188316a5f7cd2e92465e05908
 
 query IIR rowsort x12
 SELECT d-e,
@@ -529,7 +529,7 @@ SELECT d-e,
     OR b>c
  ORDER BY 2,1,3
 ----
-72 values hashing to 383362cbb331686d98664333ba406811
+72 values hashing to 513b5e9188316a5f7cd2e92465e05908
 
 query IIR rowsort x12
 SELECT d-e,
@@ -540,7 +540,7 @@ SELECT d-e,
     OR b>c
     OR e+d BETWEEN a+b-10 AND c+130
 ----
-72 values hashing to cb1271a11c5c391c3bdd0a394186f55b
+72 values hashing to 513b5e9188316a5f7cd2e92465e05908
 
 query IIR rowsort x12
 SELECT d-e,
@@ -552,7 +552,7 @@ SELECT d-e,
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 2,1,3
 ----
-72 values hashing to 383362cbb331686d98664333ba406811
+72 values hashing to 513b5e9188316a5f7cd2e92465e05908
 
 query IIR rowsort x12
 SELECT d-e,
@@ -563,7 +563,7 @@ SELECT d-e,
     OR d NOT BETWEEN 110 AND 150
     OR e+d BETWEEN a+b-10 AND c+130
 ----
-72 values hashing to cb1271a11c5c391c3bdd0a394186f55b
+72 values hashing to 513b5e9188316a5f7cd2e92465e05908
 
 query IIR rowsort x12
 SELECT d-e,
@@ -575,7 +575,7 @@ SELECT d-e,
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 2,3,1
 ----
-72 values hashing to 1ec4ef93fe220f4d0c7fe8e76c8a51c7
+72 values hashing to 513b5e9188316a5f7cd2e92465e05908
 
 query IIR rowsort x12
 SELECT d-e,
@@ -586,7 +586,7 @@ SELECT d-e,
     OR b>c
     OR d NOT BETWEEN 110 AND 150
 ----
-72 values hashing to cb1271a11c5c391c3bdd0a394186f55b
+72 values hashing to 513b5e9188316a5f7cd2e92465e05908
 
 query IIR rowsort x12
 SELECT d-e,
@@ -598,7 +598,7 @@ SELECT d-e,
     OR d NOT BETWEEN 110 AND 150
  ORDER BY 1,2
 ----
-72 values hashing to 2c3bb4a198c7d85703522f1857cb596f
+72 values hashing to 513b5e9188316a5f7cd2e92465e05908
 
 query IIIRII rowsort x13
 SELECT a+b*2+c*3,
@@ -609,7 +609,7 @@ SELECT a+b*2+c*3,
        a+b*2+c*3+d*4+e*5
   FROM t1
 ----
-180 values hashing to 66d1b73a8f7583024f918f0be45a8af7
+180 values hashing to d0f1215cb916a4734eb4be7e195b27c9
 
 query IIIRII rowsort x13
 SELECT a+b*2+c*3,
@@ -621,7 +621,7 @@ SELECT a+b*2+c*3,
   FROM t1
  ORDER BY 4,5
 ----
-180 values hashing to c04af77bec96afb3f58ae96cce5bbe03
+180 values hashing to d0f1215cb916a4734eb4be7e195b27c9
 
 query IRIIII rowsort x14
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -634,7 +634,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
   FROM t1
  WHERE c>d
 ----
-78 values hashing to 9c784650f5d878ad6a60fe80cd466cb9
+78 values hashing to 9c053ecd92584bcac538388f0b0ee8f9
 
 query IRIIII rowsort x14
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -648,7 +648,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
  WHERE c>d
  ORDER BY 1,5,3,2
 ----
-78 values hashing to 17d5e0c5ad8a2c004c5638c07e07ea07
+78 values hashing to 9c053ecd92584bcac538388f0b0ee8f9
 
 query IR rowsort x15
 SELECT a+b*2+c*3+d*4,
@@ -658,7 +658,7 @@ SELECT a+b*2+c*3+d*4,
    AND d>e
    AND d NOT BETWEEN 110 AND 150
 ----
-14 values hashing to e958d056dd3e813cb1c3e26caca70ed2
+14 values hashing to 893a3de9b6da5a4230621bc869c5121c
 
 query IR rowsort x15
 SELECT a+b*2+c*3+d*4,
@@ -669,7 +669,7 @@ SELECT a+b*2+c*3+d*4,
    AND d NOT BETWEEN 110 AND 150
  ORDER BY 2,1
 ----
-14 values hashing to 0bee7fd77c386a0193acbfb004e683fa
+14 values hashing to 893a3de9b6da5a4230621bc869c5121c
 
 query IR rowsort x15
 SELECT a+b*2+c*3+d*4,
@@ -679,7 +679,7 @@ SELECT a+b*2+c*3+d*4,
    AND d NOT BETWEEN 110 AND 150
    AND d>e
 ----
-14 values hashing to e958d056dd3e813cb1c3e26caca70ed2
+14 values hashing to 893a3de9b6da5a4230621bc869c5121c
 
 query IR rowsort x15
 SELECT a+b*2+c*3+d*4,
@@ -690,7 +690,7 @@ SELECT a+b*2+c*3+d*4,
    AND d>e
  ORDER BY 2,1
 ----
-14 values hashing to 0bee7fd77c386a0193acbfb004e683fa
+14 values hashing to 893a3de9b6da5a4230621bc869c5121c
 
 query IR rowsort x15
 SELECT a+b*2+c*3+d*4,
@@ -700,7 +700,7 @@ SELECT a+b*2+c*3+d*4,
    AND (e>c OR e<d)
    AND d>e
 ----
-14 values hashing to e958d056dd3e813cb1c3e26caca70ed2
+14 values hashing to 893a3de9b6da5a4230621bc869c5121c
 
 query IR rowsort x15
 SELECT a+b*2+c*3+d*4,
@@ -711,7 +711,7 @@ SELECT a+b*2+c*3+d*4,
    AND d>e
  ORDER BY 1,2
 ----
-14 values hashing to 0bee7fd77c386a0193acbfb004e683fa
+14 values hashing to 893a3de9b6da5a4230621bc869c5121c
 
 query IIIIII rowsort x16
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -1714,7 +1714,7 @@ SELECT a+b*2+c*3+d*4+e*5,
     OR b>c
     OR (c<=d-2 OR c>=d+2)
 ----
-114 values hashing to 6f7c08523612469b70e9daf8b0c646cf
+114 values hashing to 76ce848e85314d68f4f27a1214f746ed
 
 query IIIIRI rowsort x35
 SELECT a+b*2+c*3+d*4+e*5,
@@ -1730,7 +1730,7 @@ SELECT a+b*2+c*3+d*4+e*5,
     OR (c<=d-2 OR c>=d+2)
  ORDER BY 2,4,5,3
 ----
-114 values hashing to a568b795963f69fb9732b94c2f7e87ed
+114 values hashing to 76ce848e85314d68f4f27a1214f746ed
 
 query IIIIRI rowsort x35
 SELECT a+b*2+c*3+d*4+e*5,
@@ -1745,7 +1745,7 @@ SELECT a+b*2+c*3+d*4+e*5,
     OR b>c
     OR (e>a AND e<b)
 ----
-114 values hashing to 6f7c08523612469b70e9daf8b0c646cf
+114 values hashing to 76ce848e85314d68f4f27a1214f746ed
 
 query IIIIRI rowsort x35
 SELECT a+b*2+c*3+d*4+e*5,
@@ -1761,7 +1761,7 @@ SELECT a+b*2+c*3+d*4+e*5,
     OR (e>a AND e<b)
  ORDER BY 3,4,6,1,5
 ----
-114 values hashing to 6f7c08523612469b70e9daf8b0c646cf
+114 values hashing to 76ce848e85314d68f4f27a1214f746ed
 
 query III rowsort x36
 SELECT e,
@@ -1813,7 +1813,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE d NOT BETWEEN 110 AND 150
    AND d>e
 ----
-21 values hashing to e0b29e067e105fb6932f1e66608360d6
+21 values hashing to 6a6f59e13e88a032e495cda6ee5a79c4
 
 query RII rowsort x37
 SELECT (a+b+c+d+e)/5,
@@ -1824,7 +1824,7 @@ SELECT (a+b+c+d+e)/5,
    AND d>e
  ORDER BY 1,2,3
 ----
-21 values hashing to 8b8755cb586728e6771cb0100083e134
+21 values hashing to 6a6f59e13e88a032e495cda6ee5a79c4
 
 query RII rowsort x37
 SELECT (a+b+c+d+e)/5,
@@ -1834,7 +1834,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE d>e
    AND d NOT BETWEEN 110 AND 150
 ----
-21 values hashing to e0b29e067e105fb6932f1e66608360d6
+21 values hashing to 6a6f59e13e88a032e495cda6ee5a79c4
 
 query RII rowsort x37
 SELECT (a+b+c+d+e)/5,
@@ -1845,7 +1845,7 @@ SELECT (a+b+c+d+e)/5,
    AND d NOT BETWEEN 110 AND 150
  ORDER BY 2,3,1
 ----
-21 values hashing to 112a270c3a1956a16252576dabb97e31
+21 values hashing to 6a6f59e13e88a032e495cda6ee5a79c4
 
 query III rowsort x38
 SELECT a,
@@ -2424,7 +2424,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
   FROM t1
  WHERE e+d BETWEEN a+b-10 AND c+130
 ----
-14 values hashing to 7caa7587ce5295d6d1fe485ce85f6590
+14 values hashing to d9a965c30b678579b5a7a72eb3412f53
 
 query IIIRIII rowsort x52
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -2440,7 +2440,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
  WHERE e+d BETWEEN a+b-10 AND c+130
  ORDER BY 7,3
 ----
-14 values hashing to 7caa7587ce5295d6d1fe485ce85f6590
+14 values hashing to d9a965c30b678579b5a7a72eb3412f53
 
 query II rowsort x53
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -3209,7 +3209,7 @@ SELECT a+b*2+c*3+d*4+e*5,
        (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b)
   FROM t1
 ----
-180 values hashing to 94bc8b0dbdc84747a3d8b71483e1d003
+180 values hashing to afe7a78fe57017c83c4c531ead6b6dd4
 
 query IIIRII rowsort x71
 SELECT a+b*2+c*3+d*4+e*5,
@@ -3221,7 +3221,7 @@ SELECT a+b*2+c*3+d*4+e*5,
   FROM t1
  ORDER BY 1,2
 ----
-180 values hashing to 22c00b0302e150e6fbdd877849c7129e
+180 values hashing to afe7a78fe57017c83c4c531ead6b6dd4
 
 query IIIII rowsort x72
 SELECT a,
@@ -3285,7 +3285,7 @@ SELECT abs(b-c),
  WHERE c BETWEEN b-2 AND d+2
    AND d>e
 ----
-63 values hashing to aa8ce528058cf1c4a3e7eca13602a494
+63 values hashing to 363e0044d19e7972b51cb315d14f35bb
 
 query IIIIIIR rowsort x73
 SELECT abs(b-c),
@@ -3300,7 +3300,7 @@ SELECT abs(b-c),
    AND d>e
  ORDER BY 1,3,7,2,5,4,6
 ----
-63 values hashing to d56725fa08736c10c18c296db05c0d25
+63 values hashing to 363e0044d19e7972b51cb315d14f35bb
 
 query IIIIIIR rowsort x73
 SELECT abs(b-c),
@@ -3314,7 +3314,7 @@ SELECT abs(b-c),
  WHERE d>e
    AND c BETWEEN b-2 AND d+2
 ----
-63 values hashing to aa8ce528058cf1c4a3e7eca13602a494
+63 values hashing to 363e0044d19e7972b51cb315d14f35bb
 
 query IIIIIIR rowsort x73
 SELECT abs(b-c),
@@ -3329,7 +3329,7 @@ SELECT abs(b-c),
    AND c BETWEEN b-2 AND d+2
  ORDER BY 7,3,4,6,2,1,5
 ----
-63 values hashing to aa8ce528058cf1c4a3e7eca13602a494
+63 values hashing to 363e0044d19e7972b51cb315d14f35bb
 
 query II rowsort x74
 SELECT a-b,
@@ -3715,7 +3715,7 @@ SELECT (a+b+c+d+e)/5,
        a-b
   FROM t1
 ----
-210 values hashing to afae4bd8fc9d95fc4f356348dfcfb763
+210 values hashing to 1e4611e6799487dabc8c0ec43a142fb4
 
 query RIIIIII rowsort x84
 SELECT (a+b+c+d+e)/5,
@@ -3729,7 +3729,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  ORDER BY 3,1,5,2,6,4,7
 ----
-210 values hashing to 0a18e40b23c74cedaf9c750eaafafb63
+210 values hashing to 1e4611e6799487dabc8c0ec43a142fb4
 
 query IIIIII rowsort x85
 SELECT a,
@@ -3764,7 +3764,7 @@ SELECT a+b*2+c*3,
        a
   FROM t1
 ----
-150 values hashing to b18866c1208ff1c5f25e3298c2399303
+150 values hashing to 869c33fa30bbdba43f1ed963772cd69e
 
 query IIRII rowsort x86
 SELECT a+b*2+c*3,
@@ -3775,7 +3775,7 @@ SELECT a+b*2+c*3,
   FROM t1
  ORDER BY 5,3,2,4
 ----
-150 values hashing to 1445a206c666d72932646c87b274859a
+150 values hashing to 869c33fa30bbdba43f1ed963772cd69e
 
 query II rowsort x87
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -4019,7 +4019,7 @@ SELECT a+b*2+c*3,
        b
   FROM t1
 ----
-180 values hashing to 04c8ab0aeea750b3c3f7abd91df6f75c
+180 values hashing to ef7e108a6ae070f4961f20b630630490
 
 query IIIIRI rowsort x94
 SELECT a+b*2+c*3,
@@ -4031,7 +4031,7 @@ SELECT a+b*2+c*3,
   FROM t1
  ORDER BY 1,5,3,6,4
 ----
-180 values hashing to 55cc4cc0b266c768bde391c8eb88f71c
+180 values hashing to ef7e108a6ae070f4961f20b630630490
 
 query IIIII rowsort x95
 SELECT d,
@@ -4119,7 +4119,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE c BETWEEN b-2 AND d+2
     OR (a>b-2 AND a<b+2)
 ----
-95 values hashing to 194a2d2d75f122645398876b8a32bab2
+95 values hashing to 86cd13d2f764ed09f72e18fa38d73919
 
 query RIIII rowsort x97
 SELECT (a+b+c+d+e)/5,
@@ -4133,7 +4133,7 @@ SELECT (a+b+c+d+e)/5,
     OR (a>b-2 AND a<b+2)
  ORDER BY 1,2
 ----
-95 values hashing to 01bb960cb5c2243f0db2fc79553b87a9
+95 values hashing to 86cd13d2f764ed09f72e18fa38d73919
 
 query RIIII rowsort x97
 SELECT (a+b+c+d+e)/5,
@@ -4146,7 +4146,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE (a>b-2 AND a<b+2)
     OR c BETWEEN b-2 AND d+2
 ----
-95 values hashing to 194a2d2d75f122645398876b8a32bab2
+95 values hashing to 86cd13d2f764ed09f72e18fa38d73919
 
 query RIIII rowsort x97
 SELECT (a+b+c+d+e)/5,
@@ -4160,7 +4160,7 @@ SELECT (a+b+c+d+e)/5,
     OR c BETWEEN b-2 AND d+2
  ORDER BY 2,3,4
 ----
-95 values hashing to 8c6cc5296167545f78500b45610c4b70
+95 values hashing to 86cd13d2f764ed09f72e18fa38d73919
 
 query III rowsort x98
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -4286,7 +4286,7 @@ SELECT b-c,
        (a+b+c+d+e)/5
   FROM t1
 ----
-150 values hashing to bbd114b1f010a90d0db7b37a7dc5ad3c
+150 values hashing to fb6443a656a3542fc324191e2e248616
 
 query IIIIR rowsort x101
 SELECT b-c,
@@ -4298,7 +4298,7 @@ SELECT b-c,
   FROM t1
  ORDER BY 4,2,5,1,3
 ----
-150 values hashing to 23a910595652eda739626f08d3032283
+150 values hashing to fb6443a656a3542fc324191e2e248616
 
 query IIIIIIR rowsort x102
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -4373,7 +4373,7 @@ SELECT a+b*2+c*3,
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
 ----
-90 values hashing to 82ee109f6899fdc53ad28923e1ac00f6
+90 values hashing to e1e3c57b220457e2f7e70e355c1b954a
 
 query IIIRII rowsort x103
 SELECT a+b*2+c*3,
@@ -4387,7 +4387,7 @@ SELECT a+b*2+c*3,
  WHERE c BETWEEN b-2 AND d+2
  ORDER BY 1,2,5,3
 ----
-90 values hashing to e4263083eef872745d4acf2215c2e458
+90 values hashing to e1e3c57b220457e2f7e70e355c1b954a
 
 query IIIIIII rowsort x104
 SELECT a+b*2+c*3+d*4+e*5,
@@ -4491,7 +4491,7 @@ SELECT a-b,
        b-c
   FROM t1
 ----
-150 values hashing to beb55a6f87bff713dbcaae2a3ae09799
+150 values hashing to 2085a06ec63507dc897d4310b76048ed
 
 query IRIII rowsort x108
 SELECT a-b,
@@ -4502,7 +4502,7 @@ SELECT a-b,
   FROM t1
  ORDER BY 3,5,4,2,1
 ----
-150 values hashing to ba822947d17cc26f6f6dd549698885f0
+150 values hashing to 2085a06ec63507dc897d4310b76048ed
 
 query RII rowsort x109
 SELECT (a+b+c+d+e)/5,
@@ -4525,7 +4525,7 @@ SELECT (a+b+c+d+e)/5,
    AND c>d
  ORDER BY 2,1
 ----
-15 values hashing to dc06f4556447b1f1e426cd55696b7be4
+15 values hashing to 95a90009afb43e173e4b3e4c4f57b182
 
 query RII rowsort x109
 SELECT (a+b+c+d+e)/5,
@@ -4680,7 +4680,7 @@ SELECT a,
  WHERE a>b
  ORDER BY 2,3
 ----
-51 values hashing to 28b12fc521b16b0faa7a049c8e947819
+51 values hashing to 0d50cacba98873ef49f6739c6f05d385
 
 query III rowsort x113
 SELECT c-d,
@@ -4733,7 +4733,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
    AND c BETWEEN b-2 AND d+2
 ----
-50 values hashing to 470263775543187719482313c8bf4246
+50 values hashing to eb1064994892fa75316d6baf6f58f54f
 
 query IIIRI rowsort x115
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -4749,7 +4749,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND c BETWEEN b-2 AND d+2
  ORDER BY 2,3
 ----
-50 values hashing to c8f2c8f759610598a1ecd91ab7a82ffb
+50 values hashing to eb1064994892fa75316d6baf6f58f54f
 
 query IIIRI rowsort x115
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -4764,7 +4764,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND c>d
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-50 values hashing to 470263775543187719482313c8bf4246
+50 values hashing to eb1064994892fa75316d6baf6f58f54f
 
 query IIIRI rowsort x115
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -4780,7 +4780,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 1,4,5,3,2
 ----
-50 values hashing to 6c9eb231868a1fbfea937aad313495b8
+50 values hashing to eb1064994892fa75316d6baf6f58f54f
 
 query IIIRI rowsort x115
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -4795,7 +4795,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND c BETWEEN b-2 AND d+2
    AND c>d
 ----
-50 values hashing to 470263775543187719482313c8bf4246
+50 values hashing to eb1064994892fa75316d6baf6f58f54f
 
 query IIIRI rowsort x115
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -5219,7 +5219,7 @@ SELECT abs(a),
   FROM t1
  WHERE c>d
 ----
-65 values hashing to 9162b7d229230aa31db7e29446d0cc68
+65 values hashing to 576eb4b74d52a72705736443a5711229
 
 query IIIRI rowsort x126
 SELECT abs(a),
@@ -5231,7 +5231,7 @@ SELECT abs(a),
  WHERE c>d
  ORDER BY 3,4,5,2,1
 ----
-65 values hashing to 9162b7d229230aa31db7e29446d0cc68
+65 values hashing to 576eb4b74d52a72705736443a5711229
 
 query I rowsort x127
 SELECT a+b*2+c*3
@@ -5252,14 +5252,14 @@ query R rowsort x128
 SELECT (a+b+c+d+e)/5
   FROM t1
 ----
-30 values hashing to 361fdea7477f5644e65ee14114dbf694
+30 values hashing to 1fc1404489a3bdcdfdf6fbde6f7fa1df
 
 query R rowsort x128
 SELECT (a+b+c+d+e)/5
   FROM t1
  ORDER BY 1
 ----
-30 values hashing to 6b54471c671cb24431677f6f9e5c13b7
+30 values hashing to 1fc1404489a3bdcdfdf6fbde6f7fa1df
 
 query II rowsort x129
 SELECT a+b*2+c*3+d*4,
@@ -5521,7 +5521,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  WHERE (e>c OR e<d)
 ----
-147 values hashing to 7846b5269b3dfe448e8000052a3116ba
+147 values hashing to a621b418f601a339af9583640178239c
 
 query RIIIIII rowsort x136
 SELECT (a+b+c+d+e)/5,
@@ -5535,7 +5535,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE (e>c OR e<d)
  ORDER BY 4,3,5,1,2,7,6
 ----
-147 values hashing to a47d381ca06bb8a42429eaadf4034d0e
+147 values hashing to a621b418f601a339af9583640178239c
 
 query II rowsort x137
 SELECT a+b*2+c*3,
@@ -5565,7 +5565,7 @@ SELECT a+b*2+c*3+d*4,
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
 ----
-70 values hashing to f5e2c383bdb24e17dac33909ba76e998
+70 values hashing to a24123d83f96200a9d36cdbc6179c799
 
 query IIIIIRI rowsort x138
 SELECT a+b*2+c*3+d*4,
@@ -5579,7 +5579,7 @@ SELECT a+b*2+c*3+d*4,
  WHERE (c<=d-2 OR c>=d+2)
  ORDER BY 1,2,4,6
 ----
-70 values hashing to 3f319e76e6e81cc0276342d1eeed4fb0
+70 values hashing to a24123d83f96200a9d36cdbc6179c799
 
 query III rowsort x139
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -5873,7 +5873,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE c BETWEEN b-2 AND d+2
     OR (a>b-2 AND a<b+2)
 ----
-133 values hashing to 2f4d51ed916ffc73f5a0184a4a0a2d20
+133 values hashing to b6749e49b464ab838e12c9ae6a31e98a
 
 query RIIIIII rowsort x143
 SELECT (a+b+c+d+e)/5,
@@ -5888,7 +5888,7 @@ SELECT (a+b+c+d+e)/5,
     OR (a>b-2 AND a<b+2)
  ORDER BY 3,1,2,7
 ----
-133 values hashing to 205ec662b6db3f955ffb66fee7252c9d
+133 values hashing to b6749e49b464ab838e12c9ae6a31e98a
 
 query RIIIIII rowsort x143
 SELECT (a+b+c+d+e)/5,
@@ -5902,7 +5902,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE (a>b-2 AND a<b+2)
     OR c BETWEEN b-2 AND d+2
 ----
-133 values hashing to 2f4d51ed916ffc73f5a0184a4a0a2d20
+133 values hashing to b6749e49b464ab838e12c9ae6a31e98a
 
 query RIIIIII rowsort x143
 SELECT (a+b+c+d+e)/5,
@@ -5917,7 +5917,7 @@ SELECT (a+b+c+d+e)/5,
     OR c BETWEEN b-2 AND d+2
  ORDER BY 7,2,6,3,1,5
 ----
-133 values hashing to ac269d66351e8b776a841f407fafa111
+133 values hashing to b6749e49b464ab838e12c9ae6a31e98a
 
 query III rowsort x144
 SELECT a+b*2+c*3,
@@ -6259,7 +6259,7 @@ SELECT b,
  WHERE b>c
  ORDER BY 2,3
 ----
-65 values hashing to eb0206d8bc171ce541fdef72f7ef89e4
+65 values hashing to 8c8bc67ae2a89fca32c829b3419e6a3e
 
 query I rowsort x156
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b)
@@ -6388,7 +6388,7 @@ SELECT (a+b+c+d+e)/5,
        a-b
   FROM t1
 ----
-180 values hashing to 693f016e89ec0a149145e092a0618f8a
+180 values hashing to 3cc1ffa481cb1b7b033025f38b95351d
 
 query RIIIII rowsort x161
 SELECT (a+b+c+d+e)/5,
@@ -6400,7 +6400,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  ORDER BY 5,1
 ----
-180 values hashing to 430eb2f80dba75268bcba2f7c9c9fb20
+180 values hashing to 3cc1ffa481cb1b7b033025f38b95351d
 
 query IIIIII rowsort x162
 SELECT c,
@@ -7460,7 +7460,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        a-b
   FROM t1
 ----
-210 values hashing to 8eef08334e1312233f09b1628c290bfa
+210 values hashing to 7a0e3dac7f856b884f9550e0aa4f315f
 
 query IIIIRII rowsort x185
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -7474,7 +7474,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
   FROM t1
  ORDER BY 1,5,6,7
 ----
-210 values hashing to 91bfd99647b4886cfcb1a0580c20b3f7
+210 values hashing to 7a0e3dac7f856b884f9550e0aa4f315f
 
 query II rowsort x186
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -7505,7 +7505,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE c BETWEEN b-2 AND d+2
    AND c>d
 ----
-70 values hashing to c9d3902ae8f1dbb509f1d37239a2ff9d
+70 values hashing to 8bce515a4866fb33899a6e1d6efe7a4b
 
 query RIIIIII rowsort x187
 SELECT (a+b+c+d+e)/5,
@@ -7520,7 +7520,7 @@ SELECT (a+b+c+d+e)/5,
    AND c>d
  ORDER BY 7,5
 ----
-70 values hashing to e34db647b97be58f1a2a16e3e349f880
+70 values hashing to 8bce515a4866fb33899a6e1d6efe7a4b
 
 query RIIIIII rowsort x187
 SELECT (a+b+c+d+e)/5,
@@ -7534,7 +7534,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE c>d
    AND c BETWEEN b-2 AND d+2
 ----
-70 values hashing to c9d3902ae8f1dbb509f1d37239a2ff9d
+70 values hashing to 8bce515a4866fb33899a6e1d6efe7a4b
 
 query RIIIIII rowsort x187
 SELECT (a+b+c+d+e)/5,
@@ -7549,7 +7549,7 @@ SELECT (a+b+c+d+e)/5,
    AND c BETWEEN b-2 AND d+2
  ORDER BY 4,6,2,7
 ----
-70 values hashing to 4ad0da4117d553691eea84ef25c13f0b
+70 values hashing to 8bce515a4866fb33899a6e1d6efe7a4b
 
 query IIIIIII rowsort x188
 SELECT b,
@@ -7618,7 +7618,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
  WHERE (e>c OR e<d)
    AND c BETWEEN b-2 AND d+2
 ----
-52 values hashing to 5b62771c44fab0abd3ba0f75a3d87945
+52 values hashing to 2ed0a0d1acfe82060cc0edbbc72a8fc0
 
 query IIIR rowsort x190
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -7630,7 +7630,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
    AND c BETWEEN b-2 AND d+2
  ORDER BY 4,1,2
 ----
-52 values hashing to 871f1f32e6ba2a06d2cf2cd636a4abfe
+52 values hashing to 2ed0a0d1acfe82060cc0edbbc72a8fc0
 
 query IIIR rowsort x190
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -7641,7 +7641,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
  WHERE c BETWEEN b-2 AND d+2
    AND (e>c OR e<d)
 ----
-52 values hashing to 5b62771c44fab0abd3ba0f75a3d87945
+52 values hashing to 2ed0a0d1acfe82060cc0edbbc72a8fc0
 
 query IIIR rowsort x190
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -7653,7 +7653,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
    AND (e>c OR e<d)
  ORDER BY 2,1
 ----
-52 values hashing to 871f1f32e6ba2a06d2cf2cd636a4abfe
+52 values hashing to 2ed0a0d1acfe82060cc0edbbc72a8fc0
 
 query IIIIIRI rowsort x191
 SELECT b,
@@ -7667,7 +7667,7 @@ SELECT b,
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
 ----
-119 values hashing to 04aae19c1d083bd863d53f171103b906
+119 values hashing to 3607d6fe92fc60f83c87ec472c71b30d
 
 query IIIIIRI rowsort x191
 SELECT b,
@@ -7682,7 +7682,7 @@ SELECT b,
  WHERE d NOT BETWEEN 110 AND 150
  ORDER BY 2,5
 ----
-119 values hashing to 32ad600c420e29f9ad647860e52c8cb0
+119 values hashing to 3607d6fe92fc60f83c87ec472c71b30d
 
 query III rowsort x192
 SELECT c-d,
@@ -7770,7 +7770,7 @@ SELECT a+b*2+c*3+d*4,
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-182 values hashing to 5d7047dd54b16a09698953c4ee81ef5c
+182 values hashing to b7a5c037ab81302f4c513a95ad161842
 
 query IIIRIII rowsort x193
 SELECT a+b*2+c*3+d*4,
@@ -7784,7 +7784,7 @@ SELECT a+b*2+c*3+d*4,
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 1,4,7,5,2,3,6
 ----
-182 values hashing to 15f2afb8505b98b742d8e89a4759cd23
+182 values hashing to b7a5c037ab81302f4c513a95ad161842
 
 query III rowsort x194
 SELECT b,
@@ -8219,7 +8219,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
  WHERE (e>c OR e<d)
     OR c BETWEEN b-2 AND d+2
 ----
-115 values hashing to da20403ff6f0c7700493a50c144df648
+115 values hashing to 4e77a90cdc39039f9fe73e3bafeb8075
 
 query IIRII rowsort x200
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -8232,7 +8232,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
     OR c BETWEEN b-2 AND d+2
  ORDER BY 4,5,2
 ----
-115 values hashing to 34597dcae24baa1910bbeb0b8cb46d6c
+115 values hashing to 4e77a90cdc39039f9fe73e3bafeb8075
 
 query IIRII rowsort x200
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -8244,7 +8244,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
  WHERE c BETWEEN b-2 AND d+2
     OR (e>c OR e<d)
 ----
-115 values hashing to da20403ff6f0c7700493a50c144df648
+115 values hashing to 4e77a90cdc39039f9fe73e3bafeb8075
 
 query IIRII rowsort x200
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -8257,7 +8257,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
     OR (e>c OR e<d)
  ORDER BY 1,2
 ----
-115 values hashing to f5c8d7073f64bcfa76f55608a74ac859
+115 values hashing to 4e77a90cdc39039f9fe73e3bafeb8075
 
 query II rowsort x201
 SELECT c,
@@ -8308,7 +8308,7 @@ SELECT a+b*2+c*3+d*4+e*5,
        (a+b+c+d+e)/5
   FROM t1
 ----
-210 values hashing to a698016e8ff50d721e5ac4d6cc543895
+210 values hashing to f98035a1f414e3eeeebbd836a4648714
 
 query IIIIIIR rowsort x203
 SELECT a+b*2+c*3+d*4+e*5,
@@ -8322,7 +8322,7 @@ SELECT a+b*2+c*3+d*4+e*5,
   FROM t1
  ORDER BY 3,6,4,7,1
 ----
-210 values hashing to f363b463e3d97b000d49419c0343d13c
+210 values hashing to f98035a1f414e3eeeebbd836a4648714
 
 query IIIIR rowsort x204
 SELECT c-d,
@@ -8333,7 +8333,7 @@ SELECT c-d,
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-130 values hashing to 7bff8c7ba3106f974be4910e5246c779
+130 values hashing to a17a04ed59ad4a4dd523b91a924e4e68
 
 query IIIIR rowsort x204
 SELECT c-d,
@@ -8345,7 +8345,7 @@ SELECT c-d,
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 5,2
 ----
-130 values hashing to 5961222603ca45cea6157d9c9f5e33fe
+130 values hashing to a17a04ed59ad4a4dd523b91a924e4e68
 
 query I rowsort x205
 SELECT a+b*2+c*3
@@ -8550,7 +8550,7 @@ SELECT c,
  WHERE c>d
     OR (e>c OR e<d)
 ----
-156 values hashing to d19805253222778c012dd25918760c84
+156 values hashing to 3b4e6bfd69d874a5c8b9530e065facde
 
 query IIIRII rowsort x214
 SELECT c,
@@ -8564,7 +8564,7 @@ SELECT c,
     OR (e>c OR e<d)
  ORDER BY 1,2,6,5
 ----
-156 values hashing to 237c419bbaa02333bcf91e23d7f982d7
+156 values hashing to 3b4e6bfd69d874a5c8b9530e065facde
 
 query IIIRII rowsort x214
 SELECT c,
@@ -8577,7 +8577,7 @@ SELECT c,
  WHERE (e>c OR e<d)
     OR c>d
 ----
-156 values hashing to d19805253222778c012dd25918760c84
+156 values hashing to 3b4e6bfd69d874a5c8b9530e065facde
 
 query IIIRII rowsort x214
 SELECT c,
@@ -8591,7 +8591,7 @@ SELECT c,
     OR c>d
  ORDER BY 5,3,6,1
 ----
-156 values hashing to efa56af0a34e4dddda72ffa66249c227
+156 values hashing to 3b4e6bfd69d874a5c8b9530e065facde
 
 query I rowsort x215
 SELECT d-e
@@ -8776,7 +8776,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
 ----
-90 values hashing to 1912dee643b74206558436230a51c2c3
+90 values hashing to fbf2a8906464b7f7479ab386f7808fe2
 
 query RIIIII rowsort x219
 SELECT (a+b+c+d+e)/5,
@@ -8789,20 +8789,20 @@ SELECT (a+b+c+d+e)/5,
  WHERE c BETWEEN b-2 AND d+2
  ORDER BY 4,6,1,5,2
 ----
-90 values hashing to f7124f571b509815221dc9ec21e673de
+90 values hashing to fbf2a8906464b7f7479ab386f7808fe2
 
 query R rowsort x220
 SELECT (a+b+c+d+e)/5
   FROM t1
 ----
-30 values hashing to 361fdea7477f5644e65ee14114dbf694
+30 values hashing to 1fc1404489a3bdcdfdf6fbde6f7fa1df
 
 query R rowsort x220
 SELECT (a+b+c+d+e)/5
   FROM t1
  ORDER BY 1
 ----
-30 values hashing to 6b54471c671cb24431677f6f9e5c13b7
+30 values hashing to 1fc1404489a3bdcdfdf6fbde6f7fa1df
 
 query IIIIII rowsort x221
 SELECT d,
@@ -9324,7 +9324,7 @@ SELECT b-c,
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
    AND d NOT BETWEEN 110 AND 150
 ----
-42 values hashing to 6bbb4d96f5e9b8c634e17af79a0a30ae
+42 values hashing to 0721a54e9247553514fb8b702bd9cdcf
 
 query IIRIII rowsort x237
 SELECT b-c,
@@ -9340,7 +9340,7 @@ SELECT b-c,
    AND d NOT BETWEEN 110 AND 150
  ORDER BY 5,3,4,1
 ----
-42 values hashing to f5d64fa17abfa4b3a3f813e4299880be
+42 values hashing to 0721a54e9247553514fb8b702bd9cdcf
 
 query IIRIII rowsort x237
 SELECT b-c,
@@ -9355,7 +9355,7 @@ SELECT b-c,
    AND d>e
    AND d NOT BETWEEN 110 AND 150
 ----
-42 values hashing to 6bbb4d96f5e9b8c634e17af79a0a30ae
+42 values hashing to 0721a54e9247553514fb8b702bd9cdcf
 
 query IIRIII rowsort x237
 SELECT b-c,
@@ -9371,7 +9371,7 @@ SELECT b-c,
    AND d NOT BETWEEN 110 AND 150
  ORDER BY 6,4,1
 ----
-42 values hashing to e9cb6c40b5b2fc5bd83822de2ed63547
+42 values hashing to 0721a54e9247553514fb8b702bd9cdcf
 
 query II rowsort x238
 SELECT a,
@@ -10382,7 +10382,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
  WHERE d NOT BETWEEN 110 AND 150
     OR (a>b-2 AND a<b+2)
 ----
-110 values hashing to 2c37d52d7dbb02d03ab85e9d00a826e8
+110 values hashing to 69690b2bc5310b80994ce8618e6344f7
 
 query IIRII rowsort x264
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -10395,7 +10395,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
     OR (a>b-2 AND a<b+2)
  ORDER BY 1,4
 ----
-110 values hashing to 4132f074409452c5876a39098a7079c1
+110 values hashing to 69690b2bc5310b80994ce8618e6344f7
 
 query IIRII rowsort x264
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -10407,7 +10407,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
  WHERE (a>b-2 AND a<b+2)
     OR d NOT BETWEEN 110 AND 150
 ----
-110 values hashing to 2c37d52d7dbb02d03ab85e9d00a826e8
+110 values hashing to 69690b2bc5310b80994ce8618e6344f7
 
 query IIRII rowsort x264
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -10420,7 +10420,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
     OR d NOT BETWEEN 110 AND 150
  ORDER BY 1,5,4,2,3
 ----
-110 values hashing to 4132f074409452c5876a39098a7079c1
+110 values hashing to 69690b2bc5310b80994ce8618e6344f7
 
 query IIIIII rowsort x265
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -10607,7 +10607,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
 ----
-50 values hashing to 2df4b2a1484272164680f194c260314c
+50 values hashing to 12abfa872e0396cd6d9ff4a4a11ff33f
 
 query IIIRI rowsort x268
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -10620,7 +10620,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
  WHERE (c<=d-2 OR c>=d+2)
  ORDER BY 4,1,5,3
 ----
-50 values hashing to 323d0166ff8252fdbaf74c53675625d3
+50 values hashing to 12abfa872e0396cd6d9ff4a4a11ff33f
 
 query I rowsort x269
 SELECT d
@@ -11089,7 +11089,7 @@ SELECT (a+b+c+d+e)/5,
        a-b
   FROM t1
 ----
-210 values hashing to f4321c6e26c4013d040ad1b49f563d4b
+210 values hashing to 42b33115966a46dee09094bf5cb59c26
 
 query RIIIIII rowsort x277
 SELECT (a+b+c+d+e)/5,
@@ -11103,7 +11103,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  ORDER BY 3,7,4,2,1
 ----
-210 values hashing to 7811129470fb86e0201e0c53685dd36a
+210 values hashing to 42b33115966a46dee09094bf5cb59c26
 
 query III rowsort x278
 SELECT c,
@@ -11180,7 +11180,7 @@ SELECT d,
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
     OR c>d
 ----
-196 values hashing to c952140e3a05811de5bb8d35fb6ce73a
+196 values hashing to 6eb4358bb21e4723cfaeac95259248a0
 
 query IRIIIII rowsort x281
 SELECT d,
@@ -11195,7 +11195,7 @@ SELECT d,
     OR c>d
  ORDER BY 1,5,2,3,4,6,7
 ----
-196 values hashing to df548b083b73bb36a28111dd4994f193
+196 values hashing to 6eb4358bb21e4723cfaeac95259248a0
 
 query IRIIIII rowsort x281
 SELECT d,
@@ -11209,7 +11209,7 @@ SELECT d,
  WHERE c>d
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-196 values hashing to c952140e3a05811de5bb8d35fb6ce73a
+196 values hashing to 6eb4358bb21e4723cfaeac95259248a0
 
 query IRIIIII rowsort x281
 SELECT d,
@@ -11224,7 +11224,7 @@ SELECT d,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 2,7,5,1,4,6,3
 ----
-196 values hashing to 5e5ae1f24fa31fa2a29b650859845be4
+196 values hashing to 6eb4358bb21e4723cfaeac95259248a0
 
 query IIIIII rowsort x282
 SELECT a+b*2,
@@ -11347,7 +11347,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
        b-c
   FROM t1
 ----
-180 values hashing to b84ab1bef5fbd643629e243046f2372e
+180 values hashing to a12022bb2d026b3848b8059a30161ba7
 
 query IIIRII rowsort x284
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -11360,7 +11360,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
   FROM t1
  ORDER BY 5,1,4,3,6
 ----
-180 values hashing to 721ad0139954778edca6129611de2552
+180 values hashing to a12022bb2d026b3848b8059a30161ba7
 
 query IIIII rowsort x285
 SELECT a,
@@ -11704,7 +11704,7 @@ SELECT e,
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
     OR d NOT BETWEEN 110 AND 150
 ----
-145 values hashing to 6024a8c065856e3185d447382b126fe7
+145 values hashing to 474fb82c945841ab006351fb9e52c50d
 
 query IRIII rowsort x293
 SELECT e,
@@ -11717,7 +11717,7 @@ SELECT e,
     OR d NOT BETWEEN 110 AND 150
  ORDER BY 3,4,2,5,1
 ----
-145 values hashing to 12f69fd09be7e8570e9fe5bc19cc01ac
+145 values hashing to 474fb82c945841ab006351fb9e52c50d
 
 query IIIII rowsort x294
 SELECT d,
@@ -11770,7 +11770,7 @@ SELECT d,
        (a+b+c+d+e)/5
   FROM t1
 ----
-210 values hashing to 500fb3c699beaad9c6876c75252659e3
+210 values hashing to 735ddc85e47a6244f7b9c08ffd2a48ba
 
 query IIIIIIR rowsort x296
 SELECT d,
@@ -11784,7 +11784,7 @@ SELECT d,
   FROM t1
  ORDER BY 7,5,4,6,1
 ----
-210 values hashing to 72afc191dbf6bd02a7bda1c890d97778
+210 values hashing to 735ddc85e47a6244f7b9c08ffd2a48ba
 
 query IIII rowsort x297
 SELECT c,
@@ -12090,7 +12090,7 @@ SELECT b,
        abs(a)
   FROM t1
 ----
-120 values hashing to e2c9d1ef2217a631f833822eaa425704
+120 values hashing to b7aeef5a8ceae5bba422c76fc7e5c147
 
 query IIRI rowsort x305
 SELECT b,
@@ -12100,7 +12100,7 @@ SELECT b,
   FROM t1
  ORDER BY 1,2,4,3
 ----
-120 values hashing to 8fffc0bd7572efadbedfc9cd4137174d
+120 values hashing to b7aeef5a8ceae5bba422c76fc7e5c147
 
 query IIIRII rowsort x306
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -12127,7 +12127,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
  WHERE c>d
  ORDER BY 4,5,6,3,2,1
 ----
-78 values hashing to 977f25743df4471efa7eca7efbf12c7d
+78 values hashing to 665611d4ffc18b60bde98843961d9fea
 
 query IIII rowsort x307
 SELECT a+b*2+c*3+d*4,
@@ -12200,7 +12200,7 @@ SELECT d-e,
  WHERE c BETWEEN b-2 AND d+2
    AND a>b
 ----
-24 values hashing to 69f45db2d35ab23a7103c567db10d622
+24 values hashing to bcdd33e84545a55b3d04d15b306291d9
 
 query IRI rowsort x310
 SELECT d-e,
@@ -12211,7 +12211,7 @@ SELECT d-e,
    AND a>b
  ORDER BY 3,2
 ----
-24 values hashing to 69f45db2d35ab23a7103c567db10d622
+24 values hashing to bcdd33e84545a55b3d04d15b306291d9
 
 query III rowsort x311
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -12485,7 +12485,7 @@ SELECT (a+b+c+d+e)/5,
    AND c>d
  ORDER BY 3,2,1
 ----
-16 values hashing to 87f3aadfd6ab9fbb8ba4670c422afc5a
+16 values hashing to fcd4ed4bdc5c65f9cf7b3a74094d1da8
 
 query RIII rowsort x314
 SELECT (a+b+c+d+e)/5,
@@ -12637,7 +12637,7 @@ SELECT abs(b-c),
   FROM t1
  WHERE d NOT BETWEEN 110 AND 150
 ----
-85 values hashing to 36ec5405511bcdde91753d5c974d6105
+85 values hashing to f0efe07613daacd538d49d2f6a1796a6
 
 query IIIIR rowsort x316
 SELECT abs(b-c),
@@ -12649,7 +12649,7 @@ SELECT abs(b-c),
  WHERE d NOT BETWEEN 110 AND 150
  ORDER BY 5,3,2,4,1
 ----
-85 values hashing to b95c6fc8a468d110bbc0f7fcc833f71b
+85 values hashing to f0efe07613daacd538d49d2f6a1796a6
 
 query III rowsort x317
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -12790,7 +12790,7 @@ SELECT e,
   FROM t1
  WHERE b>c
 ----
-91 values hashing to cc487158254f7cea051018d41fd33789
+91 values hashing to 58d8a62ff88a6be7694a139950927f7f
 
 query IIIIIIR rowsort x322
 SELECT e,
@@ -12806,7 +12806,7 @@ SELECT e,
  WHERE b>c
  ORDER BY 5,1,3
 ----
-91 values hashing to 1b28b979c44841a90b5540ff808c0778
+91 values hashing to 58d8a62ff88a6be7694a139950927f7f
 
 query IIII rowsort x323
 SELECT d,
@@ -12916,7 +12916,7 @@ SELECT b-c,
        c
   FROM t1
 ----
-150 values hashing to 9183ffe2a11c61731f1bd726f09fefbe
+150 values hashing to 35e8645d7e032055b38373c87ff9085f
 
 query IIIRI rowsort x324
 SELECT b-c,
@@ -12927,7 +12927,7 @@ SELECT b-c,
   FROM t1
  ORDER BY 5,1,2
 ----
-150 values hashing to 854e0b34d7b06a2ea91e6e311678134c
+150 values hashing to 35e8645d7e032055b38373c87ff9085f
 
 query I rowsort x325
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END
@@ -13269,7 +13269,7 @@ SELECT (a+b+c+d+e)/5,
     OR (e>c OR e<d)
     OR a>b
 ----
-84 values hashing to dbd984b8ab164613fc93719f86c8d362
+84 values hashing to afc960f0c50c49bdde5b2cc58fecfde9
 
 query RII rowsort x335
 SELECT (a+b+c+d+e)/5,
@@ -13281,7 +13281,7 @@ SELECT (a+b+c+d+e)/5,
     OR a>b
  ORDER BY 1,3
 ----
-84 values hashing to 8465ba83697ee2634ee45fa70e002757
+84 values hashing to afc960f0c50c49bdde5b2cc58fecfde9
 
 query RII rowsort x335
 SELECT (a+b+c+d+e)/5,
@@ -13292,7 +13292,7 @@ SELECT (a+b+c+d+e)/5,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
     OR (e>c OR e<d)
 ----
-84 values hashing to dbd984b8ab164613fc93719f86c8d362
+84 values hashing to afc960f0c50c49bdde5b2cc58fecfde9
 
 query RII rowsort x335
 SELECT (a+b+c+d+e)/5,
@@ -13304,7 +13304,7 @@ SELECT (a+b+c+d+e)/5,
     OR (e>c OR e<d)
  ORDER BY 2,3
 ----
-84 values hashing to 2a1467bfe5fe9f0bf8b4c6803a58bd91
+84 values hashing to afc960f0c50c49bdde5b2cc58fecfde9
 
 query RII rowsort x335
 SELECT (a+b+c+d+e)/5,
@@ -13315,7 +13315,7 @@ SELECT (a+b+c+d+e)/5,
     OR (e>c OR e<d)
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-84 values hashing to dbd984b8ab164613fc93719f86c8d362
+84 values hashing to afc960f0c50c49bdde5b2cc58fecfde9
 
 query RII rowsort x335
 SELECT (a+b+c+d+e)/5,
@@ -13327,7 +13327,7 @@ SELECT (a+b+c+d+e)/5,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 2,1
 ----
-84 values hashing to a079cd3ddb5f969f284c379129033804
+84 values hashing to afc960f0c50c49bdde5b2cc58fecfde9
 
 query IIRIII rowsort x336
 SELECT abs(a),
@@ -13358,7 +13358,7 @@ SELECT abs(a),
     OR (a>b-2 AND a<b+2)
  ORDER BY 4,2,5,1,6,3
 ----
-144 values hashing to 228a7826219e61071e1137bae30bc0e8
+144 values hashing to 533b7daf9727721e5861032d8a484463
 
 query IIRIII rowsort x336
 SELECT abs(a),
@@ -13389,7 +13389,7 @@ SELECT abs(a),
     OR (a>b-2 AND a<b+2)
  ORDER BY 4,6,5,3,2
 ----
-144 values hashing to 807cd771df385c22fb99fbd8822d20a3
+144 values hashing to 533b7daf9727721e5861032d8a484463
 
 query IIRIII rowsort x336
 SELECT abs(a),
@@ -13420,7 +13420,7 @@ SELECT abs(a),
     OR b>c
  ORDER BY 5,1,2,6,3
 ----
-144 values hashing to 0bc9e23c6930974b994d95886f4e896e
+144 values hashing to 533b7daf9727721e5861032d8a484463
 
 query II rowsort x337
 SELECT abs(a),
@@ -13578,7 +13578,7 @@ SELECT d-e,
        a+b*2+c*3+d*4
   FROM t1
 ----
-180 values hashing to baa5727558efb1a090e5468fc52e180c
+180 values hashing to 818aa97ed59d5dfc24f2ecf75c2dcafb
 
 query IIIRII rowsort x341
 SELECT d-e,
@@ -13591,7 +13591,7 @@ SELECT d-e,
   FROM t1
  ORDER BY 3,4,1,6
 ----
-180 values hashing to 18c467f98c2917ff159a19afc38a1d81
+180 values hashing to 818aa97ed59d5dfc24f2ecf75c2dcafb
 
 query II rowsort x342
 SELECT b,
@@ -14222,7 +14222,7 @@ SELECT c,
        abs(a)
   FROM t1
 ----
-180 values hashing to 184f18a986e44af8a35c02c04511d19c
+180 values hashing to ca205c2433013367ce82f259de726278
 
 query IIIIRI rowsort x356
 SELECT c,
@@ -14234,7 +14234,7 @@ SELECT c,
   FROM t1
  ORDER BY 3,4,5
 ----
-180 values hashing to 49b815376df1519860738b8345db6219
+180 values hashing to ca205c2433013367ce82f259de726278
 
 query II rowsort x357
 SELECT a,
@@ -14533,7 +14533,7 @@ SELECT abs(b-c),
   FROM t1
  WHERE d>e
 ----
-77 values hashing to 46fd38956b252c6ebe55ff02aa620803
+77 values hashing to 62c97518d876656a9a17e66f5e222483
 
 query IIIRIII rowsort x362
 SELECT abs(b-c),
@@ -14548,7 +14548,7 @@ SELECT abs(b-c),
  WHERE d>e
  ORDER BY 3,7,1,6,2,4,5
 ----
-77 values hashing to 46fd38956b252c6ebe55ff02aa620803
+77 values hashing to 62c97518d876656a9a17e66f5e222483
 
 query IIIIRII rowsort x363
 SELECT b,
@@ -14563,7 +14563,7 @@ SELECT b,
     OR b>c
     OR (e>c OR e<d)
 ----
-189 values hashing to c593691e46b229b506c6f7edaad451a1
+189 values hashing to 94bbb62d0bc85f2f8eef2e94ebff571b
 
 query IIIIRII rowsort x363
 SELECT b,
@@ -14579,7 +14579,7 @@ SELECT b,
     OR (e>c OR e<d)
  ORDER BY 2,4,7
 ----
-189 values hashing to cf56089f6b366b060376b81e5ca45d49
+189 values hashing to 94bbb62d0bc85f2f8eef2e94ebff571b
 
 query IIIIRII rowsort x363
 SELECT b,
@@ -14594,7 +14594,7 @@ SELECT b,
     OR (e>c OR e<d)
     OR a>b
 ----
-189 values hashing to c593691e46b229b506c6f7edaad451a1
+189 values hashing to 94bbb62d0bc85f2f8eef2e94ebff571b
 
 query IIIIRII rowsort x363
 SELECT b,
@@ -14610,7 +14610,7 @@ SELECT b,
     OR a>b
  ORDER BY 4,5,3,7,6,1
 ----
-189 values hashing to b4c5cef2121d8193624143097d953bfb
+189 values hashing to 94bbb62d0bc85f2f8eef2e94ebff571b
 
 query IIIIRII rowsort x363
 SELECT b,
@@ -14625,7 +14625,7 @@ SELECT b,
     OR a>b
     OR b>c
 ----
-189 values hashing to c593691e46b229b506c6f7edaad451a1
+189 values hashing to 94bbb62d0bc85f2f8eef2e94ebff571b
 
 query IIIIRII rowsort x363
 SELECT b,
@@ -14641,7 +14641,7 @@ SELECT b,
     OR b>c
  ORDER BY 4,7,1,5,6,2,3
 ----
-189 values hashing to cf56089f6b366b060376b81e5ca45d49
+189 values hashing to 94bbb62d0bc85f2f8eef2e94ebff571b
 
 query IIII rowsort x364
 SELECT a,
@@ -15287,7 +15287,7 @@ SELECT a+b*2+c*3+d*4+e*5,
  WHERE (e>c OR e<d)
    AND b>c
 ----
-36 values hashing to 1d4402105f7422344d580568821e441d
+36 values hashing to 847a091a66c067f8dc7ffdcc2b6cdcfc
 
 query IIIR rowsort x378
 SELECT a+b*2+c*3+d*4+e*5,
@@ -15299,7 +15299,7 @@ SELECT a+b*2+c*3+d*4+e*5,
    AND b>c
  ORDER BY 2,4,3
 ----
-36 values hashing to 2a70c27d9e91b2c1fca965bded3c8d05
+36 values hashing to 847a091a66c067f8dc7ffdcc2b6cdcfc
 
 query IIIIII rowsort x379
 SELECT a+b*2,
@@ -15517,7 +15517,7 @@ SELECT a+b*2+c*3+d*4,
     OR e+d BETWEEN a+b-10 AND c+130
     OR (e>c OR e<d)
 ----
-92 values hashing to 28648cbd4f6548940530616ffad68c6e
+92 values hashing to 625869a42f78f4f342664d184f72764b
 
 query IRII rowsort x386
 SELECT a+b*2+c*3+d*4,
@@ -15531,7 +15531,7 @@ SELECT a+b*2+c*3+d*4,
     OR (e>c OR e<d)
  ORDER BY 3,2
 ----
-92 values hashing to d58ae89422a3ba018f346b41dde125a8
+92 values hashing to 625869a42f78f4f342664d184f72764b
 
 query IRII rowsort x386
 SELECT a+b*2+c*3+d*4,
@@ -15544,7 +15544,7 @@ SELECT a+b*2+c*3+d*4,
     OR (e>c OR e<d)
     OR e+d BETWEEN a+b-10 AND c+130
 ----
-92 values hashing to 28648cbd4f6548940530616ffad68c6e
+92 values hashing to 625869a42f78f4f342664d184f72764b
 
 query IRII rowsort x386
 SELECT a+b*2+c*3+d*4,
@@ -15558,7 +15558,7 @@ SELECT a+b*2+c*3+d*4,
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 3,1,2,4
 ----
-92 values hashing to d58ae89422a3ba018f346b41dde125a8
+92 values hashing to 625869a42f78f4f342664d184f72764b
 
 query IRII rowsort x386
 SELECT a+b*2+c*3+d*4,
@@ -15571,7 +15571,7 @@ SELECT a+b*2+c*3+d*4,
     OR (e>c OR e<d)
     OR (c<=d-2 OR c>=d+2)
 ----
-92 values hashing to 28648cbd4f6548940530616ffad68c6e
+92 values hashing to 625869a42f78f4f342664d184f72764b
 
 query IRII rowsort x386
 SELECT a+b*2+c*3+d*4,
@@ -15585,7 +15585,7 @@ SELECT a+b*2+c*3+d*4,
     OR (c<=d-2 OR c>=d+2)
  ORDER BY 3,4,2
 ----
-92 values hashing to 7aed937f9aa84ecc7e9f9093d21e2847
+92 values hashing to 625869a42f78f4f342664d184f72764b
 
 query IIRIIII rowsort x387
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -15598,7 +15598,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
   FROM t1
  WHERE (e>c OR e<d)
 ----
-147 values hashing to 1a4fce3b53ddbbb2984c1ac4a2081468
+147 values hashing to 3d4887b4aaefc1e1da94146c0b953c47
 
 query IIRIIII rowsort x387
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -15612,7 +15612,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
  WHERE (e>c OR e<d)
  ORDER BY 4,5,6
 ----
-147 values hashing to 5e28b39fb2383fced8b13639463ece06
+147 values hashing to 3d4887b4aaefc1e1da94146c0b953c47
 
 query I rowsort x388
 SELECT c
@@ -15780,14 +15780,14 @@ query R rowsort x393
 SELECT (a+b+c+d+e)/5
   FROM t1
 ----
-30 values hashing to 361fdea7477f5644e65ee14114dbf694
+30 values hashing to 1fc1404489a3bdcdfdf6fbde6f7fa1df
 
 query R rowsort x393
 SELECT (a+b+c+d+e)/5
   FROM t1
  ORDER BY 1
 ----
-30 values hashing to 6b54471c671cb24431677f6f9e5c13b7
+30 values hashing to 1fc1404489a3bdcdfdf6fbde6f7fa1df
 
 query II rowsort x394
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -16591,7 +16591,7 @@ SELECT a+b*2+c*3+d*4,
        a
   FROM t1
 ----
-150 values hashing to e73509bd549ceecc1525bfd5a7f15fde
+150 values hashing to aada00ee4df0a1dc679a8c6d326ae963
 
 query IRIII rowsort x411
 SELECT a+b*2+c*3+d*4,
@@ -16602,7 +16602,7 @@ SELECT a+b*2+c*3+d*4,
   FROM t1
  ORDER BY 2,1,3,5
 ----
-150 values hashing to 758f2c10e59493b9c79da4e190635074
+150 values hashing to aada00ee4df0a1dc679a8c6d326ae963
 
 query IIIII rowsort x412
 SELECT abs(b-c),
@@ -16892,7 +16892,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE (e>a AND e<b)
  ORDER BY 5,7,4,3,1,6,2
 ----
-21 values hashing to 9ce4f9d3c2dded65d94d85ccb5b469b6
+21 values hashing to 02351a9efb687ba6f10c4e03d6c58ec6
 
 query I rowsort x420
 SELECT e
@@ -17034,7 +17034,7 @@ SELECT abs(a),
   FROM t1
  WHERE d>e
 ----
-66 values hashing to 95fedf7861ca1d65f46d139e45268272
+66 values hashing to ea1a34a3c00fc12bfcd01fb57fc30514
 
 query IRIIII rowsort x424
 SELECT abs(a),
@@ -17048,7 +17048,7 @@ SELECT abs(a),
  WHERE d>e
  ORDER BY 2,4,5,1,3
 ----
-66 values hashing to a979652caa35a9231e655a6ce3371a6a
+66 values hashing to ea1a34a3c00fc12bfcd01fb57fc30514
 
 query IIIIIII rowsort x425
 SELECT abs(b-c),
@@ -17115,7 +17115,7 @@ SELECT (a+b+c+d+e)/5,
        a+b*2
   FROM t1
 ----
-120 values hashing to c1d842a21bea0bf90cbf6b68a7579528
+120 values hashing to e86f737b471c107de33a0d7fd1f986a1
 
 query RIII rowsort x426
 SELECT (a+b+c+d+e)/5,
@@ -17125,7 +17125,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  ORDER BY 1,2
 ----
-120 values hashing to 3f6447c76980ed7c545a6f820abbf580
+120 values hashing to e86f737b471c107de33a0d7fd1f986a1
 
 query II rowsort x427
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -17289,7 +17289,7 @@ SELECT b-c,
        (a+b+c+d+e)/5
   FROM t1
 ----
-120 values hashing to e5dbcc3c1888be5fe5dfa938847f4385
+120 values hashing to 363ac42be969821438548b033a2bdc19
 
 query IIIR rowsort x430
 SELECT b-c,
@@ -17299,7 +17299,7 @@ SELECT b-c,
   FROM t1
  ORDER BY 1,2,4
 ----
-120 values hashing to 9279c36896f4cd0ad979a1bcfd1a8620
+120 values hashing to 363ac42be969821438548b033a2bdc19
 
 query II rowsort x431
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -17665,7 +17665,7 @@ SELECT a+b*2+c*3,
     OR c>d
     OR d>e
 ----
-84 values hashing to ef21735f78bd9a8fd2b201b6f8c3949c
+84 values hashing to b2327ebc4dfc1d0292c7229a9c03aa0c
 
 query IIIR rowsort x439
 SELECT a+b*2+c*3,
@@ -17679,7 +17679,7 @@ SELECT a+b*2+c*3,
     OR d>e
  ORDER BY 1,4,2,3
 ----
-84 values hashing to 1d5a3b37d26627edf04e13238d8913ef
+84 values hashing to b2327ebc4dfc1d0292c7229a9c03aa0c
 
 query IIIR rowsort x439
 SELECT a+b*2+c*3,
@@ -17692,7 +17692,7 @@ SELECT a+b*2+c*3,
     OR c>d
     OR (c<=d-2 OR c>=d+2)
 ----
-84 values hashing to ef21735f78bd9a8fd2b201b6f8c3949c
+84 values hashing to b2327ebc4dfc1d0292c7229a9c03aa0c
 
 query IIIR rowsort x439
 SELECT a+b*2+c*3,
@@ -17706,7 +17706,7 @@ SELECT a+b*2+c*3,
     OR (c<=d-2 OR c>=d+2)
  ORDER BY 1,3
 ----
-84 values hashing to d39cea21fd8921600787b81ddb81f48b
+84 values hashing to b2327ebc4dfc1d0292c7229a9c03aa0c
 
 query IIIII rowsort x440
 SELECT d,
@@ -19047,7 +19047,7 @@ SELECT a,
    AND c>d
  ORDER BY 6,1,2,5,3,4
 ----
-48 values hashing to 09699c60f2f89cba3154a0e91108c01d
+48 values hashing to 382cb5c2618e9f77c4701adac4073b2c
 
 query III rowsort x465
 SELECT b,
@@ -19293,7 +19293,7 @@ SELECT b-c,
   FROM t1
  WHERE d>e
 ----
-77 values hashing to 86f6c48c77cdde2af129ab2926a0d111
+77 values hashing to 934d47062954c16618b53d79e946ee61
 
 query IRIIIII rowsort x471
 SELECT b-c,
@@ -19308,7 +19308,7 @@ SELECT b-c,
  WHERE d>e
  ORDER BY 1,4,5
 ----
-77 values hashing to bbeaf57b436c849d345e25fb47cff137
+77 values hashing to 934d47062954c16618b53d79e946ee61
 
 query I rowsort x472
 SELECT b-c
@@ -19423,7 +19423,7 @@ SELECT (a+b+c+d+e)/5,
        b-c
   FROM t1
 ----
-150 values hashing to c6b6233e35e69b14431904cc0a41c428
+150 values hashing to 70a519577fc83b4b51eaf9b3fa12f888
 
 query RIIII rowsort x475
 SELECT (a+b+c+d+e)/5,
@@ -19435,7 +19435,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  ORDER BY 2,3,1,5
 ----
-150 values hashing to 56a19a5983233a8b2f0fc2481301ad64
+150 values hashing to 70a519577fc83b4b51eaf9b3fa12f888
 
 query IIIIII rowsort x476
 SELECT a+b*2,
@@ -19802,7 +19802,7 @@ SELECT b,
        abs(a)
   FROM t1
 ----
-210 values hashing to dba64eeb024fe1918dcc9a59ac398dff
+210 values hashing to 0eda8522cde541466a6881b313ed17d3
 
 query IIIRIII rowsort x482
 SELECT b,
@@ -19816,7 +19816,7 @@ SELECT b,
   FROM t1
  ORDER BY 6,4,2,7,5,1
 ----
-210 values hashing to c1ec6c073a5aac59fa07cd587b0c988e
+210 values hashing to 0eda8522cde541466a6881b313ed17d3
 
 query IIIIIII rowsort x483
 SELECT abs(b-c),
@@ -19857,7 +19857,7 @@ SELECT b-c,
   FROM t1
  WHERE (e>c OR e<d)
 ----
-126 values hashing to ed7fee0633d5554ee7fca4e011e16323
+126 values hashing to c8aff2be11be3c161a2986a106cd32c2
 
 query IIIIRI rowsort x484
 SELECT b-c,
@@ -19870,7 +19870,7 @@ SELECT b-c,
  WHERE (e>c OR e<d)
  ORDER BY 6,1,5
 ----
-126 values hashing to 9331df871118f554eee0d0d5e5a24636
+126 values hashing to c8aff2be11be3c161a2986a106cd32c2
 
 query IIIIIII rowsort x485
 SELECT d,
@@ -19951,7 +19951,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND d>e
    AND (e>a AND e<b)
 ----
-12 values hashing to 5d8ad548c1e5dad561249f51ae7eed43
+12 values hashing to fd9ea7728e818493e3ba8cf748fe9a04
 
 query IIIRII rowsort x486
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -19982,7 +19982,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND c BETWEEN b-2 AND d+2
    AND (e>a AND e<b)
 ----
-12 values hashing to 5d8ad548c1e5dad561249f51ae7eed43
+12 values hashing to fd9ea7728e818493e3ba8cf748fe9a04
 
 query IIIRII rowsort x486
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -19998,7 +19998,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND (e>a AND e<b)
  ORDER BY 5,4
 ----
-12 values hashing to 5d8ad548c1e5dad561249f51ae7eed43
+12 values hashing to fd9ea7728e818493e3ba8cf748fe9a04
 
 query IIIRII rowsort x486
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -20013,7 +20013,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND d>e
    AND c BETWEEN b-2 AND d+2
 ----
-12 values hashing to 5d8ad548c1e5dad561249f51ae7eed43
+12 values hashing to fd9ea7728e818493e3ba8cf748fe9a04
 
 query IIIRII rowsort x486
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -20029,7 +20029,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND c BETWEEN b-2 AND d+2
  ORDER BY 4,3
 ----
-12 values hashing to 5d8ad548c1e5dad561249f51ae7eed43
+12 values hashing to fd9ea7728e818493e3ba8cf748fe9a04
 
 query IIIRII rowsort x486
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -20044,7 +20044,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND (e>a AND e<b)
    AND d>e
 ----
-12 values hashing to 5d8ad548c1e5dad561249f51ae7eed43
+12 values hashing to fd9ea7728e818493e3ba8cf748fe9a04
 
 query IIIRII rowsort x486
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -20060,7 +20060,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
    AND d>e
  ORDER BY 5,2,3
 ----
-12 values hashing to 5d8ad548c1e5dad561249f51ae7eed43
+12 values hashing to fd9ea7728e818493e3ba8cf748fe9a04
 
 query I rowsort x487
 SELECT a-b
@@ -20089,7 +20089,7 @@ SELECT a-b,
   FROM t1
  WHERE (a>b-2 AND a<b+2)
 ----
-56 values hashing to af7d4c57fb14c08dcd57b4978b7f1f1f
+56 values hashing to 35d52550bdaf363087c82414ace23f3e
 
 query IRIIIII rowsort x488
 SELECT a-b,
@@ -20104,7 +20104,7 @@ SELECT a-b,
  WHERE (a>b-2 AND a<b+2)
  ORDER BY 4,3,6,1
 ----
-56 values hashing to 56f4a644f6c4f6dcdfc03fd0d2cc107d
+56 values hashing to 35d52550bdaf363087c82414ace23f3e
 
 query RIII rowsort x489
 SELECT (a+b+c+d+e)/5,
@@ -20113,7 +20113,7 @@ SELECT (a+b+c+d+e)/5,
        b
   FROM t1
 ----
-120 values hashing to ef88ee5ccd336461d4c544902f63057f
+120 values hashing to a477c1b1f99e86083c99c83ce6482890
 
 query RIII rowsort x489
 SELECT (a+b+c+d+e)/5,
@@ -20123,7 +20123,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  ORDER BY 3,2
 ----
-120 values hashing to cbfc87c950a565cf3870646c6ef2d20e
+120 values hashing to a477c1b1f99e86083c99c83ce6482890
 
 query IIIII rowsort x490
 SELECT d-e,
@@ -20225,7 +20225,7 @@ SELECT a+b*2+c*3+d*4,
   FROM t1
  WHERE (e>c OR e<d)
 ----
-147 values hashing to d9e72d55a81f5e34b95e1352ba1c3a35
+147 values hashing to a1917ba7b6dd5428a18a48988036cec6
 
 query IIIIIIR rowsort x492
 SELECT a+b*2+c*3+d*4,
@@ -20241,7 +20241,7 @@ SELECT a+b*2+c*3+d*4,
  WHERE (e>c OR e<d)
  ORDER BY 5,7,1
 ----
-147 values hashing to 11cb9fea00e6d13df649f87046cd1842
+147 values hashing to a1917ba7b6dd5428a18a48988036cec6
 
 query IIIIII rowsort x493
 SELECT abs(a),
@@ -20423,7 +20423,7 @@ SELECT a+b*2,
        (a+b+c+d+e)/5
   FROM t1
 ----
-150 values hashing to 29fff2e1a233e85cf26678b9ed112ff4
+150 values hashing to 0dead8d7a7160064224bd9deec2526f8
 
 query IIIIR rowsort x496
 SELECT a+b*2,
@@ -20434,7 +20434,7 @@ SELECT a+b*2,
   FROM t1
  ORDER BY 3,1,4,2
 ----
-150 values hashing to e85fcb6a00ad841ee757389345f26f8d
+150 values hashing to 0dead8d7a7160064224bd9deec2526f8
 
 query IIIIIR rowsort x497
 SELECT a,
@@ -20445,7 +20445,7 @@ SELECT a,
        (a+b+c+d+e)/5
   FROM t1
 ----
-180 values hashing to 6fdb19dfb02f9c9acd24e877d3ccff00
+180 values hashing to 5226a2872588c2cb08de0d9935759724
 
 query IIIIIR rowsort x497
 SELECT a,
@@ -20457,7 +20457,7 @@ SELECT a,
   FROM t1
  ORDER BY 3,2,6,1,5
 ----
-180 values hashing to 08eeeefc05277cb469c7f08e4b8e4588
+180 values hashing to 5226a2872588c2cb08de0d9935759724
 
 query II rowsort x498
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -20891,7 +20891,7 @@ SELECT c,
        a
   FROM t1
 ----
-210 values hashing to 6b3383c1fcd64e0aaec2c11b4b45e6d0
+210 values hashing to 401c089834dcc74483e8d9c156d273be
 
 query IRIIIII rowsort x509
 SELECT c,
@@ -20904,7 +20904,7 @@ SELECT c,
   FROM t1
  ORDER BY 2,4,6,1
 ----
-210 values hashing to 8b010f463a4fac7ee5f75c8e7e9740dd
+210 values hashing to 401c089834dcc74483e8d9c156d273be
 
 query IIII rowsort x510
 SELECT a-b,
@@ -20936,7 +20936,7 @@ SELECT (a+b+c+d+e)/5,
     OR (a>b-2 AND a<b+2)
     OR d NOT BETWEEN 110 AND 150
 ----
-145 values hashing to 283c09e8ae415ae4d5359a7bef8da3bd
+145 values hashing to a066fda47b521b5408b1fcdb849eeb43
 
 query RIIII rowsort x511
 SELECT (a+b+c+d+e)/5,
@@ -20950,7 +20950,7 @@ SELECT (a+b+c+d+e)/5,
     OR d NOT BETWEEN 110 AND 150
  ORDER BY 2,3
 ----
-145 values hashing to 67819095613d5d4588642df8f2549453
+145 values hashing to a066fda47b521b5408b1fcdb849eeb43
 
 query RIIII rowsort x511
 SELECT (a+b+c+d+e)/5,
@@ -20963,7 +20963,7 @@ SELECT (a+b+c+d+e)/5,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
     OR (a>b-2 AND a<b+2)
 ----
-145 values hashing to 283c09e8ae415ae4d5359a7bef8da3bd
+145 values hashing to a066fda47b521b5408b1fcdb849eeb43
 
 query RIIII rowsort x511
 SELECT (a+b+c+d+e)/5,
@@ -20977,7 +20977,7 @@ SELECT (a+b+c+d+e)/5,
     OR (a>b-2 AND a<b+2)
  ORDER BY 4,1
 ----
-145 values hashing to fbb94a7c44e86685f589ac6ed8e48d66
+145 values hashing to a066fda47b521b5408b1fcdb849eeb43
 
 query RIIII rowsort x511
 SELECT (a+b+c+d+e)/5,
@@ -20990,7 +20990,7 @@ SELECT (a+b+c+d+e)/5,
     OR d NOT BETWEEN 110 AND 150
     OR (a>b-2 AND a<b+2)
 ----
-145 values hashing to 283c09e8ae415ae4d5359a7bef8da3bd
+145 values hashing to a066fda47b521b5408b1fcdb849eeb43
 
 query RIIII rowsort x511
 SELECT (a+b+c+d+e)/5,
@@ -21004,7 +21004,7 @@ SELECT (a+b+c+d+e)/5,
     OR (a>b-2 AND a<b+2)
  ORDER BY 3,5
 ----
-145 values hashing to 4f892e4f91086cbee6bb6ecc7217c7eb
+145 values hashing to a066fda47b521b5408b1fcdb849eeb43
 
 query RIIII rowsort x511
 SELECT (a+b+c+d+e)/5,
@@ -21017,7 +21017,7 @@ SELECT (a+b+c+d+e)/5,
     OR d NOT BETWEEN 110 AND 150
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-145 values hashing to 283c09e8ae415ae4d5359a7bef8da3bd
+145 values hashing to a066fda47b521b5408b1fcdb849eeb43
 
 query RIIII rowsort x511
 SELECT (a+b+c+d+e)/5,
@@ -21031,7 +21031,7 @@ SELECT (a+b+c+d+e)/5,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 4,1,3
 ----
-145 values hashing to 2e45bb92ff617b44e6a7bdac50335e91
+145 values hashing to a066fda47b521b5408b1fcdb849eeb43
 
 query IIII rowsort x512
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -22159,7 +22159,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-52 values hashing to 208956bbdc1c897915f377aa6c46fc39
+52 values hashing to d6b7133674dc0b6d978a0707313a0fdc
 
 query IR rowsort x534
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -22168,7 +22168,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 2,1
 ----
-52 values hashing to c68c45ff6a7fd6e93da3495911c22de6
+52 values hashing to d6b7133674dc0b6d978a0707313a0fdc
 
 query IIIII rowsort x535
 SELECT c-d,
@@ -22240,7 +22240,7 @@ SELECT c,
  WHERE d>e
     OR (a>b-2 AND a<b+2)
 ----
-64 values hashing to 6ec46f1048b907c79252d2d35e5f429f
+64 values hashing to f2277ade0b90f2da4dc31da5d51c8342
 
 query IIIR rowsort x537
 SELECT c,
@@ -22252,7 +22252,7 @@ SELECT c,
     OR (a>b-2 AND a<b+2)
  ORDER BY 3,1,2
 ----
-64 values hashing to 3c5fb310afe671d3f70ec2e0cd655639
+64 values hashing to f2277ade0b90f2da4dc31da5d51c8342
 
 query IIIR rowsort x537
 SELECT c,
@@ -22263,7 +22263,7 @@ SELECT c,
  WHERE (a>b-2 AND a<b+2)
     OR d>e
 ----
-64 values hashing to 6ec46f1048b907c79252d2d35e5f429f
+64 values hashing to f2277ade0b90f2da4dc31da5d51c8342
 
 query IIIR rowsort x537
 SELECT c,
@@ -22275,7 +22275,7 @@ SELECT c,
     OR d>e
  ORDER BY 3,1
 ----
-64 values hashing to 3c5fb310afe671d3f70ec2e0cd655639
+64 values hashing to f2277ade0b90f2da4dc31da5d51c8342
 
 query IIRIII rowsort x538
 SELECT d,
@@ -22302,7 +22302,7 @@ SELECT d,
     OR d>e
  ORDER BY 5,6,3,4,1
 ----
-72 values hashing to 1592c49ebb3a54daa985715ac7a2e3c5
+72 values hashing to 022bdb21cdec7e72ce0ab6477e7c1aa2
 
 query IIRIII rowsort x538
 SELECT d,
@@ -22329,7 +22329,7 @@ SELECT d,
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 2,5,4,3
 ----
-72 values hashing to e9f9dd82c83ace0ca10732dcae09bc47
+72 values hashing to 022bdb21cdec7e72ce0ab6477e7c1aa2
 
 query IIIIIII rowsort x539
 SELECT e,
@@ -22671,7 +22671,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-52 values hashing to eb66458ee6ca856188b5cf2e42d9b5fe
+52 values hashing to f7c921a8a221d5ccdf0db26b59d9e95f
 
 query RI rowsort x549
 SELECT (a+b+c+d+e)/5,
@@ -22680,7 +22680,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 1,2
 ----
-52 values hashing to d6273bc946c0b2b6e8748ba9793a9ce5
+52 values hashing to f7c921a8a221d5ccdf0db26b59d9e95f
 
 query IIII rowsort x550
 SELECT abs(b-c),
@@ -22769,7 +22769,7 @@ SELECT (a+b+c+d+e)/5,
     OR c>d
     OR e+d BETWEEN a+b-10 AND c+130
 ----
-156 values hashing to f0ff2a5ab0e71734c961862bff884121
+156 values hashing to 369ce0804ec4a98008429d13e8ab473c
 
 query RIIIII rowsort x552
 SELECT (a+b+c+d+e)/5,
@@ -22784,7 +22784,7 @@ SELECT (a+b+c+d+e)/5,
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 4,6,1
 ----
-156 values hashing to e2dc602103cf3417bfe73bc042b7ccce
+156 values hashing to 369ce0804ec4a98008429d13e8ab473c
 
 query RIIIII rowsort x552
 SELECT (a+b+c+d+e)/5,
@@ -22798,7 +22798,7 @@ SELECT (a+b+c+d+e)/5,
     OR (e>c OR e<d)
     OR c>d
 ----
-156 values hashing to f0ff2a5ab0e71734c961862bff884121
+156 values hashing to 369ce0804ec4a98008429d13e8ab473c
 
 query RIIIII rowsort x552
 SELECT (a+b+c+d+e)/5,
@@ -22813,7 +22813,7 @@ SELECT (a+b+c+d+e)/5,
     OR c>d
  ORDER BY 1,4,6,5,3,2
 ----
-156 values hashing to 682711f665b00bd94329b43c2080dfc6
+156 values hashing to 369ce0804ec4a98008429d13e8ab473c
 
 query IIIIII rowsort x553
 SELECT b-c,
@@ -22935,7 +22935,7 @@ SELECT (a+b+c+d+e)/5,
         WHEN d THEN 333  WHEN e THEN 444 ELSE 555 END
   FROM t1
 ----
-150 values hashing to dbcef8e1ece1734f7a985a39498608d7
+150 values hashing to 66020b4f04d5ef452462095a6786f8f0
 
 query RIIII rowsort x558
 SELECT (a+b+c+d+e)/5,
@@ -22947,7 +22947,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  ORDER BY 5,2,1,3,4
 ----
-150 values hashing to 770968717219c9063c147981b46c51cf
+150 values hashing to 66020b4f04d5ef452462095a6786f8f0
 
 query IIIRIII rowsort x559
 SELECT b-c,
@@ -22961,7 +22961,7 @@ SELECT b-c,
        a
   FROM t1
 ----
-210 values hashing to 2e7419efdaee9becf9391cc054e26a6f
+210 values hashing to 94087a1fa4868f499ed5643ee5b45eb5
 
 query IIIRIII rowsort x559
 SELECT b-c,
@@ -22976,7 +22976,7 @@ SELECT b-c,
   FROM t1
  ORDER BY 4,5,2
 ----
-210 values hashing to 40fe62612e22ac13f57cbb6f51c0727e
+210 values hashing to 94087a1fa4868f499ed5643ee5b45eb5
 
 query I rowsort x560
 SELECT a
@@ -23237,7 +23237,7 @@ SELECT e,
         WHEN a<b+3 THEN 333 ELSE 444 END
   FROM t1
 ----
-210 values hashing to 26c3f1d769f1030b20ec8d77cd39a5a3
+210 values hashing to 7e584fd96d88f047adf091023aa7886c
 
 query IIRIIII rowsort x565
 SELECT e,
@@ -23251,7 +23251,7 @@ SELECT e,
   FROM t1
  ORDER BY 2,5,3,6,7,4,1
 ----
-210 values hashing to e470cacb8d4008a16e007b73e2c1ac30
+210 values hashing to 7e584fd96d88f047adf091023aa7886c
 
 query IIIII rowsort x566
 SELECT c-d,
@@ -23370,7 +23370,7 @@ SELECT abs(b-c),
   FROM t1
  WHERE c>d
 ----
-52 values hashing to d93e9aaa99f1d0970edd0d8b00cb0246
+52 values hashing to 249c60056e287a6874ad2375fec64c85
 
 query IIIR rowsort x570
 SELECT abs(b-c),
@@ -23381,7 +23381,7 @@ SELECT abs(b-c),
  WHERE c>d
  ORDER BY 2,1,4,3
 ----
-52 values hashing to 9b5cd9189db54874ef6ab6e73f8da7c1
+52 values hashing to 249c60056e287a6874ad2375fec64c85
 
 query IIR rowsort x571
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -23389,7 +23389,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
        (a+b+c+d+e)/5
   FROM t1
 ----
-90 values hashing to ad9378201a4bd6e134aedeb42aaa74f9
+90 values hashing to d67d2c02a5068171e02beb7e075dadb8
 
 query IIR rowsort x571
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -23398,7 +23398,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
   FROM t1
  ORDER BY 3,1
 ----
-90 values hashing to 882114a5ff0f80c2ddfcc719b487a5d1
+90 values hashing to d67d2c02a5068171e02beb7e075dadb8
 
 query I rowsort x572
 SELECT c
@@ -24499,7 +24499,7 @@ SELECT b-c,
        (a+b+c+d+e)/5
   FROM t1
 ----
-150 values hashing to deb6bdd22e30e80aad7ef50d6fd9c455
+150 values hashing to f399de190b70dc5d563f91d3661f14bb
 
 query IIIIR rowsort x599
 SELECT b-c,
@@ -24510,7 +24510,7 @@ SELECT b-c,
   FROM t1
  ORDER BY 4,1,5
 ----
-150 values hashing to eb770bbcc3e13312e86d99aae0d6c3e5
+150 values hashing to f399de190b70dc5d563f91d3661f14bb
 
 query IIIII rowsort x600
 SELECT a+b*2+c*3+d*4,
@@ -24717,7 +24717,7 @@ SELECT e,
  WHERE c BETWEEN b-2 AND d+2
    AND c>d
 ----
-60 values hashing to c35ce4e212ad59aefac39c80bef0129e
+60 values hashing to 28753fef15b54c46f42234ddf8dec5d9
 
 query IIIIIR rowsort x605
 SELECT e,
@@ -24731,7 +24731,7 @@ SELECT e,
    AND c>d
  ORDER BY 5,4,3,6,2
 ----
-60 values hashing to 3dae88c3b0de84d74013ad443926a3e5
+60 values hashing to 28753fef15b54c46f42234ddf8dec5d9
 
 query IIIIIR rowsort x605
 SELECT e,
@@ -24744,7 +24744,7 @@ SELECT e,
  WHERE c>d
    AND c BETWEEN b-2 AND d+2
 ----
-60 values hashing to c35ce4e212ad59aefac39c80bef0129e
+60 values hashing to 28753fef15b54c46f42234ddf8dec5d9
 
 query IIIIIR rowsort x605
 SELECT e,
@@ -24758,7 +24758,7 @@ SELECT e,
    AND c BETWEEN b-2 AND d+2
  ORDER BY 1,2
 ----
-60 values hashing to 65e7098f6b11530c19818982d2b33d13
+60 values hashing to 28753fef15b54c46f42234ddf8dec5d9
 
 query I rowsort x606
 SELECT a
@@ -24832,7 +24832,7 @@ SELECT d-e,
     OR a>b
     OR (e>c OR e<d)
 ----
-189 values hashing to 1e73702c4baf44e8c09bc1d548a94bd9
+189 values hashing to 177312da859abda19905b0946f6031b2
 
 query IIIIIIR rowsort x608
 SELECT d-e,
@@ -24848,7 +24848,7 @@ SELECT d-e,
     OR (e>c OR e<d)
  ORDER BY 2,1,6,3
 ----
-189 values hashing to e10d7f833173c7ba06d27a0ad8e5c27d
+189 values hashing to 177312da859abda19905b0946f6031b2
 
 query IIIIIIR rowsort x608
 SELECT d-e,
@@ -24863,7 +24863,7 @@ SELECT d-e,
     OR (e>c OR e<d)
     OR a>b
 ----
-189 values hashing to 1e73702c4baf44e8c09bc1d548a94bd9
+189 values hashing to 177312da859abda19905b0946f6031b2
 
 query IIIIIIR rowsort x608
 SELECT d-e,
@@ -24879,7 +24879,7 @@ SELECT d-e,
     OR a>b
  ORDER BY 4,7,1,2,6
 ----
-189 values hashing to 381f6f878acb02b80ab2485d9d8b4b70
+189 values hashing to 177312da859abda19905b0946f6031b2
 
 query IIIIIIR rowsort x608
 SELECT d-e,
@@ -24894,7 +24894,7 @@ SELECT d-e,
     OR a>b
     OR b>c
 ----
-189 values hashing to 1e73702c4baf44e8c09bc1d548a94bd9
+189 values hashing to 177312da859abda19905b0946f6031b2
 
 query IIIIIIR rowsort x608
 SELECT d-e,
@@ -24910,7 +24910,7 @@ SELECT d-e,
     OR b>c
  ORDER BY 7,2,6,1,5,4,3
 ----
-189 values hashing to 85046c4f6bcc57f1d048337be5704d79
+189 values hashing to 177312da859abda19905b0946f6031b2
 
 query IIRIII rowsort x609
 SELECT c,
@@ -25148,7 +25148,7 @@ SELECT abs(b-c),
  WHERE a>b
    AND (c<=d-2 OR c>=d+2)
 ----
-20 values hashing to f43b7f459cf85cf7197c78046563dd32
+20 values hashing to aec60affb75642b823dfe180c5f66a2f
 
 query IIIR rowsort x616
 SELECT abs(b-c),
@@ -25160,7 +25160,7 @@ SELECT abs(b-c),
    AND (c<=d-2 OR c>=d+2)
  ORDER BY 1,3,4,2
 ----
-20 values hashing to 2922e031eb27cdeabd0e9771d0e9c550
+20 values hashing to aec60affb75642b823dfe180c5f66a2f
 
 query IIIIIR rowsort x617
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -25172,7 +25172,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
   FROM t1
  WHERE (e>c OR e<d)
 ----
-126 values hashing to 4e7df75fa49fb1da7999228ee8f42c1d
+126 values hashing to b6c1712030d9c4b325e7bc22aa0cd923
 
 query IIIIIR rowsort x617
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -25185,7 +25185,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
  WHERE (e>c OR e<d)
  ORDER BY 6,1,5,4
 ----
-126 values hashing to b7ef649eb077ecbcc79f8477c19910e2
+126 values hashing to b6c1712030d9c4b325e7bc22aa0cd923
 
 query I rowsort x618
 SELECT abs(b-c)
@@ -25321,7 +25321,7 @@ SELECT a+b*2+c*3+d*4,
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 2,1
 ----
-16 values hashing to d3c83fcb84c01945182ff43628916fca
+16 values hashing to ca2750657eed32d9618ea2918c129e9d
 
 query IIRI rowsort x621
 SELECT a+b*2+c*3+d*4,
@@ -25381,7 +25381,7 @@ SELECT e,
        (a+b+c+d+e)/5
   FROM t1
 ----
-150 values hashing to 10c7dc1badbcc0097a6c8f631582cdf3
+150 values hashing to 1198235e750a1a942ce6f2bd9da984f4
 
 query IIIIR rowsort x622
 SELECT e,
@@ -25392,7 +25392,7 @@ SELECT e,
   FROM t1
  ORDER BY 5,3,4
 ----
-150 values hashing to e8597464bd44c197f97aa12d4899c62c
+150 values hashing to 1198235e750a1a942ce6f2bd9da984f4
 
 query I rowsort x623
 SELECT a+b*2+c*3
@@ -25512,7 +25512,7 @@ SELECT b,
   FROM t1
  WHERE (e>c OR e<d)
 ----
-84 values hashing to f766328c6d23064db1612af376bef2dd
+84 values hashing to 43a0d2c58bb2d1972fadffa8bca05961
 
 query IRII rowsort x625
 SELECT b,
@@ -25523,7 +25523,7 @@ SELECT b,
  WHERE (e>c OR e<d)
  ORDER BY 3,1
 ----
-84 values hashing to 1819209a1c638a59bda567e3fe060d1e
+84 values hashing to 43a0d2c58bb2d1972fadffa8bca05961
 
 query IIIII rowsort x626
 SELECT e,
@@ -25827,7 +25827,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
   FROM t1
  WHERE c>d
 ----
-78 values hashing to c0b4de1c6597358da077524dd56bc40a
+78 values hashing to 184f99b388f10012bd7ea9f1dfe27665
 
 query IIIRII rowsort x633
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -25841,7 +25841,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
  WHERE c>d
  ORDER BY 2,4,5,6
 ----
-78 values hashing to 096cea31dd374c795dacbd2b371031da
+78 values hashing to 184f99b388f10012bd7ea9f1dfe27665
 
 query I rowsort x634
 SELECT a-b
@@ -25929,7 +25929,7 @@ SELECT e,
  WHERE (a>b-2 AND a<b+2)
  ORDER BY 7,4,3,5,2,1
 ----
-56 values hashing to 1e119985d1288cb9fc8e6f62d7d48af7
+56 values hashing to 12e2e37f0efbf221bc03ec0caa86879c
 
 query IIII rowsort x636
 SELECT a+b*2+c*3+d*4,
@@ -26141,7 +26141,7 @@ SELECT e,
     OR e+d BETWEEN a+b-10 AND c+130
     OR b>c
 ----
-135 values hashing to 33616514ff78c995f9af6f53629b43ec
+135 values hashing to bb76fa3eb770cb6217729e3a87494719
 
 query IIIRI rowsort x638
 SELECT e,
@@ -26156,7 +26156,7 @@ SELECT e,
     OR b>c
  ORDER BY 4,1
 ----
-135 values hashing to 3abc7d45abe3491d581d6741d5dd966e
+135 values hashing to bb76fa3eb770cb6217729e3a87494719
 
 query IIIRI rowsort x638
 SELECT e,
@@ -26170,7 +26170,7 @@ SELECT e,
     OR b>c
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-135 values hashing to 33616514ff78c995f9af6f53629b43ec
+135 values hashing to bb76fa3eb770cb6217729e3a87494719
 
 query IIIRI rowsort x638
 SELECT e,
@@ -26185,7 +26185,7 @@ SELECT e,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 5,2,1,4,3
 ----
-135 values hashing to e1f4fa3f8c729c61679a91ea9de0fd30
+135 values hashing to bb76fa3eb770cb6217729e3a87494719
 
 query IIIRI rowsort x638
 SELECT e,
@@ -26199,7 +26199,7 @@ SELECT e,
     OR b>c
     OR e+d BETWEEN a+b-10 AND c+130
 ----
-135 values hashing to 33616514ff78c995f9af6f53629b43ec
+135 values hashing to bb76fa3eb770cb6217729e3a87494719
 
 query IIIRI rowsort x638
 SELECT e,
@@ -26214,7 +26214,7 @@ SELECT e,
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 1,5,3,4,2
 ----
-135 values hashing to a45518a42eb13a5d979a1dc41bc873a1
+135 values hashing to bb76fa3eb770cb6217729e3a87494719
 
 query II rowsort x639
 SELECT d-e,
@@ -26392,7 +26392,7 @@ SELECT a+b*2+c*3+d*4+e*5,
  WHERE (e>a AND e<b)
     OR (a>b-2 AND a<b+2)
 ----
-66 values hashing to aa1e53dcb7a96f0ac40cf727013b9fe5
+66 values hashing to c82ba52a16e4e917bd61a215e89e6613
 
 query IIRIII rowsort x643
 SELECT a+b*2+c*3+d*4+e*5,
@@ -26406,7 +26406,7 @@ SELECT a+b*2+c*3+d*4+e*5,
     OR (a>b-2 AND a<b+2)
  ORDER BY 2,4,6,5,3
 ----
-66 values hashing to aa1e53dcb7a96f0ac40cf727013b9fe5
+66 values hashing to c82ba52a16e4e917bd61a215e89e6613
 
 query III rowsort x644
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -26541,7 +26541,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  WHERE (a>b-2 AND a<b+2)
 ----
-40 values hashing to b9ac07f8729ad528b5512fe4121b44d3
+40 values hashing to d9fa6733f636a25e059cdb10f0309c22
 
 query RIIII rowsort x646
 SELECT (a+b+c+d+e)/5,
@@ -26553,7 +26553,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE (a>b-2 AND a<b+2)
  ORDER BY 3,2,1,4,5
 ----
-40 values hashing to 1b3649408654336156043667d1114e54
+40 values hashing to d9fa6733f636a25e059cdb10f0309c22
 
 query I rowsort x647
 SELECT e
@@ -26679,7 +26679,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
 ----
-70 values hashing to 64030f0b07e7fad59522d5ae72843454
+70 values hashing to ec419a003d4ca12aaa4572667662e44b
 
 query IRIIIII rowsort x650
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -26693,7 +26693,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
  WHERE (c<=d-2 OR c>=d+2)
  ORDER BY 3,7
 ----
-70 values hashing to c9c6a3e97c93cca5761a6f1aa816ae49
+70 values hashing to ec419a003d4ca12aaa4572667662e44b
 
 query IIIIII rowsort x651
 SELECT a+b*2+c*3,
@@ -27254,7 +27254,7 @@ SELECT d-e,
   FROM t1
  WHERE b>c
 ----
-91 values hashing to f83ee29ba48379ce8c5ac636c76ad241
+91 values hashing to 5524f02cec4a19e3bfe990fde99f8c19
 
 query IIIIIIR rowsort x665
 SELECT d-e,
@@ -27268,7 +27268,7 @@ SELECT d-e,
  WHERE b>c
  ORDER BY 5,6,2,4
 ----
-91 values hashing to f83ee29ba48379ce8c5ac636c76ad241
+91 values hashing to 5524f02cec4a19e3bfe990fde99f8c19
 
 query IIII rowsort x666
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -27322,7 +27322,7 @@ SELECT a+b*2+c*3,
  WHERE (a>b-2 AND a<b+2)
     OR a>b
 ----
-133 values hashing to fe2b4af602d9ac4fbf1d55518e88e496
+133 values hashing to 7d27a7e55106a7cbe28fd942be84a7e1
 
 query IIIRIII rowsort x668
 SELECT a+b*2+c*3,
@@ -27337,7 +27337,7 @@ SELECT a+b*2+c*3,
     OR a>b
  ORDER BY 2,6,3,1,5,4,7
 ----
-133 values hashing to 266971f0e227d55bef6a17fec4006817
+133 values hashing to 7d27a7e55106a7cbe28fd942be84a7e1
 
 query IIIII rowsort x669
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -27373,7 +27373,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE d>e
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-156 values hashing to ee9ed766d30a10b2958096c6dafe5d3b
+156 values hashing to d63df0dad2d6da76a4a846fd3d7927a3
 
 query RIIIII rowsort x670
 SELECT (a+b+c+d+e)/5,
@@ -27387,7 +27387,7 @@ SELECT (a+b+c+d+e)/5,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 3,6
 ----
-156 values hashing to 1223c43282a91a9927b1320899e7c5a1
+156 values hashing to d63df0dad2d6da76a4a846fd3d7927a3
 
 query RIIIII rowsort x670
 SELECT (a+b+c+d+e)/5,
@@ -27400,7 +27400,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
     OR d>e
 ----
-156 values hashing to ee9ed766d30a10b2958096c6dafe5d3b
+156 values hashing to d63df0dad2d6da76a4a846fd3d7927a3
 
 query RIIIII rowsort x670
 SELECT (a+b+c+d+e)/5,
@@ -27414,7 +27414,7 @@ SELECT (a+b+c+d+e)/5,
     OR d>e
  ORDER BY 3,4
 ----
-156 values hashing to 1223c43282a91a9927b1320899e7c5a1
+156 values hashing to d63df0dad2d6da76a4a846fd3d7927a3
 
 query IIII rowsort x671
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -27500,7 +27500,7 @@ SELECT d,
    AND (c<=d-2 OR c>=d+2)
  ORDER BY 2,3,1
 ----
-15 values hashing to 55073bc498ce701ad4a60e205703405a
+15 values hashing to 0df44ed507b65f2d70b300b52c1e60ef
 
 query IIR rowsort x674
 SELECT d,
@@ -27846,7 +27846,7 @@ SELECT c,
        b
   FROM t1
 ----
-150 values hashing to 6e8444fa93b31cdbfcac6c519ae0190c
+150 values hashing to 4bb15dc1afef5619f8c93b1236e4dd5a
 
 query IIRII rowsort x680
 SELECT c,
@@ -27857,7 +27857,7 @@ SELECT c,
   FROM t1
  ORDER BY 2,4,1,3,5
 ----
-150 values hashing to 291bdc1cdc207e7ca955f0996c5dd09f
+150 values hashing to 4bb15dc1afef5619f8c93b1236e4dd5a
 
 query IIII rowsort x681
 SELECT a+b*2,
@@ -28344,7 +28344,7 @@ SELECT a-b,
        abs(a)
   FROM t1
 ----
-150 values hashing to ce5aa2b0a836ba7af5fa5e7f51bdd4eb
+150 values hashing to 229179459b668323b133ba05266f09c8
 
 query IIIRI rowsort x696
 SELECT a-b,
@@ -28356,7 +28356,7 @@ SELECT a-b,
   FROM t1
  ORDER BY 4,2
 ----
-150 values hashing to 79ea8540f046898fe09a61bc630abf7d
+150 values hashing to 229179459b668323b133ba05266f09c8
 
 query IIIIIII rowsort x697
 SELECT abs(a),
@@ -28538,7 +28538,7 @@ SELECT (a+b+c+d+e)/5,
     OR c BETWEEN b-2 AND d+2
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-135 values hashing to 98f78f593b6ed56edf66412659567db9
+135 values hashing to 9bc0b99040cb9f33cf14b96f376f0966
 
 query RIIII rowsort x700
 SELECT (a+b+c+d+e)/5,
@@ -28552,7 +28552,7 @@ SELECT (a+b+c+d+e)/5,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 3,4,5,1,2
 ----
-135 values hashing to 643cef846cc5a082ebd4018b9c23243a
+135 values hashing to 9bc0b99040cb9f33cf14b96f376f0966
 
 query RIIII rowsort x700
 SELECT (a+b+c+d+e)/5,
@@ -28565,7 +28565,7 @@ SELECT (a+b+c+d+e)/5,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
     OR c BETWEEN b-2 AND d+2
 ----
-135 values hashing to 98f78f593b6ed56edf66412659567db9
+135 values hashing to 9bc0b99040cb9f33cf14b96f376f0966
 
 query RIIII rowsort x700
 SELECT (a+b+c+d+e)/5,
@@ -28579,7 +28579,7 @@ SELECT (a+b+c+d+e)/5,
     OR c BETWEEN b-2 AND d+2
  ORDER BY 5,4,3
 ----
-135 values hashing to 53bd83e14faa243a190e8f1153bf87de
+135 values hashing to 9bc0b99040cb9f33cf14b96f376f0966
 
 query IIII rowsort x701
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -28640,7 +28640,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE (e>a AND e<b)
     OR a>b
 ----
-60 values hashing to fcb6b447bf05b977a684acfc2eb75f44
+60 values hashing to aa0e1c19a4182f348e6dfa18cc0ddf36
 
 query RII rowsort x702
 SELECT (a+b+c+d+e)/5,
@@ -28652,7 +28652,7 @@ SELECT (a+b+c+d+e)/5,
     OR a>b
  ORDER BY 3,1
 ----
-60 values hashing to 9438d164ff554e3cce502b5fabc93d56
+60 values hashing to aa0e1c19a4182f348e6dfa18cc0ddf36
 
 query IIIIII rowsort x703
 SELECT d,
@@ -28692,7 +28692,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE e+d BETWEEN a+b-10 AND c+130
     OR c>d
 ----
-60 values hashing to fe63fccab3334d7cd425f80668f82b82
+60 values hashing to 3c49ff229ed34470d3b55149c241d3b5
 
 query RIII rowsort x704
 SELECT (a+b+c+d+e)/5,
@@ -28704,7 +28704,7 @@ SELECT (a+b+c+d+e)/5,
     OR c>d
  ORDER BY 3,2,4,1
 ----
-60 values hashing to df470bd96cffa7072ec80558c6f19390
+60 values hashing to 3c49ff229ed34470d3b55149c241d3b5
 
 query RIII rowsort x704
 SELECT (a+b+c+d+e)/5,
@@ -28715,7 +28715,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE c>d
     OR e+d BETWEEN a+b-10 AND c+130
 ----
-60 values hashing to fe63fccab3334d7cd425f80668f82b82
+60 values hashing to 3c49ff229ed34470d3b55149c241d3b5
 
 query RIII rowsort x704
 SELECT (a+b+c+d+e)/5,
@@ -28727,7 +28727,7 @@ SELECT (a+b+c+d+e)/5,
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 1,4,2
 ----
-60 values hashing to d26226da78471926fbf06bbbcf9b048d
+60 values hashing to 3c49ff229ed34470d3b55149c241d3b5
 
 query IIIIIR rowsort x705
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -28742,7 +28742,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
    AND c BETWEEN b-2 AND d+2
    AND (c<=d-2 OR c>=d+2)
 ----
-24 values hashing to 1e4f7b05e60923ec048aa5a0775387bb
+24 values hashing to e7ef42209dbf3692c1d3af36f06276b6
 
 query IIIIIR rowsort x705
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -28758,7 +28758,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
    AND (c<=d-2 OR c>=d+2)
  ORDER BY 5,4
 ----
-24 values hashing to 1e4f7b05e60923ec048aa5a0775387bb
+24 values hashing to e7ef42209dbf3692c1d3af36f06276b6
 
 query IIIIIR rowsort x705
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -28773,7 +28773,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
    AND c BETWEEN b-2 AND d+2
    AND d>e
 ----
-24 values hashing to 1e4f7b05e60923ec048aa5a0775387bb
+24 values hashing to e7ef42209dbf3692c1d3af36f06276b6
 
 query IIIIIR rowsort x705
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -28789,7 +28789,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
    AND d>e
  ORDER BY 6,3,4
 ----
-24 values hashing to 1e4f7b05e60923ec048aa5a0775387bb
+24 values hashing to e7ef42209dbf3692c1d3af36f06276b6
 
 query I rowsort x706
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -29081,7 +29081,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE c>d
     OR d>e
 ----
-95 values hashing to 82ecbe8aea4201f6b0c6f9710e027aa5
+95 values hashing to d8903b0e430b191e6ef582b8c17354fe
 
 query RIIII rowsort x715
 SELECT (a+b+c+d+e)/5,
@@ -29095,7 +29095,7 @@ SELECT (a+b+c+d+e)/5,
     OR d>e
  ORDER BY 1,3,4
 ----
-95 values hashing to e3a8ee231a88e5a0b2b9c8789bd912af
+95 values hashing to d8903b0e430b191e6ef582b8c17354fe
 
 query IIRI rowsort x716
 SELECT b-c,
@@ -29107,7 +29107,7 @@ SELECT b-c,
    AND a>b
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-36 values hashing to 5c9189d3ac4f21e38ae142abe32c3baf
+36 values hashing to 09bd0b97eecdbe399ed1a81df3ae23dc
 
 query IIRI rowsort x716
 SELECT b-c,
@@ -29120,7 +29120,7 @@ SELECT b-c,
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 1,4,2
 ----
-36 values hashing to 1315739078f7a45e90aadcb0f0fabe32
+36 values hashing to 09bd0b97eecdbe399ed1a81df3ae23dc
 
 query IIRI rowsort x716
 SELECT b-c,
@@ -29132,7 +29132,7 @@ SELECT b-c,
    AND a>b
    AND d NOT BETWEEN 110 AND 150
 ----
-36 values hashing to 5c9189d3ac4f21e38ae142abe32c3baf
+36 values hashing to 09bd0b97eecdbe399ed1a81df3ae23dc
 
 query IIRI rowsort x716
 SELECT b-c,
@@ -29145,7 +29145,7 @@ SELECT b-c,
    AND d NOT BETWEEN 110 AND 150
  ORDER BY 2,1,3,4
 ----
-36 values hashing to 5c9189d3ac4f21e38ae142abe32c3baf
+36 values hashing to 09bd0b97eecdbe399ed1a81df3ae23dc
 
 query IIRI rowsort x716
 SELECT b-c,
@@ -29157,7 +29157,7 @@ SELECT b-c,
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
    AND d NOT BETWEEN 110 AND 150
 ----
-36 values hashing to 5c9189d3ac4f21e38ae142abe32c3baf
+36 values hashing to 09bd0b97eecdbe399ed1a81df3ae23dc
 
 query IIRI rowsort x716
 SELECT b-c,
@@ -29170,7 +29170,7 @@ SELECT b-c,
    AND d NOT BETWEEN 110 AND 150
  ORDER BY 4,2,1,3
 ----
-36 values hashing to 5c9189d3ac4f21e38ae142abe32c3baf
+36 values hashing to 09bd0b97eecdbe399ed1a81df3ae23dc
 
 query I rowsort x717
 SELECT b
@@ -29241,7 +29241,7 @@ SELECT (a+b+c+d+e)/5,
    AND (e>c OR e<d)
  ORDER BY 3,2
 ----
-40 values hashing to 5bec9e448bfa12a94697305e11b9deb0
+40 values hashing to ba07b20339a957c6bfbaaf93c206effa
 
 query RIIII rowsort x719
 SELECT (a+b+c+d+e)/5,
@@ -29268,7 +29268,7 @@ SELECT (a+b+c+d+e)/5,
    AND c>d
  ORDER BY 3,2,4
 ----
-40 values hashing to 5bec9e448bfa12a94697305e11b9deb0
+40 values hashing to ba07b20339a957c6bfbaaf93c206effa
 
 query I rowsort x720
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END
@@ -29389,7 +29389,7 @@ SELECT e,
        (a+b+c+d+e)/5
   FROM t1
 ----
-60 values hashing to e19fc718975eae1fb37299ed4b607cd6
+60 values hashing to 7919a988c97ef21985baee1e7937cca6
 
 query IR rowsort x722
 SELECT e,
@@ -29397,7 +29397,7 @@ SELECT e,
   FROM t1
  ORDER BY 2,1
 ----
-60 values hashing to 55a2de8830f859d3132d6adc73b5b325
+60 values hashing to 7919a988c97ef21985baee1e7937cca6
 
 query IIIIIII rowsort x723
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d),
@@ -29483,7 +29483,7 @@ SELECT (a+b+c+d+e)/5
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-26 values hashing to a8eab3df9ecbb6b50e1d71d450d8f367
+26 values hashing to aba98389178a9e0892f93ed68f31760b
 
 query R rowsort x726
 SELECT (a+b+c+d+e)/5
@@ -29491,7 +29491,7 @@ SELECT (a+b+c+d+e)/5
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 1
 ----
-26 values hashing to 14e5fa6e785115ec6bf0dc0e5d458857
+26 values hashing to aba98389178a9e0892f93ed68f31760b
 
 query I rowsort x727
 SELECT a-b
@@ -29629,7 +29629,7 @@ SELECT e,
     OR a>b
     OR d>e
 ----
-115 values hashing to 7db2ee7c20f51270f8c1970cce3fc2e3
+115 values hashing to 23bb168608efbe6e62e7376732cb97f4
 
 query IIIRI rowsort x731
 SELECT e,
@@ -29644,7 +29644,7 @@ SELECT e,
     OR d>e
  ORDER BY 3,1
 ----
-115 values hashing to 2d17900ac68d010840d9a7bb6292bfdc
+115 values hashing to 23bb168608efbe6e62e7376732cb97f4
 
 query IIIRI rowsort x731
 SELECT e,
@@ -29658,7 +29658,7 @@ SELECT e,
     OR (a>b-2 AND a<b+2)
     OR d>e
 ----
-115 values hashing to 7db2ee7c20f51270f8c1970cce3fc2e3
+115 values hashing to 23bb168608efbe6e62e7376732cb97f4
 
 query IIIRI rowsort x731
 SELECT e,
@@ -29673,7 +29673,7 @@ SELECT e,
     OR d>e
  ORDER BY 3,2,4,5,1
 ----
-115 values hashing to 59c5933674c2f3affbc078f64b904e27
+115 values hashing to 23bb168608efbe6e62e7376732cb97f4
 
 query IIIRI rowsort x731
 SELECT e,
@@ -29687,7 +29687,7 @@ SELECT e,
     OR a>b
     OR (a>b-2 AND a<b+2)
 ----
-115 values hashing to 7db2ee7c20f51270f8c1970cce3fc2e3
+115 values hashing to 23bb168608efbe6e62e7376732cb97f4
 
 query IIIRI rowsort x731
 SELECT e,
@@ -29702,7 +29702,7 @@ SELECT e,
     OR (a>b-2 AND a<b+2)
  ORDER BY 4,2,3,1
 ----
-115 values hashing to 956158963c511daa0b66c906fa88f457
+115 values hashing to 23bb168608efbe6e62e7376732cb97f4
 
 query IIIRIII rowsort x732
 SELECT b-c,
@@ -29717,7 +29717,7 @@ SELECT b-c,
    AND d NOT BETWEEN 110 AND 150
    AND (c<=d-2 OR c>=d+2)
 ----
-21 values hashing to 07403430bf27b68213d7b04752f25380
+21 values hashing to 97834336a7e93399e38572a1048df1f1
 
 query IIIRIII rowsort x732
 SELECT b-c,
@@ -29733,7 +29733,7 @@ SELECT b-c,
    AND (c<=d-2 OR c>=d+2)
  ORDER BY 4,3
 ----
-21 values hashing to 07403430bf27b68213d7b04752f25380
+21 values hashing to 97834336a7e93399e38572a1048df1f1
 
 query IIIRIII rowsort x732
 SELECT b-c,
@@ -29748,7 +29748,7 @@ SELECT b-c,
    AND b>c
    AND (c<=d-2 OR c>=d+2)
 ----
-21 values hashing to 07403430bf27b68213d7b04752f25380
+21 values hashing to 97834336a7e93399e38572a1048df1f1
 
 query IIIRIII rowsort x732
 SELECT b-c,
@@ -29764,7 +29764,7 @@ SELECT b-c,
    AND (c<=d-2 OR c>=d+2)
  ORDER BY 4,1,2,7
 ----
-21 values hashing to 07403430bf27b68213d7b04752f25380
+21 values hashing to 97834336a7e93399e38572a1048df1f1
 
 query IIIRIII rowsort x732
 SELECT b-c,
@@ -29779,7 +29779,7 @@ SELECT b-c,
    AND d NOT BETWEEN 110 AND 150
    AND b>c
 ----
-21 values hashing to 07403430bf27b68213d7b04752f25380
+21 values hashing to 97834336a7e93399e38572a1048df1f1
 
 query IIIRIII rowsort x732
 SELECT b-c,
@@ -29795,7 +29795,7 @@ SELECT b-c,
    AND b>c
  ORDER BY 4,1,5,6,2
 ----
-21 values hashing to 07403430bf27b68213d7b04752f25380
+21 values hashing to 97834336a7e93399e38572a1048df1f1
 
 query IIIRIII rowsort x732
 SELECT b-c,
@@ -29810,7 +29810,7 @@ SELECT b-c,
    AND (c<=d-2 OR c>=d+2)
    AND d NOT BETWEEN 110 AND 150
 ----
-21 values hashing to 07403430bf27b68213d7b04752f25380
+21 values hashing to 97834336a7e93399e38572a1048df1f1
 
 query IIIRIII rowsort x732
 SELECT b-c,
@@ -30213,7 +30213,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
  WHERE (e>c OR e<d)
     OR e+d BETWEEN a+b-10 AND c+130
 ----
-84 values hashing to 7fe89c9bd355606111b2b4b16b623592
+84 values hashing to 9dd10a8043a02969681c6734fd7bf834
 
 query IIRI rowsort x744
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -30225,7 +30225,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 1,4,3
 ----
-84 values hashing to 4466be0692a27e94f3ec3a7978db2069
+84 values hashing to 9dd10a8043a02969681c6734fd7bf834
 
 query IIRI rowsort x744
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -30236,7 +30236,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
  WHERE e+d BETWEEN a+b-10 AND c+130
     OR (e>c OR e<d)
 ----
-84 values hashing to 7fe89c9bd355606111b2b4b16b623592
+84 values hashing to 9dd10a8043a02969681c6734fd7bf834
 
 query IIRI rowsort x744
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -30248,7 +30248,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
     OR (e>c OR e<d)
  ORDER BY 1,3,4
 ----
-84 values hashing to a704744207512b65dcd152261af9ddcf
+84 values hashing to 9dd10a8043a02969681c6734fd7bf834
 
 query IIII rowsort x745
 SELECT b-c,
@@ -30362,7 +30362,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE e+d BETWEEN a+b-10 AND c+130
     OR d>e
 ----
-24 values hashing to 5d0dbcffe633671c06c9c3e573462410
+24 values hashing to 6869b3ab9532a5501538379b28819a61
 
 query RI rowsort x748
 SELECT (a+b+c+d+e)/5,
@@ -30372,7 +30372,7 @@ SELECT (a+b+c+d+e)/5,
     OR d>e
  ORDER BY 1,2
 ----
-24 values hashing to ded3e2d1da28ae90bb73544f072b38d0
+24 values hashing to 6869b3ab9532a5501538379b28819a61
 
 query RI rowsort x748
 SELECT (a+b+c+d+e)/5,
@@ -30381,7 +30381,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE d>e
     OR e+d BETWEEN a+b-10 AND c+130
 ----
-24 values hashing to 5d0dbcffe633671c06c9c3e573462410
+24 values hashing to 6869b3ab9532a5501538379b28819a61
 
 query RI rowsort x748
 SELECT (a+b+c+d+e)/5,
@@ -30391,7 +30391,7 @@ SELECT (a+b+c+d+e)/5,
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 1,2
 ----
-24 values hashing to ded3e2d1da28ae90bb73544f072b38d0
+24 values hashing to 6869b3ab9532a5501538379b28819a61
 
 query IIIII rowsort x749
 SELECT abs(a),
@@ -30516,7 +30516,7 @@ SELECT a,
  WHERE (c<=d-2 OR c>=d+2)
  ORDER BY 3,6,1,5,2,4
 ----
-60 values hashing to d64c834db85fb5bdda8060cdce53cee8
+60 values hashing to 82788b560405c3924499d62bae7238ed
 
 query IIII rowsort x753
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -30554,7 +30554,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
  WHERE d NOT BETWEEN 110 AND 150
     OR e+d BETWEEN a+b-10 AND c+130
 ----
-126 values hashing to 5982442595f1ecd36700a58d12396914
+126 values hashing to 0860132ec250703bb2e2752fb3c9d1e9
 
 query IIIIIIR rowsort x754
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -30570,7 +30570,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
     OR e+d BETWEEN a+b-10 AND c+130
  ORDER BY 3,4,7,6,5,1,2
 ----
-126 values hashing to 5fe41cdf4c0c9f0a1d66c222620659d6
+126 values hashing to 0860132ec250703bb2e2752fb3c9d1e9
 
 query IIIIIIR rowsort x754
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -30585,7 +30585,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
  WHERE e+d BETWEEN a+b-10 AND c+130
     OR d NOT BETWEEN 110 AND 150
 ----
-126 values hashing to 5982442595f1ecd36700a58d12396914
+126 values hashing to 0860132ec250703bb2e2752fb3c9d1e9
 
 query IIIIIIR rowsort x754
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -30601,7 +30601,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
     OR d NOT BETWEEN 110 AND 150
  ORDER BY 7,6,4,3,2,5
 ----
-126 values hashing to 2c428eebf620dc4254d67dc7d65a5041
+126 values hashing to 0860132ec250703bb2e2752fb3c9d1e9
 
 query IIIII rowsort x755
 SELECT abs(a),
@@ -30884,7 +30884,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
        d
   FROM t1
 ----
-150 values hashing to 46ab66f80baedb887da3aa08214b24c1
+150 values hashing to 87e7209da4f0ba4057dd7fe378c839f3
 
 query IRIII rowsort x761
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -30896,7 +30896,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
   FROM t1
  ORDER BY 3,2,4
 ----
-150 values hashing to 369cc6e461851cc75ffe8358742526a1
+150 values hashing to 87e7209da4f0ba4057dd7fe378c839f3
 
 query IIIIR rowsort x762
 SELECT a,
@@ -31300,7 +31300,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
  WHERE d>e
     OR b>c
 ----
-40 values hashing to 939761320bcbc3bd348185ae77807541
+40 values hashing to 976583b8ce27a79b03e477b93660b073
 
 query IR rowsort x770
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -31310,7 +31310,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
     OR b>c
  ORDER BY 1,2
 ----
-40 values hashing to 939761320bcbc3bd348185ae77807541
+40 values hashing to 976583b8ce27a79b03e477b93660b073
 
 query IR rowsort x770
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -31319,7 +31319,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
  WHERE b>c
     OR d>e
 ----
-40 values hashing to 939761320bcbc3bd348185ae77807541
+40 values hashing to 976583b8ce27a79b03e477b93660b073
 
 query IR rowsort x770
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -31329,7 +31329,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
     OR d>e
  ORDER BY 1,2
 ----
-40 values hashing to 939761320bcbc3bd348185ae77807541
+40 values hashing to 976583b8ce27a79b03e477b93660b073
 
 query IIIIIIR rowsort x771
 SELECT a+b*2+c*3,
@@ -31341,7 +31341,7 @@ SELECT a+b*2+c*3,
        (a+b+c+d+e)/5
   FROM t1
 ----
-210 values hashing to f228086be52c5b6fa02cfc0bf9b5d82d
+210 values hashing to 2dc9933f33098324268077771f9e98d2
 
 query IIIIIIR rowsort x771
 SELECT a+b*2+c*3,
@@ -31354,7 +31354,7 @@ SELECT a+b*2+c*3,
   FROM t1
  ORDER BY 1,5,7
 ----
-210 values hashing to 8eb357d88724ef45aa68b18b5767cf82
+210 values hashing to 2dc9933f33098324268077771f9e98d2
 
 query III rowsort x772
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -31462,7 +31462,7 @@ SELECT a+b*2+c*3,
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
 ----
-50 values hashing to f9bc25eb5a13fefe2dc139cc93e8d8e2
+50 values hashing to 93004c40a071e7bc19d695eeda670b5a
 
 query IIRII rowsort x776
 SELECT a+b*2+c*3,
@@ -31474,7 +31474,7 @@ SELECT a+b*2+c*3,
  WHERE (c<=d-2 OR c>=d+2)
  ORDER BY 5,1,4,3,2
 ----
-50 values hashing to f9bc25eb5a13fefe2dc139cc93e8d8e2
+50 values hashing to 93004c40a071e7bc19d695eeda670b5a
 
 query I rowsort x777
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -31922,7 +31922,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
  WHERE (e>c OR e<d)
    AND d NOT BETWEEN 110 AND 150
 ----
-56 values hashing to 9ef5a7422dcae0e2a1e80c9d5742cb92
+56 values hashing to 5c484b89385818d9ef4c7423d4df272c
 
 query IIRI rowsort x787
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -31934,7 +31934,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
    AND d NOT BETWEEN 110 AND 150
  ORDER BY 3,2,4,1
 ----
-56 values hashing to 34ef3d07054e9dc38220ca7826d98e5f
+56 values hashing to 5c484b89385818d9ef4c7423d4df272c
 
 query I rowsort x788
 SELECT a-b
@@ -32193,7 +32193,7 @@ SELECT abs(b-c),
    AND c>d
    AND c BETWEEN b-2 AND d+2
 ----
-25 values hashing to bde1cc7fc1fb09a8a13a40d2372a404c
+25 values hashing to d8309a4d0ad7100d93bb11debc1cf787
 
 query IIIRI rowsort x793
 SELECT abs(b-c),
@@ -32207,7 +32207,7 @@ SELECT abs(b-c),
    AND c BETWEEN b-2 AND d+2
  ORDER BY 3,1,5,2
 ----
-25 values hashing to 22aae6659af63dd4505f70baf581d54d
+25 values hashing to d8309a4d0ad7100d93bb11debc1cf787
 
 query IIIRI rowsort x793
 SELECT abs(b-c),
@@ -32220,7 +32220,7 @@ SELECT abs(b-c),
    AND c BETWEEN b-2 AND d+2
    AND c>d
 ----
-25 values hashing to bde1cc7fc1fb09a8a13a40d2372a404c
+25 values hashing to d8309a4d0ad7100d93bb11debc1cf787
 
 query IIIRI rowsort x793
 SELECT abs(b-c),
@@ -32234,7 +32234,7 @@ SELECT abs(b-c),
    AND c>d
  ORDER BY 3,1,5,2
 ----
-25 values hashing to 22aae6659af63dd4505f70baf581d54d
+25 values hashing to d8309a4d0ad7100d93bb11debc1cf787
 
 query IIIRI rowsort x793
 SELECT abs(b-c),
@@ -32247,7 +32247,7 @@ SELECT abs(b-c),
    AND a>b
    AND c>d
 ----
-25 values hashing to bde1cc7fc1fb09a8a13a40d2372a404c
+25 values hashing to d8309a4d0ad7100d93bb11debc1cf787
 
 query IIIRI rowsort x793
 SELECT abs(b-c),
@@ -32261,7 +32261,7 @@ SELECT abs(b-c),
    AND c>d
  ORDER BY 5,1,4
 ----
-25 values hashing to bde1cc7fc1fb09a8a13a40d2372a404c
+25 values hashing to d8309a4d0ad7100d93bb11debc1cf787
 
 query IIIRI rowsort x793
 SELECT abs(b-c),
@@ -32274,7 +32274,7 @@ SELECT abs(b-c),
    AND c BETWEEN b-2 AND d+2
    AND a>b
 ----
-25 values hashing to bde1cc7fc1fb09a8a13a40d2372a404c
+25 values hashing to d8309a4d0ad7100d93bb11debc1cf787
 
 query IIIRI rowsort x793
 SELECT abs(b-c),
@@ -32288,7 +32288,7 @@ SELECT abs(b-c),
    AND a>b
  ORDER BY 4,1,3
 ----
-25 values hashing to bde1cc7fc1fb09a8a13a40d2372a404c
+25 values hashing to d8309a4d0ad7100d93bb11debc1cf787
 
 query I rowsort x794
 SELECT d-e
@@ -32807,7 +32807,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
   FROM t1
  WHERE (a>b-2 AND a<b+2)
 ----
-48 values hashing to eb46860fbe219ff70a5c37d0d490cf9d
+48 values hashing to 53719815495f81b20b21751d23b9248a
 
 query IRIIII rowsort x805
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -32821,7 +32821,7 @@ SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
  WHERE (a>b-2 AND a<b+2)
  ORDER BY 1,5,2,3,4
 ----
-48 values hashing to eb46860fbe219ff70a5c37d0d490cf9d
+48 values hashing to 53719815495f81b20b21751d23b9248a
 
 query IIII rowsort x806
 SELECT a+b*2+c*3+d*4+e*5,
@@ -32931,7 +32931,7 @@ SELECT b,
  WHERE c BETWEEN b-2 AND d+2
  ORDER BY 5,6,1,3,7
 ----
-105 values hashing to e07c177104c088b2517208009f3876ce
+105 values hashing to d9f7b0fa4f9f4d8762da98160fb1cc17
 
 query IIII rowsort x808
 SELECT a+b*2+c*3+d*4,
@@ -32965,7 +32965,7 @@ SELECT abs(a),
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
 ----
-105 values hashing to 67e31889962bbec53b9cb38eb948ae52
+105 values hashing to 3eecb4cb6be7cd902168c523716d5851
 
 query IIIRIII rowsort x809
 SELECT abs(a),
@@ -32979,7 +32979,7 @@ SELECT abs(a),
  WHERE c BETWEEN b-2 AND d+2
  ORDER BY 1,3,2,6,5,7,4
 ----
-105 values hashing to 1a48c22301c8552770ac786747ef8ef3
+105 values hashing to 3eecb4cb6be7cd902168c523716d5851
 
 query I rowsort x810
 SELECT a
@@ -33196,7 +33196,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        (a+b+c+d+e)/5
   FROM t1
 ----
-150 values hashing to 70c8bc86b2b5e03a0e5b889c3e125d85
+150 values hashing to ab595b760c0a58b23f2c304ee7d4d000
 
 query IIIIR rowsort x815
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -33208,7 +33208,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
   FROM t1
  ORDER BY 3,5,1
 ----
-150 values hashing to 43ddb9e2e1148bb1beae808a7cbb73c7
+150 values hashing to ab595b760c0a58b23f2c304ee7d4d000
 
 query IIIII rowsort x816
 SELECT e,
@@ -33242,7 +33242,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE a>b
     OR (a>b-2 AND a<b+2)
 ----
-57 values hashing to f8868f401ee73a2a741fa80d1cd5c265
+57 values hashing to 3ba809efee09b1c69e640ec11de05cd7
 
 query RII rowsort x817
 SELECT (a+b+c+d+e)/5,
@@ -33254,7 +33254,7 @@ SELECT (a+b+c+d+e)/5,
     OR (a>b-2 AND a<b+2)
  ORDER BY 1,3,2
 ----
-57 values hashing to 728a8f370ed8126b3494fa1b4ada7f2c
+57 values hashing to 3ba809efee09b1c69e640ec11de05cd7
 
 query RII rowsort x817
 SELECT (a+b+c+d+e)/5,
@@ -33265,7 +33265,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE (a>b-2 AND a<b+2)
     OR a>b
 ----
-57 values hashing to f8868f401ee73a2a741fa80d1cd5c265
+57 values hashing to 3ba809efee09b1c69e640ec11de05cd7
 
 query RII rowsort x817
 SELECT (a+b+c+d+e)/5,
@@ -33277,7 +33277,7 @@ SELECT (a+b+c+d+e)/5,
     OR a>b
  ORDER BY 1,2
 ----
-57 values hashing to 728a8f370ed8126b3494fa1b4ada7f2c
+57 values hashing to 3ba809efee09b1c69e640ec11de05cd7
 
 query IIIIII rowsort x818
 SELECT (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b),
@@ -33344,7 +33344,7 @@ SELECT d-e,
        abs(a)
   FROM t1
 ----
-210 values hashing to 89ef59677c526f08266e11776592af64
+210 values hashing to fa56167c1ea264f9d8700837c09f128e
 
 query IRIIIII rowsort x819
 SELECT d-e,
@@ -33358,7 +33358,7 @@ SELECT d-e,
   FROM t1
  ORDER BY 7,6,2,1,3,4
 ----
-210 values hashing to 771d4a3d0d7627af72e68d90e0263c7a
+210 values hashing to fa56167c1ea264f9d8700837c09f128e
 
 query IIRII rowsort x820
 SELECT c-d,
@@ -33368,7 +33368,7 @@ SELECT c-d,
        d
   FROM t1
 ----
-150 values hashing to 4ea8dca1b3124977fa1b9e45a67a6a47
+150 values hashing to eea6dd7a36bf04b858d582672fc6e5d7
 
 query IIRII rowsort x820
 SELECT c-d,
@@ -33379,7 +33379,7 @@ SELECT c-d,
   FROM t1
  ORDER BY 1,2
 ----
-150 values hashing to 2bf65feb0c7b06be04c5b32731afb944
+150 values hashing to eea6dd7a36bf04b858d582672fc6e5d7
 
 query II rowsort x821
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -33805,7 +33805,7 @@ SELECT (a+b+c+d+e)/5,
        (SELECT count(*) FROM t1 AS x WHERE x.b<t1.b)
   FROM t1
 ----
-180 values hashing to 93c0ac0d58991e0c3ae19e7282eaa4cd
+180 values hashing to c2022cd9796ed674673d121c5d031ff7
 
 query RIIIII rowsort x831
 SELECT (a+b+c+d+e)/5,
@@ -33817,7 +33817,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  ORDER BY 6,4,2,5
 ----
-180 values hashing to a5b0186cc627d0cc98e34a22d53309c2
+180 values hashing to c2022cd9796ed674673d121c5d031ff7
 
 query IIRIIII rowsort x832
 SELECT a+b*2+c*3+d*4,
@@ -33832,7 +33832,7 @@ SELECT a+b*2+c*3+d*4,
  WHERE a>b
     OR (c<=d-2 OR c>=d+2)
 ----
-154 values hashing to a69f6ca595cb80bccf660be67af68559
+154 values hashing to 8de2c10f600e66fc897575b552b5cfe5
 
 query IIRIIII rowsort x832
 SELECT a+b*2+c*3+d*4,
@@ -33848,7 +33848,7 @@ SELECT a+b*2+c*3+d*4,
     OR (c<=d-2 OR c>=d+2)
  ORDER BY 4,6,5,3
 ----
-154 values hashing to 5d6156c067efb862cd9525d6a9ad0942
+154 values hashing to 8de2c10f600e66fc897575b552b5cfe5
 
 query IIIIII rowsort x833
 SELECT b-c,
@@ -33939,7 +33939,7 @@ SELECT a,
   FROM t1
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-130 values hashing to 0a09f82c24180f64076c105b38f419ab
+130 values hashing to 77532a7de449ac4ff62afcb60b8ac43c
 
 query IRIII rowsort x835
 SELECT a,
@@ -33952,7 +33952,7 @@ SELECT a,
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 2,5,1,4,3
 ----
-130 values hashing to 7c584bb7f51961b7d62995948218e5c0
+130 values hashing to 77532a7de449ac4ff62afcb60b8ac43c
 
 query IIIIII rowsort x836
 SELECT b-c,
@@ -34105,7 +34105,7 @@ SELECT a,
    AND EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 2,1
 ----
-48 values hashing to fe5678cc6560dc0edfef4147eaa0aadd
+48 values hashing to f91fa58fbf47936c3e2520781be748d3
 
 query IIIIIII rowsort x842
 SELECT a,
@@ -34239,7 +34239,7 @@ SELECT d,
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
 ----
-180 values hashing to 33d815b5e7921686fd835d8277926765
+180 values hashing to 83540da94448d9838721cd95d586f0f2
 
 query IIIRII rowsort x845
 SELECT d,
@@ -34251,7 +34251,7 @@ SELECT d,
   FROM t1
  ORDER BY 4,6,5,1,2,3
 ----
-180 values hashing to da7254f4bd1e7ec58421ccaf2604cb3d
+180 values hashing to 83540da94448d9838721cd95d586f0f2
 
 query IIIII rowsort x846
 SELECT abs(b-c),
@@ -34289,7 +34289,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
        a+b*2+c*3
   FROM t1
 ----
-210 values hashing to 56daebbf165604f9d567d5a2e88012b5
+210 values hashing to d91b3719a4c780a87343d17d55be0640
 
 query IRIIIII rowsort x847
 SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
@@ -34303,7 +34303,7 @@ SELECT CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END,
   FROM t1
  ORDER BY 4,3,5,6,2,7,1
 ----
-210 values hashing to 55e640f77aec640fb73121689caa3af4
+210 values hashing to d91b3719a4c780a87343d17d55be0640
 
 query IIIII rowsort x848
 SELECT b-c,
@@ -34400,7 +34400,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
     OR (c<=d-2 OR c>=d+2)
     OR d>e
 ----
-96 values hashing to ddd6ec0da781edf5f63e754c8580002b
+96 values hashing to e98e87c2954abd60c6411b3fd0a2309a
 
 query IIIIIR rowsort x851
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -34416,7 +34416,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
     OR d>e
  ORDER BY 2,3
 ----
-96 values hashing to 86fe563f401cfe37ad770a280074b160
+96 values hashing to e98e87c2954abd60c6411b3fd0a2309a
 
 query IIIIIR rowsort x851
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -34431,7 +34431,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
     OR d>e
     OR (c<=d-2 OR c>=d+2)
 ----
-96 values hashing to ddd6ec0da781edf5f63e754c8580002b
+96 values hashing to e98e87c2954abd60c6411b3fd0a2309a
 
 query IIIIIR rowsort x851
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -34447,7 +34447,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
     OR (c<=d-2 OR c>=d+2)
  ORDER BY 3,4
 ----
-96 values hashing to 86fe563f401cfe37ad770a280074b160
+96 values hashing to e98e87c2954abd60c6411b3fd0a2309a
 
 query IIIIIR rowsort x851
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -34462,7 +34462,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
     OR (c<=d-2 OR c>=d+2)
     OR (e>a AND e<b)
 ----
-96 values hashing to ddd6ec0da781edf5f63e754c8580002b
+96 values hashing to e98e87c2954abd60c6411b3fd0a2309a
 
 query IIIIIR rowsort x851
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -34478,7 +34478,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
     OR (e>a AND e<b)
  ORDER BY 3,4,1
 ----
-96 values hashing to f2d44a9aea0595e55d5538825a83f40b
+96 values hashing to e98e87c2954abd60c6411b3fd0a2309a
 
 query IIIII rowsort x852
 SELECT b,
@@ -34606,7 +34606,7 @@ SELECT abs(a),
   FROM t1
  WHERE c>d
 ----
-65 values hashing to 22b04829daade08a0fc7ec812d4c5d18
+65 values hashing to bfe6f0db6b74f6c30815fadcc16b7e80
 
 query IIRII rowsort x853
 SELECT abs(a),
@@ -34619,7 +34619,7 @@ SELECT abs(a),
  WHERE c>d
  ORDER BY 3,2
 ----
-65 values hashing to c1a175160a8e29727307842e2c8fd0a3
+65 values hashing to bfe6f0db6b74f6c30815fadcc16b7e80
 
 query IIIII rowsort x854
 SELECT d,
@@ -35025,14 +35025,14 @@ SELECT (a+b+c+d+e)/5,
    AND b>c
  ORDER BY 2,1
 ----
-232.000
-468
-247.000
-490
 127.000
 1290
 137.000
 1390
+232.000
+468
+247.000
+490
 
 query I rowsort x860
 SELECT a-b
@@ -35093,7 +35093,7 @@ SELECT (a+b+c+d+e)/5,
     OR (e>c OR e<d)
     OR (e>a AND e<b)
 ----
-46 values hashing to 561e56c2b0b4c533c0602f5e5eff4666
+46 values hashing to 0329aa46a15f16bbe8dd3ca8dcb0df9b
 
 query RI rowsort x862
 SELECT (a+b+c+d+e)/5,
@@ -35104,7 +35104,7 @@ SELECT (a+b+c+d+e)/5,
     OR (e>a AND e<b)
  ORDER BY 1,2
 ----
-46 values hashing to 56f65525d9bb510ed6fe9be61012e064
+46 values hashing to 0329aa46a15f16bbe8dd3ca8dcb0df9b
 
 query RI rowsort x862
 SELECT (a+b+c+d+e)/5,
@@ -35114,7 +35114,7 @@ SELECT (a+b+c+d+e)/5,
     OR (e>c OR e<d)
     OR (a>b-2 AND a<b+2)
 ----
-46 values hashing to 561e56c2b0b4c533c0602f5e5eff4666
+46 values hashing to 0329aa46a15f16bbe8dd3ca8dcb0df9b
 
 query RI rowsort x862
 SELECT (a+b+c+d+e)/5,
@@ -35125,7 +35125,7 @@ SELECT (a+b+c+d+e)/5,
     OR (a>b-2 AND a<b+2)
  ORDER BY 1,2
 ----
-46 values hashing to 56f65525d9bb510ed6fe9be61012e064
+46 values hashing to 0329aa46a15f16bbe8dd3ca8dcb0df9b
 
 query II rowsort x863
 SELECT abs(a),
@@ -35599,7 +35599,7 @@ SELECT (a+b+c+d+e)/5,
    AND (e>a AND e<b)
  ORDER BY 2,3,7,5,6,4
 ----
-14 values hashing to 39ced87d40d6bd59b052384c5361fdf0
+14 values hashing to 4c31a24b75fe8d41d191889134cb1bd7
 
 query RIIIIII rowsort x875
 SELECT (a+b+c+d+e)/5,
@@ -35632,7 +35632,7 @@ SELECT (a+b+c+d+e)/5,
    AND (c<=d-2 OR c>=d+2)
  ORDER BY 5,2
 ----
-14 values hashing to 39ced87d40d6bd59b052384c5361fdf0
+14 values hashing to 4c31a24b75fe8d41d191889134cb1bd7
 
 query RIIIIII rowsort x875
 SELECT (a+b+c+d+e)/5,
@@ -36252,7 +36252,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  WHERE b>c
 ----
-26 values hashing to ddfa8ec12630daa024b92033ac177c14
+26 values hashing to 9e980f9c8a21005e05f42085273038a2
 
 query RI rowsort x891
 SELECT (a+b+c+d+e)/5,
@@ -36261,7 +36261,7 @@ SELECT (a+b+c+d+e)/5,
  WHERE b>c
  ORDER BY 1,2
 ----
-26 values hashing to b3756b42a4ed06d49ce45279c67ad094
+26 values hashing to 9e980f9c8a21005e05f42085273038a2
 
 query IIIII rowsort x892
 SELECT a-b,
@@ -36643,7 +36643,7 @@ SELECT a+b*2+c*3+d*4+e*5,
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
 ----
-75 values hashing to c8515f1d35cd045f75e73e50c464c5dc
+75 values hashing to d24d0b3711c0421e3bc6b422280bd0e9
 
 query IIIRI rowsort x900
 SELECT a+b*2+c*3+d*4+e*5,
@@ -36655,7 +36655,7 @@ SELECT a+b*2+c*3+d*4+e*5,
  WHERE c BETWEEN b-2 AND d+2
  ORDER BY 4,3,5,1,2
 ----
-75 values hashing to 2e631ee748edef946dba7d9c89de3ed4
+75 values hashing to d24d0b3711c0421e3bc6b422280bd0e9
 
 query I rowsort x901
 SELECT d-e
@@ -37045,7 +37045,7 @@ SELECT c,
   FROM t1
  WHERE (e>c OR e<d)
 ----
-105 values hashing to 8645fc79af9263c26ec38b24b317633a
+105 values hashing to f8c66570cacc5328374ef485c8cee8d3
 
 query IIIRI rowsort x911
 SELECT c,
@@ -37057,7 +37057,7 @@ SELECT c,
  WHERE (e>c OR e<d)
  ORDER BY 1,5
 ----
-105 values hashing to 61c5eb0d2301687de6cb648708ae299c
+105 values hashing to f8c66570cacc5328374ef485c8cee8d3
 
 query II rowsort x912
 SELECT a+b*2,
@@ -37144,14 +37144,14 @@ query R rowsort x913
 SELECT (a+b+c+d+e)/5
   FROM t1
 ----
-30 values hashing to 361fdea7477f5644e65ee14114dbf694
+30 values hashing to 1fc1404489a3bdcdfdf6fbde6f7fa1df
 
 query R rowsort x913
 SELECT (a+b+c+d+e)/5
   FROM t1
  ORDER BY 1
 ----
-30 values hashing to 6b54471c671cb24431677f6f9e5c13b7
+30 values hashing to 1fc1404489a3bdcdfdf6fbde6f7fa1df
 
 query IIIIIII rowsort x914
 SELECT a+b*2+c*3+d*4,
@@ -37559,7 +37559,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
   FROM t1
  WHERE c BETWEEN b-2 AND d+2
 ----
-90 values hashing to 52a07418171075bb802cb80ebc75a5bb
+90 values hashing to 107cf305f882ed07b941a9b73ab52af4
 
 query IIIRII rowsort x921
 SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
@@ -37574,7 +37574,7 @@ SELECT CASE WHEN a<b-3 THEN 111 WHEN a<=b THEN 222
  WHERE c BETWEEN b-2 AND d+2
  ORDER BY 5,3
 ----
-90 values hashing to a16d83e0862664a8a672ec46942d8155
+90 values hashing to 107cf305f882ed07b941a9b73ab52af4
 
 query IRIII rowsort x922
 SELECT a+b*2+c*3+d*4+e*5,
@@ -37584,7 +37584,7 @@ SELECT a+b*2+c*3+d*4+e*5,
        CASE WHEN c>(SELECT avg(c) FROM t1) THEN a*2 ELSE b*10 END
   FROM t1
 ----
-150 values hashing to 525ce3e8ba9b78dea974b1a5db657cf7
+150 values hashing to 441efcd36efee55684b8d2e1da591ae8
 
 query IRIII rowsort x922
 SELECT a+b*2+c*3+d*4+e*5,
@@ -37595,7 +37595,7 @@ SELECT a+b*2+c*3+d*4+e*5,
   FROM t1
  ORDER BY 2,5,1,3,4
 ----
-150 values hashing to 30226d390f242b9b7be76d0d334124b2
+150 values hashing to 441efcd36efee55684b8d2e1da591ae8
 
 query RII rowsort x923
 SELECT (a+b+c+d+e)/5,
@@ -37603,7 +37603,7 @@ SELECT (a+b+c+d+e)/5,
        c
   FROM t1
 ----
-90 values hashing to fe0cf4f3d8d0611d24d5385ef87d5dc7
+90 values hashing to 32502170083bac3b87042802b7979dd7
 
 query RII rowsort x923
 SELECT (a+b+c+d+e)/5,
@@ -37612,7 +37612,7 @@ SELECT (a+b+c+d+e)/5,
   FROM t1
  ORDER BY 2,3
 ----
-90 values hashing to 158c190a57722dd57d2b34134112577f
+90 values hashing to 32502170083bac3b87042802b7979dd7
 
 query IIII rowsort x924
 SELECT d,
@@ -38051,7 +38051,7 @@ SELECT (a+b+c+d+e)/5,
    AND c>d
  ORDER BY 4,5,3,1
 ----
-21 values hashing to f7800ffcdd03ca45eeb97ae2146dba99
+21 values hashing to 75b9fbc03a1f429c5ce58e8eaa617d5a
 
 query IIRIII rowsort x933
 SELECT b-c,
@@ -38064,7 +38064,7 @@ SELECT b-c,
   FROM t1
  WHERE (c<=d-2 OR c>=d+2)
 ----
-60 values hashing to 1c5a0846886af3086c6638c353fe5dc9
+60 values hashing to 6c7dd0e77e459ed60fd213fac779cb72
 
 query IIRIII rowsort x933
 SELECT b-c,
@@ -38078,7 +38078,7 @@ SELECT b-c,
  WHERE (c<=d-2 OR c>=d+2)
  ORDER BY 3,5,6,4,2
 ----
-60 values hashing to f0890ccb485d8665383efe29154c50af
+60 values hashing to 6c7dd0e77e459ed60fd213fac779cb72
 
 query II rowsort x934
 SELECT c,
@@ -38127,7 +38127,7 @@ SELECT a+b*2+c*3+d*4+e*5,
  WHERE b>c
    AND c BETWEEN b-2 AND d+2
 ----
-20 values hashing to 8399b43a0cc80e75b7e16662ab0ea78b
+20 values hashing to 7d0c64dfd27cd0c074641185fc42ccb8
 
 query IIRI rowsort x935
 SELECT a+b*2+c*3+d*4+e*5,
@@ -38139,7 +38139,7 @@ SELECT a+b*2+c*3+d*4+e*5,
    AND c BETWEEN b-2 AND d+2
  ORDER BY 4,2,1
 ----
-20 values hashing to 8399b43a0cc80e75b7e16662ab0ea78b
+20 values hashing to 7d0c64dfd27cd0c074641185fc42ccb8
 
 query IIRI rowsort x935
 SELECT a+b*2+c*3+d*4+e*5,
@@ -38150,7 +38150,7 @@ SELECT a+b*2+c*3+d*4+e*5,
  WHERE c BETWEEN b-2 AND d+2
    AND b>c
 ----
-20 values hashing to 8399b43a0cc80e75b7e16662ab0ea78b
+20 values hashing to 7d0c64dfd27cd0c074641185fc42ccb8
 
 query IIRI rowsort x935
 SELECT a+b*2+c*3+d*4+e*5,
@@ -38162,7 +38162,7 @@ SELECT a+b*2+c*3+d*4+e*5,
    AND b>c
  ORDER BY 4,3,1,2
 ----
-20 values hashing to 8399b43a0cc80e75b7e16662ab0ea78b
+20 values hashing to 7d0c64dfd27cd0c074641185fc42ccb8
 
 query I rowsort x936
 SELECT b-c
@@ -38446,7 +38446,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
   FROM t1
  WHERE b>c
 ----
-65 values hashing to 549fa1a12495dddbecb7928c979822ae
+65 values hashing to 385515fc506e8ac82bc1745be925cb6b
 
 query IIIRI rowsort x942
 SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
@@ -38459,7 +38459,7 @@ SELECT CASE a+1 WHEN b THEN 111 WHEN c THEN 222
  WHERE b>c
  ORDER BY 3,2,4,5,1
 ----
-65 values hashing to 88033715b1476f414746687d56004835
+65 values hashing to 385515fc506e8ac82bc1745be925cb6b
 
 query IIIIIII rowsort x943
 SELECT abs(a),
@@ -39510,7 +39510,7 @@ SELECT d,
  WHERE c BETWEEN b-2 AND d+2
  ORDER BY 7,1
 ----
-105 values hashing to fa82f0412b6af4a411248050318a81a2
+105 values hashing to 8694f5bf6723e6cd8bc0e8f9c8329e71
 
 query IIIIIII rowsort x965
 SELECT d-e,
@@ -39716,7 +39716,7 @@ SELECT c-d,
  WHERE d NOT BETWEEN 110 AND 150
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
 ----
-174 values hashing to 67c05813e2717716b1a5e3e052b33246
+174 values hashing to ec61f2ada56fff67b1ea56a7b7c6b3cf
 
 query IIIRII rowsort x971
 SELECT c-d,
@@ -39732,7 +39732,7 @@ SELECT c-d,
     OR EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
  ORDER BY 2,5,4
 ----
-174 values hashing to b0621f3579fb18c4906c82b82a1963d0
+174 values hashing to ec61f2ada56fff67b1ea56a7b7c6b3cf
 
 query IIIRII rowsort x971
 SELECT c-d,
@@ -39747,7 +39747,7 @@ SELECT c-d,
  WHERE EXISTS(SELECT 1 FROM t1 AS x WHERE x.b<t1.b)
     OR d NOT BETWEEN 110 AND 150
 ----
-174 values hashing to 67c05813e2717716b1a5e3e052b33246
+174 values hashing to ec61f2ada56fff67b1ea56a7b7c6b3cf
 
 query IIIRII rowsort x971
 SELECT c-d,
@@ -39763,7 +39763,7 @@ SELECT c-d,
     OR d NOT BETWEEN 110 AND 150
  ORDER BY 6,2,5,4
 ----
-174 values hashing to 165c8e99adbca8ff24535c6c4057832d
+174 values hashing to ec61f2ada56fff67b1ea56a7b7c6b3cf
 
 query IIIIII rowsort x972
 SELECT a,
@@ -39892,7 +39892,7 @@ SELECT abs(b-c),
        (SELECT count(*) FROM t1 AS x WHERE x.c>t1.c AND x.d<t1.d)
   FROM t1
 ----
-150 values hashing to cc10231558d8454a33a31dc739a2b191
+150 values hashing to 36709862112e8d7444acb22fb00c01a3
 
 query IIIRI rowsort x976
 SELECT abs(b-c),
@@ -39903,7 +39903,7 @@ SELECT abs(b-c),
   FROM t1
  ORDER BY 3,2,1,5
 ----
-150 values hashing to d4579d98609ac0da0236606f2bfd5e86
+150 values hashing to 36709862112e8d7444acb22fb00c01a3
 
 query IRI rowsort x977
 SELECT a-b,
@@ -39912,7 +39912,7 @@ SELECT a-b,
   FROM t1
  WHERE (a>b-2 AND a<b+2)
 ----
-24 values hashing to 8f52d3528a89c0a71c4a222a535152bc
+24 values hashing to 60832a9f7174c4abb038ff208c9ed318
 
 query IRI rowsort x977
 SELECT a-b,
@@ -39922,7 +39922,7 @@ SELECT a-b,
  WHERE (a>b-2 AND a<b+2)
  ORDER BY 1,2
 ----
-24 values hashing to 4530fc099c5202b93b95cdc3ef12a390
+24 values hashing to 60832a9f7174c4abb038ff208c9ed318
 
 query II rowsort x978
 SELECT a-b,
@@ -40093,7 +40093,7 @@ SELECT a-b,
        a+b*2+c*3+d*4
   FROM t1
 ----
-210 values hashing to 78a33f1aef967f1ac0f3cadca007da56
+210 values hashing to a7156fcb4143cb50131951458c5672bc
 
 query IIRIIII rowsort x982
 SELECT a-b,
@@ -40107,7 +40107,7 @@ SELECT a-b,
   FROM t1
  ORDER BY 3,4,5,1,2
 ----
-210 values hashing to 52330360d66ce6f1d4795cc3844fc692
+210 values hashing to a7156fcb4143cb50131951458c5672bc
 
 query III rowsort x983
 SELECT c-d,
@@ -40208,7 +40208,7 @@ SELECT b,
        c
   FROM t1
 ----
-120 values hashing to 6b81c5b736c0239fa15781e5d5fec750
+120 values hashing to d896401336b76254dfa0129643f225ca
 
 query IRII rowsort x986
 SELECT b,
@@ -40218,7 +40218,7 @@ SELECT b,
   FROM t1
  ORDER BY 4,3,2,1
 ----
-120 values hashing to 879c69b5402a20143ece7e3112ec5ae3
+120 values hashing to d896401336b76254dfa0129643f225ca
 
 query III rowsort x987
 SELECT c,
