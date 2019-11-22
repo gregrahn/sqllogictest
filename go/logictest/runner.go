@@ -180,6 +180,8 @@ func copyRestOfFile(scanner *parser.LineScanner, wr *bufio.Writer) {
 }
 
 func writeResults(record *parser.Record, results []string, wr *bufio.Writer) {
+	results = record.SortResults(results)
+
 	if len(results) > record.HashThreshold() {
 		hash, err := hashResults(results)
 		if err != nil {
