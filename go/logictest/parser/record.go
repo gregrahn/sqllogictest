@@ -57,7 +57,7 @@ type Record struct {
 	// The canonical line number for this record, which is the first line number of the SQL statement or
 	// query to execute.
 	lineNum int
-	// The expected result of the query, represented as a strings
+	// The expected result of the query, represented as strings
 	result []string
 	// Label used to store results for a query, currently unused.
 	label string
