@@ -271,7 +271,7 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 		if record.Type() == parser.Query || record.Type() == parser.Statement {
 			logSkip()
 		}
-		return "", nil, false, nil
+		return "", nil, true, nil
 	}
 
 	switch record.Type() {
