@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"time"
 
@@ -299,7 +298,7 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 
 		// Only log one error per record, so if schema comparison fails don't bother with result comparison
 		if verifySchema(record, schemaStr) {
-			verifyResults(record, results)
+			verifyResults(record, schemaStr, results)
 		}
 		return schemaStr, results, true, nil
 	case parser.Halt:
@@ -309,11 +308,14 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 	}
 }
 
-func verifyResults(record *parser.Record, results []string) {
+func verifyResults(record *parser.Record, schema string, results []string) {
 	if len(results) != record.NumResults() {
 		logFailure(fmt.Sprintf("Incorrect number of results. Expected %v, got %v", record.NumResults(), len(results)))
 		return
 	}
+
+	results = normalizeResults(results, schema)
+	results = record.SortResults(results)
 
 	if record.IsHashResult() {
 		verifyHash(record, results)
@@ -322,9 +324,27 @@ func verifyResults(record *parser.Record, results []string) {
 	}
 }
 
-func verifyRows(record *parser.Record, results []string) {
-	results = record.SortResults(results)
+// Normalizes the results according to the schema given.
+// Test files have type rules that conform to MySQL's actual behavior, which is pretty odd in some cases. For example,
+// the type of the expression `- - - 8` is decimal (float) as of MySQL 8.0. Rather than expect all databases to
+// duplicate these semantics, we allow integer types to be freely converted to floats. This means we need to format
+// integer results as float results, with three trailing zeros, where necessary.
+func normalizeResults(results []string, schema string) []string {
+	newResults := make([]string, len(results))
+	for i := range results {
+		typ := schema[i%len(schema)]
+		if typ == 'R' && !strings.Contains(results[i], ".") {
+			newResults[i] = results[i] + ".000"
+		} else {
+			newResults[i] = results[i]
+		}
+	}
+	return newResults
+}
 
+// Verifies that the rows given exactly match the expected rows of the record, in the order given. Rows must have been
+// previously sorted according to the semantics of the record.
+func verifyRows(record *parser.Record, results []string) {
 	for i := range record.Result() {
 		if record.Result()[i] != results[i] {
 			logFailure("Incorrect result at position %d. Expected %v, got %v", i, record.Result()[i], results[i])
@@ -335,6 +355,8 @@ func verifyRows(record *parser.Record, results []string) {
 	logSuccess()
 }
 
+// Verifies that the hash of the rows given exactly match the expected hash of the record given. Rows must have been
+// previously sorted according to the semantics of the record.
 func verifyHash(record *parser.Record, results []string) {
 	results = record.SortResults(results)
 
@@ -351,6 +373,7 @@ func verifyHash(record *parser.Record, results []string) {
 	}
 }
 
+// Computes the md5 hash of the results given, using the same algorithm as the original sqllogictest C code.
 func hashResults(results []string) (string, error) {
 	h := md5.New()
 	for _, r := range results {
@@ -361,24 +384,35 @@ func hashResults(results []string) (string, error) {
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
-var allIs = regexp.MustCompile("^I+$")
-var isAndRs = regexp.MustCompile("^[IR]+$")
-
 // Returns whether the schema given matches the record's expected schema, and logging an error if not.
 func verifySchema(record *parser.Record, schemaStr string) bool {
-	if schemaStr != record.Schema() {
-		// There's an edge case here: for results sets that contain no rows, the test records use integer values for the
-		// result schema even when they contain float columns. I think this is because an earlier version of MySQL had this
-		// buggy behavior. For this reason, when a result set is empty we skip schema comparison. A better solution in the
-		// longer term would be to update the test files with the types returned by modern versions of MySQL.
-		if len(schemaStr) == len(record.Schema()) &&
-			record.NumResults() == 0 &&
-			allIs.MatchString(record.Schema()) &&
-			isAndRs.MatchString(schemaStr) {
-			return true
-		}
+	if schemaStr == record.Schema() {
+		return true
+	}
+
+	if len(schemaStr) != len(record.Schema()) {
 		logFailure("Schemas differ. Expected %s, got %s", record.Schema(), schemaStr)
 		return false
+	}
+
+	// MySQL has odd rules for when a result is a float v. an integer. Rather than try to replicate MySQL's type logic
+	// exactly, we allow integer results in place of floats. See normalizeResults for details.
+	for i, c := range record.Schema() {
+		if !compatibleSchemaTypes(c, rune(schemaStr[i])) {
+			logFailure("Schemas differ. Expected %s, got %s", record.Schema(), schemaStr)
+			return false
+		}
+	}
+	return true
+}
+
+func compatibleSchemaTypes(expected, actual rune) bool {
+	if expected != actual {
+		if expected == 'R' && actual == 'I'{
+			return true
+		} else {
+			return false
+		}
 	}
 	return true
 }
