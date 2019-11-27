@@ -57,10 +57,12 @@ type Record struct {
 	// The canonical line number for this record, which is the first line number of the SQL statement or
 	// query to execute.
 	lineNum int
-	// The expected result of the query, represented as a strings
+	// The expected result of the query, represented as strings
 	result []string
 	// Label used to store results for a query, currently unused.
 	label string
+	// Hash threshold is the number of records to begin hashing results at
+	hashThreshold int
 }
 
 // A condition is a directive to execute a record or not depending on the underlying engine being evaluated.
@@ -211,4 +213,16 @@ func (r *Record) SortResults(results []string) []string {
 	default:
 		panic(fmt.Sprintf("Uncrecognized sort mode %v", r.sortMode))
 	}
+}
+
+func (r *Record) SortString() string {
+	return string(r.sortMode)
+}
+
+func (r *Record) Label() string {
+	return r.label
+}
+
+func (r *Record) HashThreshold() int {
+	return r.hashThreshold
 }

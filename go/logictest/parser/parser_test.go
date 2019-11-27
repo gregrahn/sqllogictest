@@ -33,22 +33,26 @@ func TestParseFile(t *testing.T) {
 			expectError: false,
 			query:       "CREATE TABLE t1(a INTEGER, b INTEGER, c INTEGER, d INTEGER, e INTEGER)",
 			lineNum:     2,
+			hashThreshold: 8,
 		},
 		{
 			recordType:  Statement,
 			expectError: false,
 			query:       "INSERT INTO t1(e,c,b,d,a) VALUES(103,102,100,101,104)",
 			lineNum:     5,
+			hashThreshold: 8,
 		},
 		{
 			recordType:  Statement,
 			expectError: true,
 			query:       "INSERT INTO t1(a,c,d,e,b) VALUES(107,106,108,109,105)",
 			lineNum:     8,
+			hashThreshold: 8,
 		},
 		{
 			recordType: Halt,
 			lineNum:    11,
+			hashThreshold: 8,
 		},
 		{
 			recordType: Query,
@@ -59,6 +63,7 @@ func TestParseFile(t *testing.T) {
  ORDER BY 1`),
 			result:  []string{"30 values hashing to 3c13dee48d9356ae19af2515e05e6b54"},
 			lineNum: 14,
+			hashThreshold: 8,
 		},
 		{
 			recordType: Query,
@@ -71,6 +76,7 @@ func TestParseFile(t *testing.T) {
  ORDER BY 1,2`),
 			result:  []string{"60 values hashing to 808146289313018fce25f1a280bd8c30"},
 			lineNum: 29,
+			hashThreshold: 16,
 		},
 		{
 			recordType: Halt,
@@ -81,6 +87,7 @@ func TestParseFile(t *testing.T) {
 				},
 			},
 			lineNum: 37,
+			hashThreshold: 16,
 		},
 		{
 			recordType: Query,
@@ -105,6 +112,7 @@ func TestParseFile(t *testing.T) {
 			},
 			result:  []string{"1", "2", "3", "4", "5"},
 			lineNum: 41,
+			hashThreshold: 16,
 		},
 		{
 			recordType: Query,
@@ -125,6 +133,7 @@ func TestParseFile(t *testing.T) {
 			},
 			result:  []string{"-3", "222", "-3", "222", "-1", "222", "-1", "222"},
 			lineNum: 62,
+			hashThreshold: 16,
 		},
 		{
 			recordType: Statement,
@@ -137,6 +146,7 @@ func TestParseFile(t *testing.T) {
   x1 VARCHAR(30)
 )`),
 			lineNum: 80,
+			hashThreshold: 16,
 		},
 		{
 			recordType: Query,
@@ -151,6 +161,7 @@ func TestParseFile(t *testing.T) {
 			lineNum: 90,
 			schema: "TTTT",
 			result: []string {"table t29 row 6", "table t31 row 9", "table t51 row 5", "table t55 row 4"},
+			hashThreshold: 16,
 		},
 		{
 			recordType: Query,
@@ -172,6 +183,7 @@ func TestParseFile(t *testing.T) {
 					engine: "oracle",
 				},
 			},
+			hashThreshold: 16,
 		},
 	}
 

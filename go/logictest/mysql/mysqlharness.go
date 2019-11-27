@@ -48,7 +48,11 @@ func (h *MysqlHarness) EngineStr() string {
 
 // See Harness.Init
 func (h *MysqlHarness) Init() error {
-	return h.dropAllTables()
+	if err := h.dropAllTables(); err != nil {
+		return err
+	}
+
+	return h.dropAllViews()
 }
 
 // See Harness.ExecuteStatement
@@ -88,7 +92,7 @@ func (h *MysqlHarness) ExecuteQuery(statement string) (schema string, results []
 }
 
 func (h *MysqlHarness) dropAllTables() error {
-	rows, err := h.db.Query("show tables")
+	rows, err := h.db.Query("show full tables where table_type not like 'VIEW'")
 	if err != nil {
 		return err
 	}
@@ -119,6 +123,40 @@ func (h *MysqlHarness) dropAllTables() error {
 
 	return nil
 }
+
+func (h *MysqlHarness) dropAllViews() error {
+	rows, err := h.db.Query("show full tables where table_type like 'VIEW'")
+	if err != nil {
+		return err
+	}
+
+	_, columns, err := columns(rows)
+	if err != nil {
+		return err
+	}
+
+	var viewNames []string
+	for rows.Next() {
+		err := rows.Scan(columns...)
+		if err != nil {
+			return err
+		}
+
+		viewName := columns[0].(*sql.NullString)
+		viewNames = append(viewNames, viewName.String)
+	}
+
+	if len(viewNames) > 0 {
+		dropView := "drop view if exists " + strings.Join(viewNames, ",")
+		_, err = h.db.Exec(dropView)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 
 // Returns the string representation of the column value given
 func stringVal(col interface{}) string {

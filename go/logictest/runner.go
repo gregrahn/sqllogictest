@@ -15,6 +15,7 @@
 package logictest
 
 import (
+	"bufio"
 	"crypto/md5"
 	"fmt"
 	"os"
@@ -31,9 +32,18 @@ var currRecord *parser.Record
 var _, TruncateQueriesInLog = os.LookupEnv("SQLLOGICTEST_TRUNCATE_QUERIES")
 
 // Runs the test files found under any of the paths given. Can specify individual test files, or directories that
-// contain test files somewhere underneath. All files named *.test enountered under a directory will be attempted to be
+// contain test files somewhere underneath. All files named *.test encountered under a directory will be attempted to be
 // parsed as a test file, and will panic for malformed test files or paths that don't exist.
 func RunTestFiles(harness Harness, paths ...string) {
+	testFiles := collectTestFiles(paths)
+
+	for _, file := range testFiles {
+		runTestFile(harness, file)
+	}
+}
+
+// Returns all the test files residing at the paths given.
+func collectTestFiles(paths []string) []string {
 	var testFiles []string
 	for _, arg := range paths {
 		abs, err := filepath.Abs(arg)
@@ -64,9 +74,154 @@ func RunTestFiles(harness Harness, paths ...string) {
 			testFiles = append(testFiles, abs)
 		}
 	}
+	return testFiles
+}
+
+// Generates the test files given by executing the query and replacing expected results with the ones obtained by the
+// test run. Files written will have the .generated suffix.
+func GenerateTestFiles(harness Harness, paths ...string) {
+	testFiles := collectTestFiles(paths)
 
 	for _, file := range testFiles {
-		runTestFile(harness, file)
+		generateTestFile(harness, file)
+	}
+}
+
+func generateTestFile(harness Harness, f string) {
+	currTestFile = f
+
+	err := harness.Init()
+	if err != nil {
+		panic(err)
+	}
+
+	file, err := os.Open(f)
+	if err != nil {
+		panic(err)
+	}
+
+	testRecords, err := parser.ParseTestFile(f)
+	if err != nil {
+		panic(err)
+	}
+
+	generatedFile, err := os.Create(f + ".generated")
+	if err != nil {
+		panic(err)
+	}
+
+	scanner := &parser.LineScanner{
+		bufio.NewScanner(file), 0,
+	}
+	wr := bufio.NewWriter(generatedFile)
+
+	defer func() {
+		err  = wr.Flush()
+		if err != nil {
+			panic(err)
+		}
+
+		err = generatedFile.Close()
+		if err != nil {
+			panic(err)
+		}
+	}()
+
+	for _, record := range testRecords {
+		schema, records, _, err := executeRecord(harness, record)
+
+		// If there was an error or we skipped this test, then just copy output until the next record.
+		if err != nil || !record.ShouldExecuteForEngine(harness.EngineStr()) {
+			copyUntilEndOfRecord(scanner, wr) // advance until the next record
+			continue
+		} else if record.Type() == parser.Halt {
+			copyRestOfFile(scanner, wr)
+			return
+		}
+
+		// Copy until we get to the line before the query we executed (e.g. "query IIRT no-sort")
+		for scanner.Scan() && scanner.LineNum < record.LineNum() - 1 {
+			line := scanner.Text()
+			writeLine(wr, line)
+		}
+
+		// Copy statements directly
+		if record.Type() == parser.Statement {
+			writeLine(wr, scanner.Text())
+		// Fill in the actual query result schema
+		} else if record.Type() == parser.Query {
+			var label string
+			if record.Label() != "" {
+				label = " " + record.Label()
+			}
+
+			writeLine(wr, fmt.Sprintf("query %s %s%s", schema, record.SortString(), label))
+			copyUntilSeparator(scanner, wr)   // copy the original query and separator
+			writeResults(record, records, wr) // write the query result
+			skipUntilEndOfRecord(scanner, wr) // advance until the next record
+		}
+	}
+
+	copyRestOfFile(scanner, wr)
+}
+
+func writeLine(wr *bufio.Writer, s string) {
+	_, err := wr.WriteString(s + "\n")
+	if err != nil {
+		panic(err)
+	}
+}
+
+func copyRestOfFile(scanner *parser.LineScanner, wr *bufio.Writer) {
+	for scanner.Scan() {
+		writeLine(wr, scanner.Text())
+	}
+}
+
+func writeResults(record *parser.Record, results []string, wr *bufio.Writer) {
+	results = record.SortResults(results)
+
+	if len(results) > record.HashThreshold() {
+		hash, err := hashResults(results)
+		if err != nil {
+			panic(err)
+		}
+		writeLine(wr, fmt.Sprintf("%d values hashing to %s", len(results), hash))
+	} else {
+		for _, result := range results {
+			writeLine(wr, fmt.Sprintf("%s", result))
+		}
+	}
+}
+
+func copyUntilSeparator(scanner *parser.LineScanner, wr *bufio.Writer) {
+	for scanner.Scan() {
+		line := scanner.Text()
+		writeLine(wr, line)
+
+		if strings.TrimSpace(line) == parser.Separator {
+			break
+		}
+	}
+}
+
+func copyUntilEndOfRecord(scanner *parser.LineScanner, wr *bufio.Writer) {
+	for scanner.Scan() {
+		line := scanner.Text()
+		writeLine(wr, line)
+		if strings.TrimSpace(line) == "" {
+			break
+		}
+	}
+}
+
+func skipUntilEndOfRecord(scanner *parser.LineScanner, wr *bufio.Writer) {
+	for scanner.Scan() {
+		line := scanner.Text()
+		if strings.TrimSpace(line) == "" {
+			writeLine(wr, "")
+			break
+		}
 	}
 }
 
@@ -84,14 +239,15 @@ func runTestFile(harness Harness, file string) {
 	}
 
 	for _, record := range testRecords {
-		if !executeRecord(harness, record) {
+		_, _, cont, _ := executeRecord(harness, record)
+		if !cont {
 			break
 		}
 	}
 }
 
 // Executes a single record and returns whether execution of records should continue
-func executeRecord(harness Harness, record *parser.Record) (cont bool) {
+func executeRecord(harness Harness, record *parser.Record) (schema string, results []string, cont bool, err error) {
 	currRecord = record
 
 	defer func() {
@@ -114,7 +270,7 @@ func executeRecord(harness Harness, record *parser.Record) (cont bool) {
 		if record.Type() == parser.Query || record.Type() == parser.Statement {
 			logSkip()
 		}
-		return true
+		return "", nil, true, nil
 	}
 
 	switch record.Type() {
@@ -124,39 +280,42 @@ func executeRecord(harness Harness, record *parser.Record) (cont bool) {
 		if record.ExpectError() {
 			if err == nil {
 				logFailure("Expected error but didn't get one")
-				return true
+				return "", nil, true, nil
 			}
 		} else if err != nil {
 			logFailure("Unexpected error %v", err)
-			return true
+			return "", nil, true, err
 		}
 
 		logSuccess()
-		return true
+		return "", nil, true, nil
 	case parser.Query:
 		schemaStr, results, err := harness.ExecuteQuery(record.Query())
 		if err != nil {
 			logFailure("Unexpected error %v", err)
-			return true
+			return "", nil, true, err
 		}
 
 		// Only log one error per record, so if schema comparison fails don't bother with result comparison
 		if verifySchema(record, schemaStr) {
-			verifyResults(record, results)
+			verifyResults(record, schemaStr, results)
 		}
-		return true
+		return schemaStr, results, true, nil
 	case parser.Halt:
-		return false
+		return "", nil, false, nil
 	default:
 		panic(fmt.Sprintf("Uncrecognized record type %v", record.Type()))
 	}
 }
 
-func verifyResults(record *parser.Record, results []string) {
+func verifyResults(record *parser.Record, schema string, results []string) {
 	if len(results) != record.NumResults() {
 		logFailure(fmt.Sprintf("Incorrect number of results. Expected %v, got %v", record.NumResults(), len(results)))
 		return
 	}
+
+	results = normalizeResults(results, schema)
+	results = record.SortResults(results)
 
 	if record.IsHashResult() {
 		verifyHash(record, results)
@@ -165,9 +324,27 @@ func verifyResults(record *parser.Record, results []string) {
 	}
 }
 
-func verifyRows(record *parser.Record, results []string) {
-	results = record.SortResults(results)
+// Normalizes the results according to the schema given.
+// Test files have type rules that conform to MySQL's actual behavior, which is pretty odd in some cases. For example,
+// the type of the expression `- - - 8` is decimal (float) as of MySQL 8.0. Rather than expect all databases to
+// duplicate these semantics, we allow integer types to be freely converted to floats. This means we need to format
+// integer results as float results, with three trailing zeros, where necessary.
+func normalizeResults(results []string, schema string) []string {
+	newResults := make([]string, len(results))
+	for i := range results {
+		typ := schema[i%len(schema)]
+		if typ == 'R' && !strings.Contains(results[i], ".") {
+			newResults[i] = results[i] + ".000"
+		} else {
+			newResults[i] = results[i]
+		}
+	}
+	return newResults
+}
 
+// Verifies that the rows given exactly match the expected rows of the record, in the order given. Rows must have been
+// previously sorted according to the semantics of the record.
+func verifyRows(record *parser.Record, results []string) {
 	for i := range record.Result() {
 		if record.Result()[i] != results[i] {
 			logFailure("Incorrect result at position %d. Expected %v, got %v", i, record.Result()[i], results[i])
@@ -178,6 +355,8 @@ func verifyRows(record *parser.Record, results []string) {
 	logSuccess()
 }
 
+// Verifies that the hash of the rows given exactly match the expected hash of the record given. Rows must have been
+// previously sorted according to the semantics of the record.
 func verifyHash(record *parser.Record, results []string) {
 	results = record.SortResults(results)
 
@@ -194,6 +373,7 @@ func verifyHash(record *parser.Record, results []string) {
 	}
 }
 
+// Computes the md5 hash of the results given, using the same algorithm as the original sqllogictest C code.
 func hashResults(results []string) (string, error) {
 	h := md5.New()
 	for _, r := range results {
@@ -206,9 +386,33 @@ func hashResults(results []string) (string, error) {
 
 // Returns whether the schema given matches the record's expected schema, and logging an error if not.
 func verifySchema(record *parser.Record, schemaStr string) bool {
-	if schemaStr != record.Schema() {
+	if schemaStr == record.Schema() {
+		return true
+	}
+
+	if len(schemaStr) != len(record.Schema()) {
 		logFailure("Schemas differ. Expected %s, got %s", record.Schema(), schemaStr)
 		return false
+	}
+
+	// MySQL has odd rules for when a result is a float v. an integer. Rather than try to replicate MySQL's type logic
+	// exactly, we allow integer results in place of floats. See normalizeResults for details.
+	for i, c := range record.Schema() {
+		if !compatibleSchemaTypes(c, rune(schemaStr[i])) {
+			logFailure("Schemas differ. Expected %s, got %s", record.Schema(), schemaStr)
+			return false
+		}
+	}
+	return true
+}
+
+func compatibleSchemaTypes(expected, actual rune) bool {
+	if expected != actual {
+		if expected == 'R' && actual == 'I'{
+			return true
+		} else {
+			return false
+		}
 	}
 	return true
 }
