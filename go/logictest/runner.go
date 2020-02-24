@@ -28,7 +28,6 @@ import (
 
 var currTestFile string
 var currRecord *parser.Record
-
 var _, TruncateQueriesInLog = os.LookupEnv("SQLLOGICTEST_TRUNCATE_QUERIES")
 
 // Runs the test files found under any of the paths given. Can specify individual test files, or directories that
@@ -39,6 +38,15 @@ func RunTestFiles(harness Harness, paths ...string) {
 
 	for _, file := range testFiles {
 		runTestFile(harness, file)
+	}
+}
+
+// Runs the test files with their duration appended to the end of the logs
+func RunTestFilesWithTestTimes(harness Harness, paths ...string) {
+	testFiles := collectTestFiles(paths)
+
+	for _, file := range testFiles {
+		runTestFileWithTestTimes(harness, file)
 	}
 }
 
@@ -128,7 +136,7 @@ func generateTestFile(harness Harness, f string) {
 	}()
 
 	for _, record := range testRecords {
-		schema, records, _, err := executeRecord(harness, record)
+		schema, records, _, err := executeRecord(harness, record, false)
 
 		// If there was an error or we skipped this test, then just copy output until the next record.
 		if err != nil || !record.ShouldExecuteForEngine(harness.EngineStr()) {
@@ -239,15 +247,44 @@ func runTestFile(harness Harness, file string) {
 	}
 
 	for _, record := range testRecords {
-		_, _, cont, _ := executeRecord(harness, record)
+		_, _, cont, _ := executeRecord(harness, record, false)
 		if !cont {
 			break
 		}
 	}
 }
 
+func runTestFileWithTestTimes(harness Harness, file string) {
+	currTestFile = file
+
+	err := harness.Init()
+	if err != nil {
+		panic(err)
+	}
+
+	testRecords, err := parser.ParseTestFile(file)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, record := range testRecords {
+		_, _, cont, _ := executeRecord(harness, record, true)
+		if !cont {
+			break
+		}
+	}
+}
+
+
 // Executes a single record and returns whether execution of records should continue
-func executeRecord(harness Harness, record *parser.Record) (schema string, results []string, cont bool, err error) {
+func executeRecord(harness Harness, record *parser.Record, addDurationToLog bool) (schema string, results []string, cont bool, err error) {
+	var start time.Time
+
+	if addDurationToLog {
+		start = time.Now()
+	}
+
+	logFailure, logSkip, logSuccess := getLoggers(addDurationToLog, start)
 	currRecord = record
 
 	defer func() {
@@ -297,8 +334,8 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 		}
 
 		// Only log one error per record, so if schema comparison fails don't bother with result comparison
-		if verifySchema(record, schemaStr) {
-			verifyResults(record, schemaStr, results)
+		if verifySchema(record, schemaStr, addDurationToLog, start) {
+			verifyResults(record, schemaStr, results, addDurationToLog, start)
 		}
 		return schemaStr, results, true, nil
 	case parser.Halt:
@@ -308,7 +345,9 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 	}
 }
 
-func verifyResults(record *parser.Record, schema string, results []string) {
+func verifyResults(record *parser.Record, schema string, results []string, addDurationToLog bool, testExecutionStart time.Time) {
+	logFailure, _, _ := getLoggers(addDurationToLog, testExecutionStart)
+
 	if len(results) != record.NumResults() {
 		logFailure(fmt.Sprintf("Incorrect number of results. Expected %v, got %v", record.NumResults(), len(results)))
 		return
@@ -318,9 +357,9 @@ func verifyResults(record *parser.Record, schema string, results []string) {
 	results = record.SortResults(results)
 
 	if record.IsHashResult() {
-		verifyHash(record, results)
+		verifyHash(record, results, addDurationToLog, testExecutionStart)
 	} else {
-		verifyRows(record, results)
+		verifyRows(record, results, addDurationToLog, testExecutionStart)
 	}
 }
 
@@ -344,7 +383,9 @@ func normalizeResults(results []string, schema string) []string {
 
 // Verifies that the rows given exactly match the expected rows of the record, in the order given. Rows must have been
 // previously sorted according to the semantics of the record.
-func verifyRows(record *parser.Record, results []string) {
+func verifyRows(record *parser.Record, results []string, addDurationToLog bool, testExectionStart time.Time) {
+	logFailure, _, logSuccess := getLoggers(addDurationToLog, testExectionStart)
+
 	for i := range record.Result() {
 		if record.Result()[i] != results[i] {
 			logFailure("Incorrect result at position %d. Expected %v, got %v", i, record.Result()[i], results[i])
@@ -357,7 +398,9 @@ func verifyRows(record *parser.Record, results []string) {
 
 // Verifies that the hash of the rows given exactly match the expected hash of the record given. Rows must have been
 // previously sorted according to the semantics of the record.
-func verifyHash(record *parser.Record, results []string) {
+func verifyHash(record *parser.Record, results []string, addDurationToLog bool, testExecutionStart time.Time) {
+	logFailure, _, logSuccess := getLoggers(addDurationToLog, testExecutionStart)
+
 	results = record.SortResults(results)
 
 	computedHash, err := hashResults(results)
@@ -385,7 +428,9 @@ func hashResults(results []string) (string, error) {
 }
 
 // Returns whether the schema given matches the record's expected schema, and logging an error if not.
-func verifySchema(record *parser.Record, schemaStr string) bool {
+func verifySchema(record *parser.Record, schemaStr string, addDurationToLog bool, testExecutionStart time.Time) bool {
+	logFailure, _, _ := getLoggers(addDurationToLog, testExecutionStart)
+
 	if schemaStr == record.Schema() {
 		return true
 	}
@@ -438,6 +483,47 @@ func logMessagePrefix() string {
 		testFilePath(currTestFile),
 		currRecord.LineNum(),
 		truncateQuery(currRecord.Query()))
+}
+
+func logFailureDuration(testExecutionStart time.Time) func (message string, args ...interface{}) {
+	return func(message string, args ...interface{}) {
+		newMsg := logMessagePrefixWithDuration(testExecutionStart) + " not ok: " + message
+		failureMessage := fmt.Sprintf(newMsg, args...)
+		failureMessage = strings.ReplaceAll(failureMessage, "\n", " ")
+		fmt.Println(failureMessage)
+	}
+}
+
+func logSkipDuration(testExecutionStart time.Time) func() {
+	return func() {
+		fmt.Println(logMessagePrefixWithDuration(testExecutionStart), "skipped")
+	}
+}
+
+func logSuccessDuration(testExecutionStart time.Time) func() {
+	return func() {
+		fmt.Println(logMessagePrefixWithDuration(testExecutionStart), "ok")
+	}
+}
+
+func logMessagePrefixWithDuration(testExecutionStart time.Time) string {
+	return fmt.Sprintf("%s %s:%d: %s :%d:",
+		time.Now().Format(time.RFC3339Nano),
+		testFilePath(currTestFile),
+		currRecord.LineNum(),
+		truncateQuery(currRecord.Query()),
+		time.Now().Sub(testExecutionStart).Nanoseconds())
+}
+
+func getLoggers(addDurationToLogs bool, testExecutionStart time.Time) (
+	func(message string, args ...interface{}),
+	func(),
+	func(),
+	){
+		if addDurationToLogs && (testExecutionStart != time.Time{}) {
+			return logFailureDuration(testExecutionStart), logSkipDuration(testExecutionStart), logSuccessDuration(testExecutionStart)
+		}
+		return logFailure, logSkip, logSuccess
 }
 
 func testFilePath(f string) string {
