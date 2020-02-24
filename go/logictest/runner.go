@@ -41,7 +41,7 @@ func RunTestFiles(harness Harness, paths ...string) {
 	}
 }
 
-// Runs the test files with their duration appended to the end of the logs
+// Runs the test files with their duration appended to the end of query
 func RunTestFilesWithTestTimes(harness Harness, paths ...string) {
 	testFiles := collectTestFiles(paths)
 
