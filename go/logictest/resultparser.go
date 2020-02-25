@@ -40,6 +40,7 @@ type ResultLogEntry struct {
 	TestFile     string
 	LineNum      int
 	Query        string
+	Duration	 time.Duration
 	Result       ResultType
 	ErrorMessage string
 }
@@ -77,7 +78,7 @@ func parseLogEntry(scanner *parser.LineScanner) (*ResultLogEntry, error) {
 		linesScanned++
 
 		// Sample line:
-		// 2019-10-16T12:20:29.0594292-07:00 index/random/10/slt_good_0.test:535: SELECT * FROM tab0 AS cor0 WHERE NULL <> 29 + col0 not ok: Schemas differ. Expected IIIIIII, got IIRTIRT
+		// 2019-10-16T12:20:29.0594292-07:00 123456 index/random/10/slt_good_0.test:535: SELECT * FROM tab0 AS cor0 WHERE NULL <> 29 + col0 not ok: Schemas differ. Expected IIIIIII, got IIRTIRT
 		firstSpace := strings.Index(line, " ")
 		if firstSpace == -1 {
 			// unrecognized log line, ignore and continue
@@ -85,6 +86,20 @@ func parseLogEntry(scanner *parser.LineScanner) (*ResultLogEntry, error) {
 		}
 
 		entry.EntryTime, err = time.Parse(time.RFC3339Nano, line[:firstSpace])
+		if err != nil {
+			// unrecognized log line, ignore and continue
+			continue
+		}
+
+		secondSpace := strings.Index(line[firstSpace+1:], " ")
+		if secondSpace == -1 {
+			// unrecognized log line, ignore and continue
+			continue
+		} else {
+			secondSpace = secondSpace + firstSpace
+		}
+
+		entry.Duration, err = time.ParseDuration(fmt.Sprintf("%sms", line[firstSpace+1:secondSpace+1]))
 		if err != nil {
 			// unrecognized log line, ignore and continue
 			continue
@@ -100,14 +115,14 @@ func parseLogEntry(scanner *parser.LineScanner) (*ResultLogEntry, error) {
 			panic("Couldn't determine result of log line " + line)
 		}
 
-		colonIdx := strings.Index(line[firstSpace+1:], ":")
+		colonIdx := strings.Index(line[secondSpace+1:], ":")
 		if colonIdx == -1 {
 			panic(fmt.Sprintf("Malformed line %v on line %d", line, scanner.LineNum))
 		} else {
-			colonIdx = colonIdx + firstSpace + 1
+			colonIdx = colonIdx + secondSpace + 1
 		}
 
-		entry.TestFile = line[firstSpace+1 : colonIdx]
+		entry.TestFile = line[secondSpace+2 : colonIdx]
 		colonIdx2 := strings.Index(line[colonIdx+1:], ":")
 		if colonIdx2 == -1 {
 			panic(fmt.Sprintf("Malformed line %v on line %d", line, scanner.LineNum))

@@ -15,6 +15,7 @@
 package logictest
 
 import (
+	"fmt"
 	"testing"
 	"time"
 
@@ -31,6 +32,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:  "evidence/in1.test",
 			LineNum:   25,
 			Query:     "SELECT 1 IN ()",
+			Duration:  mustParseDuration("213654"),
 			Result:    Skipped,
 		},
 		{
@@ -38,6 +40,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:  "evidence/in1.test",
 			LineNum:   30,
 			Query:     "SELECT 1 IN (2)",
+			Duration:  mustParseDuration("789321"),
 			Result:    Ok,
 		},
 		{
@@ -45,6 +48,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:  "evidence/in1.test",
 			LineNum:   35,
 			Query:     "SELECT 1 IN (2,3,4,5,6,7,8,9)",
+			Duration:  mustParseDuration("123445"),
 			Result:    Ok,
 		},
 		{
@@ -52,6 +56,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:  "evidence/in1.test",
 			LineNum:   41,
 			Query:     "SELECT 1 NOT IN ()",
+			Duration:  mustParseDuration("9807843"),
 			Result:    Skipped,
 		},
 		{
@@ -59,6 +64,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:  "evidence/in1.test",
 			LineNum:   46,
 			Query:     "SELECT 1 NOT IN (2)",
+			Duration:  mustParseDuration("34121"),
 			Result:    Ok,
 		},
 		{
@@ -66,6 +72,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:  "evidence/in1.test",
 			LineNum:   51,
 			Query:     "SELECT 1 NOT IN (2,3,4,5,6,7,8,9)",
+			Duration:  mustParseDuration("2123"),
 			Result:    Ok,
 		},
 		{
@@ -73,6 +80,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:  "evidence/in1.test",
 			LineNum:   57,
 			Query:     "SELECT null IN ()",
+			Duration:  mustParseDuration("21456998"),
 			Result:    Skipped,
 		},
 		{
@@ -80,6 +88,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:  "evidence/in1.test",
 			LineNum:   63,
 			Query:     "SELECT null NOT IN ()",
+			Duration:  mustParseDuration("395874"),
 			Result:    Skipped,
 		},
 		{
@@ -87,6 +96,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:     "evidence/in1.test",
 			LineNum:      68,
 			Query:        "CREATE TABLE t1(x INTEGER)",
+			Duration:     mustParseDuration("87838293"),
 			Result:       NotOk,
 			ErrorMessage: "Unexpected error no primary key columns",
 		},
@@ -95,6 +105,7 @@ func TestParseResultFile(t *testing.T) {
 			TestFile:  "evidence/in1.test",
 			LineNum:   72,
 			Query:     "SELECT 1 IN t1",
+			Duration:  mustParseDuration("98321"),
 			Result:    Skipped,
 		},
 	}
@@ -104,6 +115,14 @@ func TestParseResultFile(t *testing.T) {
 
 func mustParseTime(t string) time.Time {
 	parsed, err := time.Parse(time.RFC3339Nano, t)
+	if err != nil {
+		panic(err)
+	}
+	return parsed
+}
+
+func mustParseDuration(t string) time.Duration {
+	parsed, err := time.ParseDuration(fmt.Sprintf("%sms", t))
 	if err != nil {
 		panic(err)
 	}

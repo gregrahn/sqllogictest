@@ -28,8 +28,8 @@ import (
 
 var currTestFile string
 var currRecord *parser.Record
-
 var _, TruncateQueriesInLog = os.LookupEnv("SQLLOGICTEST_TRUNCATE_QUERIES")
+var startTime time.Time
 
 // Runs the test files found under any of the paths given. Can specify individual test files, or directories that
 // contain test files somewhere underneath. All files named *.test encountered under a directory will be attempted to be
@@ -248,6 +248,7 @@ func runTestFile(harness Harness, file string) {
 
 // Executes a single record and returns whether execution of records should continue
 func executeRecord(harness Harness, record *parser.Record) (schema string, results []string, cont bool, err error) {
+	startTime = time.Now()
 	currRecord = record
 
 	defer func() {
@@ -433,8 +434,9 @@ func logSuccess() {
 }
 
 func logMessagePrefix() string {
-	return fmt.Sprintf("%s %s:%d: %s",
+	return fmt.Sprintf("%s %d %s:%d: %s",
 		time.Now().Format(time.RFC3339Nano),
+		time.Now().Sub(startTime).Milliseconds(),
 		testFilePath(currTestFile),
 		currRecord.LineNum(),
 		truncateQuery(currRecord.Query()))
