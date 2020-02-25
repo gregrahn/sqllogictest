@@ -298,8 +298,8 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 		}
 
 		// Only log one error per record, so if schema comparison fails don't bother with result comparison
-		if verifySchema(record, schemaStr, startTime) {
-			verifyResults(record, schemaStr, results, startTime)
+		if verifySchema(record, schemaStr) {
+			verifyResults(record, schemaStr, results)
 		}
 		return schemaStr, results, true, nil
 	case parser.Halt:
@@ -309,7 +309,7 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 	}
 }
 
-func verifyResults(record *parser.Record, schema string, results []string, testExecutionStart time.Time) {
+func verifyResults(record *parser.Record, schema string, results []string) {
 	if len(results) != record.NumResults() {
 		logFailure(fmt.Sprintf("Incorrect number of results. Expected %v, got %v", record.NumResults(), len(results)))
 		return
@@ -319,9 +319,9 @@ func verifyResults(record *parser.Record, schema string, results []string, testE
 	results = record.SortResults(results)
 
 	if record.IsHashResult() {
-		verifyHash(record, results, testExecutionStart)
+		verifyHash(record, results)
 	} else {
-		verifyRows(record, results, testExecutionStart)
+		verifyRows(record, results)
 	}
 }
 
@@ -345,7 +345,7 @@ func normalizeResults(results []string, schema string) []string {
 
 // Verifies that the rows given exactly match the expected rows of the record, in the order given. Rows must have been
 // previously sorted according to the semantics of the record.
-func verifyRows(record *parser.Record, results []string, testExectionStart time.Time) {
+func verifyRows(record *parser.Record, results []string) {
 	for i := range record.Result() {
 		if record.Result()[i] != results[i] {
 			logFailure("Incorrect result at position %d. Expected %v, got %v", i, record.Result()[i], results[i])
@@ -358,7 +358,7 @@ func verifyRows(record *parser.Record, results []string, testExectionStart time.
 
 // Verifies that the hash of the rows given exactly match the expected hash of the record given. Rows must have been
 // previously sorted according to the semantics of the record.
-func verifyHash(record *parser.Record, results []string, testExecutionStart time.Time) {
+func verifyHash(record *parser.Record, results []string) {
 	results = record.SortResults(results)
 
 	computedHash, err := hashResults(results)
@@ -386,7 +386,7 @@ func hashResults(results []string) (string, error) {
 }
 
 // Returns whether the schema given matches the record's expected schema, and logging an error if not.
-func verifySchema(record *parser.Record, schemaStr string, testExecutionStart time.Time) bool {
+func verifySchema(record *parser.Record, schemaStr string) bool {
 	if schemaStr == record.Schema() {
 		return true
 	}
