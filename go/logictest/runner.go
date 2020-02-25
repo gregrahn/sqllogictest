@@ -436,7 +436,7 @@ func logSuccess() {
 func logMessagePrefix() string {
 	return fmt.Sprintf("%s %d %s:%d: %s",
 		time.Now().Format(time.RFC3339Nano),
-		time.Now().Sub(startTime).Nanoseconds(),
+		time.Now().Sub(startTime).Milliseconds(),
 		testFilePath(currTestFile),
 		currRecord.LineNum(),
 		truncateQuery(currRecord.Query()))

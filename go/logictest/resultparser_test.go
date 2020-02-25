@@ -122,7 +122,7 @@ func mustParseTime(t string) time.Time {
 }
 
 func mustParseDuration(t string) time.Duration {
-	parsed, err := time.ParseDuration(fmt.Sprintf("%sns", t))
+	parsed, err := time.ParseDuration(fmt.Sprintf("%sms", t))
 	if err != nil {
 		panic(err)
 	}

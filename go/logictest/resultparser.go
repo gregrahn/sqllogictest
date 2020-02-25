@@ -91,13 +91,15 @@ func parseLogEntry(scanner *parser.LineScanner) (*ResultLogEntry, error) {
 			continue
 		}
 
-		secondSpace := strings.Index(line[firstSpace+1:], " ") + firstSpace
+		secondSpace := strings.Index(line[firstSpace+1:], " ")
 		if secondSpace == -1 {
 			// unrecognized log line, ignore and continue
 			continue
+		} else {
+			secondSpace = secondSpace + firstSpace
 		}
 
-		entry.Duration, err = time.ParseDuration(fmt.Sprintf("%sns", line[firstSpace+1:secondSpace+1]))
+		entry.Duration, err = time.ParseDuration(fmt.Sprintf("%sms", line[firstSpace+1:secondSpace+1]))
 		if err != nil {
 			// unrecognized log line, ignore and continue
 			continue
