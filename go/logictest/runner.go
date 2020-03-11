@@ -18,6 +18,7 @@ import (
 	"bufio"
 	"context"
 	"crypto/md5"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -30,8 +31,10 @@ import (
 var currTestFile string
 var currRecord *parser.Record
 var _, TruncateQueriesInLog = os.LookupEnv("SQLLOGICTEST_TRUNCATE_QUERIES")
+
 var startTime time.Time
-var recordTimeout = time.Hour * 1
+var timeout = time.Hour * 1
+var testTimeoutError = errors.New("test in file timed out")
 
 // Runs the test files found under any of the paths given. Can specify individual test files, or directories that
 // contain test files somewhere underneath. All files named *.test encountered under a directory will be attempted to be
@@ -260,7 +263,7 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 	currRecord = record
 	startTime = time.Now()
 
-	ctx, cancel := context.WithTimeout(context.Background(), recordTimeout)
+	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
 	rc := make(chan *R, 1)
@@ -280,9 +283,9 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 	case <-ctx.Done():
 		logTimeout()
 
-		// set cont to false so that no subsequent records in this file
+		// set cont to false so that no subsequent records in this file are executed
 		// we assume they will likely also timeout
-		return "", []string{}, false, nil
+		return "", []string{}, false, testTimeoutError
 	}
 }
 
