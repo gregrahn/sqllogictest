@@ -273,7 +273,10 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 		return res.schema, res.results, res.cont, res.err
 	case <-time.After(1 * time.Hour):
 		logTimeout("Executing query took too long")
-		return "", []string{}, true, nil
+
+		// set cont to false so that no subsequent records in this file
+		// we assume they will likely also timeout
+		return "", []string{}, false, nil
 	}
 }
 
