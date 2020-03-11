@@ -246,10 +246,39 @@ func runTestFile(harness Harness, file string) {
 	}
 }
 
+type R struct {
+	schema string
+	results []string
+	cont bool
+	err error
+}
+
 // Executes a single record and returns whether execution of records should continue
 func executeRecord(harness Harness, record *parser.Record) (schema string, results []string, cont bool, err error) {
-	startTime = time.Now()
 	currRecord = record
+
+	tc := make(chan *R, 1)
+	go func() {
+		schema, results, cont, err := execute(harness, record)
+		tc <- &R{
+			schema: schema,
+			results: results,
+			cont: cont,
+			err: err,
+		}
+	}()
+
+	select {
+	case res := <-tc:
+		return res.schema, res.results, res.cont, res.err
+	case <-time.After(1 * time.Hour):
+		logTimeout("Executing query took too long")
+		return "", []string{}, true, nil
+	}
+}
+
+func execute(harness Harness, record *parser.Record) (schema string, results []string, cont bool, err error) {
+	startTime = time.Now()
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -416,6 +445,13 @@ func compatibleSchemaTypes(expected, actual rune) bool {
 		}
 	}
 	return true
+}
+
+func logTimeout(message string, args ...interface{}) {
+	newMsg := logMessagePrefix() + " timeout: " + message
+	failureMessage := fmt.Sprintf(newMsg, args...)
+	failureMessage = strings.ReplaceAll(failureMessage, "\n", " ")
+	fmt.Println(failureMessage)
 }
 
 func logFailure(message string, args ...interface{}) {
