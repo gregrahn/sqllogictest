@@ -23,6 +23,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/liquidata-inc/sqllogictest/go/logictest/parser"
@@ -132,8 +133,12 @@ func generateTestFile(harness Harness, f string) {
 		}
 	}()
 
+	ll := newLoggingLock()
 	for _, record := range testRecords {
-		schema, records, _, err := executeRecord(harness, record)
+		ctx, cancel := context.WithTimeout(context.Background(), timeout)
+		lockCtx := context.WithValue(ctx, "lock", ll)
+
+		schema, records, _, err := executeRecord(lockCtx, cancel, harness, record)
 
 		// If there was an error or we skipped this test, then just copy output until the next record.
 		if err != nil || !record.ShouldExecuteForEngine(harness.EngineStr()) {
@@ -230,6 +235,30 @@ func skipUntilEndOfRecord(scanner *parser.LineScanner, wr *bufio.Writer) {
 	}
 }
 
+type loggingLock struct {
+	mux *sync.Mutex
+	logged bool
+}
+
+func newLoggingLock() *loggingLock {
+	return &loggingLock{
+		mux: &sync.Mutex{},
+		logged: false,
+	}
+}
+
+func (ll *loggingLock) GetLogged() bool {
+	ll.mux.Lock()
+	defer ll.mux.Unlock()
+	return ll.logged
+}
+
+func (ll *loggingLock) SetLogged(v bool) {
+	ll.mux.Lock()
+	defer ll.mux.Unlock()
+	ll.logged = v
+}
+
 func runTestFile(harness Harness, file string) {
 	currTestFile = file
 
@@ -243,10 +272,31 @@ func runTestFile(harness Harness, file string) {
 		panic(err)
 	}
 
+	dnr := false
+	ll := newLoggingLock()
+
 	for _, record := range testRecords {
-		_, _, cont, _ := executeRecord(harness, record)
-		if !cont {
-			break
+		currRecord = record
+		startTime = time.Now()
+
+		ctx, cancel := context.WithTimeout(context.Background(), timeout)
+		lockCtx := context.WithValue(ctx, "lock", ll)
+
+		if dnr {
+			logResult(lockCtx, DidNotRun, "")
+		} else {
+			_, _, cont, err := executeRecord(lockCtx, cancel, harness, record)
+			if !cont {
+				break
+			}
+			if err == testTimeoutError {
+				dnr = true
+			}
+		}
+
+		lock := lockCtx.Value("lock").(*loggingLock)
+		if lock.GetLogged() {
+			lock.SetLogged(false)
 		}
 	}
 }
@@ -259,11 +309,7 @@ type R struct {
 }
 
 // Executes a single record and returns whether execution of records should continue
-func executeRecord(harness Harness, record *parser.Record) (schema string, results []string, cont bool, err error) {
-	currRecord = record
-	startTime = time.Now()
-
-	ctx, cancel := context.WithTimeout(context.Background(), timeout)
+func executeRecord(ctx context.Context, cancel context.CancelFunc, harness Harness, record *parser.Record) (schema string, results []string, cont bool, err error) {
 	defer cancel()
 
 	rc := make(chan *R, 1)
@@ -281,11 +327,8 @@ func executeRecord(harness Harness, record *parser.Record) (schema string, resul
 	case res := <-rc:
 		return res.schema, res.results, res.cont, res.err
 	case <-ctx.Done():
-		logTimeout()
-
-		// set cont to false so that no subsequent records in this file are executed
-		// we assume they will likely also timeout
-		return "", []string{}, false, testTimeoutError
+		logResult(ctx, Timeout, "")
+		return "", []string{}, true, testTimeoutError
 	}
 }
 
@@ -300,7 +343,7 @@ func execute(ctx context.Context, harness Harness, record *parser.Record) (schem
 				// attempt to keep entries on one line
 				toLog = strings.ReplaceAll(err.Error(), "\n", " ")
 			}
-			logFailure(ctx, "Caught panic: %v", toLog)
+			logResult(ctx, NotOk, "Caught panic: %v", toLog)
 			cont = true
 		}
 	}()
@@ -308,7 +351,7 @@ func execute(ctx context.Context, harness Harness, record *parser.Record) (schem
 	if !record.ShouldExecuteForEngine(harness.EngineStr()) {
 		// Log a skip for queries and statements only, not other control records
 		if record.Type() == parser.Query || record.Type() == parser.Statement {
-			logSkip(ctx)
+			logResult(ctx, Skipped, "")
 		}
 		return "", nil, true, nil
 	}
@@ -319,20 +362,20 @@ func execute(ctx context.Context, harness Harness, record *parser.Record) (schem
 
 		if record.ExpectError() {
 			if err == nil {
-				logFailure(ctx, "Expected error but didn't get one")
+				logResult(ctx, NotOk, "Expected error but didn't get one")
 				return "", nil, true, nil
 			}
 		} else if err != nil {
-			logFailure(ctx, "Unexpected error %v", err)
+			logResult(ctx, NotOk, "Unexpected error %v", err)
 			return "", nil, true, err
 		}
 
-		logSuccess(ctx)
+		logResult(ctx, Ok, "")
 		return "", nil, true, nil
 	case parser.Query:
 		schemaStr, results, err := harness.ExecuteQuery(record.Query())
 		if err != nil {
-			logFailure(ctx, "Unexpected error %v", err)
+			logResult(ctx, NotOk, "Unexpected error %v", err)
 			return "", nil, true, err
 		}
 
@@ -350,7 +393,7 @@ func execute(ctx context.Context, harness Harness, record *parser.Record) (schem
 
 func verifyResults(ctx context.Context, record *parser.Record, schema string, results []string) {
 	if len(results) != record.NumResults() {
-		logFailure(ctx, fmt.Sprintf("Incorrect number of results. Expected %v, got %v", record.NumResults(), len(results)))
+		logResult(ctx, NotOk, fmt.Sprintf("Incorrect number of results. Expected %v, got %v", record.NumResults(), len(results)))
 		return
 	}
 
@@ -387,12 +430,12 @@ func normalizeResults(results []string, schema string) []string {
 func verifyRows(ctx context.Context, record *parser.Record, results []string) {
 	for i := range record.Result() {
 		if record.Result()[i] != results[i] {
-			logFailure(ctx, "Incorrect result at position %d. Expected %v, got %v", i, record.Result()[i], results[i])
+			logResult(ctx, NotOk, "Incorrect result at position %d. Expected %v, got %v", i, record.Result()[i], results[i])
 			return
 		}
 	}
 
-	logSuccess(ctx)
+	logResult(ctx, Ok, "")
 }
 
 // Verifies that the hash of the rows given exactly match the expected hash of the record given. Rows must have been
@@ -402,14 +445,14 @@ func verifyHash(ctx context.Context, record *parser.Record, results []string) {
 
 	computedHash, err := hashResults(results)
 	if err != nil {
-		logFailure(ctx, "Error hashing results: %v", err)
+		logResult(ctx, NotOk, "Error hashing results: %v", err)
 		return
 	}
 
 	if record.HashResult() != computedHash {
-		logFailure(ctx, "Hash of results differ. Expected %v, got %v", record.HashResult(), computedHash)
+		logResult(ctx, NotOk, "Hash of results differ. Expected %v, got %v", record.HashResult(), computedHash)
 	} else {
-		logSuccess(ctx)
+		logResult(ctx, Ok, "")
 	}
 }
 
@@ -431,7 +474,7 @@ func verifySchema(ctx context.Context, record *parser.Record, schemaStr string) 
 	}
 
 	if len(schemaStr) != len(record.Schema()) {
-		logFailure(ctx, "Schemas differ. Expected %s, got %s", record.Schema(), schemaStr)
+		logResult(ctx, NotOk, "Schemas differ. Expected %s, got %s", record.Schema(), schemaStr)
 		return false
 	}
 
@@ -439,7 +482,7 @@ func verifySchema(ctx context.Context, record *parser.Record, schemaStr string) 
 	// exactly, we allow integer results in place of floats. See normalizeResults for details.
 	for i, c := range record.Schema() {
 		if !compatibleSchemaTypes(c, rune(schemaStr[i])) {
-			logFailure(ctx, "Schemas differ. Expected %s, got %s", record.Schema(), schemaStr)
+			logResult(ctx, NotOk, "Schemas differ. Expected %s, got %s", record.Schema(), schemaStr)
 			return false
 		}
 	}
@@ -457,32 +500,53 @@ func compatibleSchemaTypes(expected, actual rune) bool {
 	return true
 }
 
-func logFailure(ctx context.Context, message string, args ...interface{}) {
-	if ctx.Err() != nil {
+func logResult(ctx context.Context, rt ResultType, message string, args ...interface{}) {
+	lock := ctx.Value("lock").(*loggingLock)
+	if lock == nil {
+		panic("Unable to acquire lock from context")
+	}
+
+	if lock.GetLogged() {
 		return
 	}
+
+	switch rt {
+	case Ok:
+		logSuccess()
+	case NotOk:
+		logFailure(message, args...)
+	case Skipped:
+		logSkip()
+	case Timeout:
+		logTimeout()
+	case DidNotRun:
+		logDidNotRun()
+	}
+
+	lock.SetLogged(true)
+}
+
+func logFailure(message string, args ...interface{}) {
 	newMsg := logMessagePrefix() + " not ok: " + message
 	failureMessage := fmt.Sprintf(newMsg, args...)
 	failureMessage = strings.ReplaceAll(failureMessage, "\n", " ")
 	fmt.Println(failureMessage)
 }
 
-func logSkip(ctx context.Context) {
-	if ctx.Err() != nil {
-		return
-	}
+func logSkip() {
 	fmt.Println(logMessagePrefix(), "skipped")
 }
 
-func logSuccess(ctx context.Context) {
-	if ctx.Err() != nil {
-		return
-	}
+func logSuccess() {
 	fmt.Println(logMessagePrefix(), "ok")
 }
 
 func logTimeout() {
 	fmt.Println(logMessagePrefix(), "timeout")
+}
+
+func logDidNotRun() {
+	fmt.Println(logMessagePrefix(), "did not run")
 }
 
 func logMessagePrefix() string {
