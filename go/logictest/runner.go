@@ -133,10 +133,9 @@ func generateTestFile(harness Harness, f string) {
 		}
 	}()
 
-	ll := newLoggingLock()
 	for _, record := range testRecords {
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
-		lockCtx := context.WithValue(ctx, "lock", ll)
+		lockCtx := context.WithValue(ctx, "lock", &loggingLock{ mux: &sync.Mutex{}, logged: false})
 
 		schema, records, _, err := executeRecord(lockCtx, cancel, harness, record)
 
@@ -240,25 +239,6 @@ type loggingLock struct {
 	logged bool
 }
 
-func newLoggingLock() *loggingLock {
-	return &loggingLock{
-		mux: &sync.Mutex{},
-		logged: false,
-	}
-}
-
-func (ll *loggingLock) GetLogged() bool {
-	ll.mux.Lock()
-	defer ll.mux.Unlock()
-	return ll.logged
-}
-
-func (ll *loggingLock) SetLogged(v bool) {
-	ll.mux.Lock()
-	defer ll.mux.Unlock()
-	ll.logged = v
-}
-
 func runTestFile(harness Harness, file string) {
 	currTestFile = file
 
@@ -273,30 +253,25 @@ func runTestFile(harness Harness, file string) {
 	}
 
 	dnr := false
-	ll := newLoggingLock()
-
 	for _, record := range testRecords {
 		currRecord = record
 		startTime = time.Now()
 
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
-		lockCtx := context.WithValue(ctx, "lock", ll)
+		lockCtx := context.WithValue(ctx, "lock", &loggingLock{ mux: &sync.Mutex{}, logged: false})
 
 		if dnr {
 			logResult(lockCtx, DidNotRun, "")
-		} else {
-			_, _, cont, err := executeRecord(lockCtx, cancel, harness, record)
-			if !cont {
-				break
-			}
-			if err == testTimeoutError {
-				dnr = true
-			}
+			continue
 		}
 
-		lock := lockCtx.Value("lock").(*loggingLock)
-		if lock.GetLogged() {
-			lock.SetLogged(false)
+		_, _, cont, err := executeRecord(lockCtx, cancel, harness, record)
+		if err == testTimeoutError {
+			dnr = true
+		}
+
+		if !cont {
+			break
 		}
 	}
 }
@@ -506,7 +481,10 @@ func logResult(ctx context.Context, rt ResultType, message string, args ...inter
 		panic("Unable to acquire lock from context")
 	}
 
-	if lock.GetLogged() {
+	lock.mux.Lock()
+	defer lock.mux.Unlock()
+
+	if lock.logged {
 		return
 	}
 
@@ -523,7 +501,7 @@ func logResult(ctx context.Context, rt ResultType, message string, args ...inter
 		logDidNotRun()
 	}
 
-	lock.SetLogged(true)
+	lock.logged = true
 }
 
 func logFailure(message string, args ...interface{}) {
