@@ -135,7 +135,7 @@ func generateTestFile(harness Harness, f string) {
 
 	for _, record := range testRecords {
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
-		lockCtx := context.WithValue(ctx, "lock", &loggingLock{ mux: &sync.Mutex{}, logged: false})
+		lockCtx := context.WithValue(ctx, "lock", &loggingLock{})
 
 		schema, records, _, err := executeRecord(lockCtx, cancel, harness, record)
 
@@ -235,7 +235,7 @@ func skipUntilEndOfRecord(scanner *parser.LineScanner, wr *bufio.Writer) {
 }
 
 type loggingLock struct {
-	mux *sync.Mutex
+	mux sync.Mutex
 	logged bool
 }
 
@@ -258,7 +258,7 @@ func runTestFile(harness Harness, file string) {
 		startTime = time.Now()
 
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
-		lockCtx := context.WithValue(ctx, "lock", &loggingLock{ mux: &sync.Mutex{}, logged: false})
+		lockCtx := context.WithValue(ctx, "lock", &loggingLock{})
 
 		if dnr {
 			logResult(lockCtx, DidNotRun, "")
