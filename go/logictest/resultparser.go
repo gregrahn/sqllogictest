@@ -32,6 +32,8 @@ const (
 	Ok ResultType = iota
 	NotOk
 	Skipped
+	Timeout
+	DidNotRun
 )
 
 // ResultLogEntry is a single line in a sqllogictest result log file.
@@ -109,8 +111,12 @@ func parseLogEntry(scanner *parser.LineScanner) (*ResultLogEntry, error) {
 			entry.Result = Ok
 		} else if strings.Contains(line, "not ok:") {
 			entry.Result = NotOk
+		} else if strings.HasSuffix(line, "timeout") {
+			entry.Result = Timeout
 		} else if strings.HasSuffix(line, "skipped") {
 			entry.Result = Skipped
+		} else if strings.HasSuffix(line, "did not run") {
+			entry.Result = DidNotRun
 		} else {
 			panic("Couldn't determine result of log line " + line)
 		}
@@ -140,11 +146,17 @@ func parseLogEntry(scanner *parser.LineScanner) (*ResultLogEntry, error) {
 			eoq := strings.Index(line[colonIdx2+1:], "not ok: ") + colonIdx2 + 1
 			entry.Query = line[colonIdx2+2 : eoq-1]
 			entry.ErrorMessage = line[eoq+len("not ok: "):]
+		case Timeout:
+			eoq := strings.Index(line[colonIdx2+1:], "timeout") + colonIdx2 + 1
+			entry.Query = line[colonIdx2+2 : eoq-1]
 		case Ok:
 			eoq := strings.Index(line[colonIdx2+1:], "ok") + colonIdx2 + 1
 			entry.Query = line[colonIdx2+2 : eoq-1]
 		case Skipped:
 			eoq := strings.Index(line[colonIdx2+1:], "skipped") + colonIdx2 + 1
+			entry.Query = line[colonIdx2+2 : eoq-1]
+		case DidNotRun:
+			eoq := strings.Index(line[colonIdx2+1:], "did not run") + colonIdx2 + 1
 			entry.Query = line[colonIdx2+2 : eoq-1]
 		}
 
