@@ -34,7 +34,7 @@ var currRecord *parser.Record
 var _, TruncateQueriesInLog = os.LookupEnv("SQLLOGICTEST_TRUNCATE_QUERIES")
 
 var startTime time.Time
-var timeout = time.Hour * 1
+var timeout = time.Minute * 20
 var testTimeoutError = errors.New("test in file timed out")
 
 // Runs the test files found under any of the paths given. Can specify individual test files, or directories that
