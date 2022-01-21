@@ -165,9 +165,10 @@ SELECT group_concat(DISTINCT y) FROM t1
 true,false,NULL
 
 
-# EVIDENCE-OF: R-07535-34995 The result of avg() is always a floating
-# point value as long as at there is at least one non-NULL input even if
-# all inputs are integers.
+# EVIDENCE-OF: R-17177-10067 The result of avg() is always a floating
+# point value whenever there is at least one non-NULL input even if all
+# inputs are integers.
+
 
 query R nosort
 SELECT avg(x) FROM t1
@@ -368,8 +369,8 @@ SELECT min(DISTINCT x) FROM t1 WHERE y='null'
 NULL
 
 
-# EVIDENCE-OF: R-58261-63259 The sum() and total() aggregate functions
-# return sum of all non-NULL values in the group.
+# EVIDENCE-OF: R-24943-34514 The sum() and total() aggregate functions
+# return the sum of all non-NULL values in the group.
 
 query I nosort label-sum
 SELECT sum(x) FROM t1
@@ -444,9 +445,9 @@ SELECT sum(DISTINCT x) FROM t1
 3
 
 
-# EVIDENCE-OF: R-47496-23053 If any input to sum() is neither an integer
-# or a NULL then sum() returns a floating point value which might be an
-# approximation to the true sum.
+# EVIDENCE-OF: R-33611-59266 If any input to sum() is neither an integer
+# nor a NULL, then sum() returns a floating point value which is an
+# approximation of the mathematical sum.
 
 statement ok
 INSERT INTO t1 VALUES(4.0,'true')
