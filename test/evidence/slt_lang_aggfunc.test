@@ -475,6 +475,7 @@ INSERT INTO t1 VALUES(1<<63,'true');
 
 statement ok
 INSERT INTO t1 VALUES(-1,'true');
+DROP INDEX t1i1;
 
 query R nosort
 SELECT sum(x) FROM t1
@@ -483,14 +484,16 @@ SELECT sum(x) FROM t1
 query R nosort
 SELECT sum(DISTINCT x) FROM t1
 ----
-
+-9223372036854776000.000
 
 # TBD-EVIDENCE-OF: R-19553-64528 Total() never throws an integer overflow.
 
 query R nosort
 SELECT total(x) FROM t1
 ----
+-18446744073709550000.000
 
 query R nosort
 SELECT total(DISTINCT x) FROM t1
 ----
+-9223372036854776000.000

@@ -673,11 +673,20 @@ int main(int argc, char **argv){
         if( hashThreshold==0 || nResult<=hashThreshold ){
           for(i=0; i<nResult && sScript.zLine[0]; nextLine(&sScript), i++){
             if( strcmp(sScript.zLine, azResult[i])!=0 ){
-              fprintf(stdout,"%s:%d: wrong result\n", zScriptFile,
-                      sScript.nLine);
+              fprintf(stdout,"%s:%d: wrong result - expected [%s] got [%s]\n",
+                      zScriptFile, sScript.nLine, sScript.zLine, azResult[i]);
               nErr++;
-              break;
             }
+          }
+          if( i<nResult ){
+            fprintf(stdout,"%s:%d: too many result rows - expected %d got %d\n",
+                    zScriptFile, sScript.nLine, i, nResult);
+            nErr++;
+          }else if( sScript.zLine[0] ){
+            do{ nextLine(&sScript); i++; }while( sScript.zLine[0] );
+            fprintf(stdout,"%s:%d: too few result rows - expected %d got %d\n",
+                    zScriptFile, sScript.nLine, i, nResult);
+            nErr++;
           }
         }else{
           if( strcmp(sScript.zLine, zHash)!=0 ){
