@@ -1,23 +1,22 @@
 /*
 ** Copyright (c) 2008 D. Richard Hipp
 **
-** This program is free software; you can redistribute it and/or
-** modify it under the terms of the GNU General Public
-** License version 2 as published by the Free Software Foundation.
+** This program is free software.  As far as the author is
+** concerned, you can redistribute it and/or modify the code
+** as you see fit.  No attribution is required.  Use whichever
+** of the following license terms best applies to your situation.
+**
+**   1.   GNU General Public License
+**   2.   BSD License
+**   3.   MIT License
+**   4.   CC0 License
 **
 ** This program is distributed in the hope that it will be useful,
-** but WITHOUT ANY WARRANTY; without even the implied warranty of
-** MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-** General Public License for more details.
+** but without any warranty; without even the implied warranty of
+** merchantability or fitness for a particular purpose.
 ** 
-** You should have received a copy of the GNU General Public
-** License along with this library; if not, write to the
-** Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-** Boston, MA  02111-1307, USA.
-**
 ** Author contact information:
-**   drh@hwaci.com
-**   http://www.hwaci.com/drh/
+**   drh@sqlite.org
 **
 *******************************************************************************
 **
