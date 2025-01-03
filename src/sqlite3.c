@@ -18,7 +18,7 @@
 ** separate file. This file contains only code for the core SQLite library.
 **
 ** The content in this amalgamation comes from Fossil check-in
-** 2b17bc49655c577029919c2d409de994b0d2 with changes in files:
+** 9ee57a30a49d9813bf2669a5d8346f7e018e with changes in files:
 **
 **    
 */
@@ -467,7 +467,7 @@ extern "C" {
 */
 #define SQLITE_VERSION        "3.48.0"
 #define SQLITE_VERSION_NUMBER 3048000
-#define SQLITE_SOURCE_ID      "2024-12-30 21:23:53 2b17bc49655c577029919c2d409de994b0d252f8efb5da1ba0913f2c96bee552"
+#define SQLITE_SOURCE_ID      "2025-01-03 11:51:50 9ee57a30a49d9813bf2669a5d8346f7e018e3fbf1792739951311a8d3a249d45"
 
 /*
 ** CAPI3REF: Run-Time Library Version Numbers
@@ -33054,7 +33054,10 @@ SQLITE_PRIVATE void sqlite3TreeViewSrcList(TreeView *pView, const SrcList *pSrc)
       sqlite3_str_appendf(&x, " DDL");
     }
     if( pItem->fg.isCte ){
-      sqlite3_str_appendf(&x, " CteUse=0x%p", pItem->u2.pCteUse);
+      static const char *aMat[] = {",MAT", "", ",NO-MAT"};
+      sqlite3_str_appendf(&x, " CteUse=%d%s",
+                          pItem->u2.pCteUse->nUse,
+                          aMat[pItem->u2.pCteUse->eM10d]);
     }
     if( pItem->fg.isOn || (pItem->fg.isUsing==0 && pItem->u3.pOn!=0) ){
       sqlite3_str_appendf(&x, " isOn");
@@ -33085,9 +33088,6 @@ SQLITE_PRIVATE void sqlite3TreeViewSrcList(TreeView *pView, const SrcList *pSrc)
         sqlite3TreeViewColumnList(pView, pTab->aCol, pTab->nCol, 1);
       }
       assert( (int)pItem->fg.isNestedFrom == IsNestedFrom(pItem) );
-      sqlite3TreeViewPush(&pView, 0);
-      sqlite3TreeViewLine(pView, "SUBQUERY");
-      sqlite3TreeViewPop(&pView);
       sqlite3TreeViewSelect(pView, pItem->u4.pSubq->pSelect, 0);
     }
     if( pItem->fg.isTabFunc ){
@@ -164144,6 +164144,11 @@ static int constraintCompatibleWithOuterJoin(
 **        more than 20, then return false.
 **
 **   3.   If no disqualifying conditions above are found, return true.
+**
+** 2025-01-03: I experimented with a new rule that returns false if the
+** the datatype of the column is "BOOLEAN".	This did not improve
+** performance on any queries at hand, but it did burn CPU cycles, so the
+** idea was not committed.
 */
 static SQLITE_NOINLINE int columnIsGoodIndexCandidate(
   const Table *pTab,
@@ -226246,6 +226251,24 @@ static int dbpageRowid(sqlite3_vtab_cursor *pCursor, sqlite_int64 *pRowid){
   return SQLITE_OK;
 }
 
+/*
+** Open write transactions. Since we do not know in advance which database
+** files will be written by the sqlite_dbpage virtual table, start a write
+** transaction on them all.
+**
+** Return SQLITE_OK if successful, or an SQLite error code otherwise.
+*/
+static int dbpageBeginTrans(DbpageTable *pTab){
+  sqlite3 *db = pTab->db;
+  int rc = SQLITE_OK;
+  int i;
+  for(i=0; rc==SQLITE_OK && i<db->nDb; i++){
+    Btree *pBt = db->aDb[i].pBt;
+    if( pBt ) rc = sqlite3BtreeBeginTrans(pBt, 1, 0);
+  }
+  return rc;
+}
+
 static int dbpageUpdate(
   sqlite3_vtab *pVtab,
   int argc,
@@ -226313,6 +226336,12 @@ static int dbpageUpdate(
       goto update_fail;
     }
   }
+
+  if( dbpageBeginTrans(pTab)!=SQLITE_OK ){
+    zErr = "failed to open transaction";
+    goto update_fail;
+  }
+
   pPager = sqlite3BtreePager(pBt);
   rc = sqlite3PagerGet(pPager, pgno, (DbPage**)&pDbPage, 0);
   if( rc==SQLITE_OK ){
@@ -226334,18 +226363,8 @@ update_fail:
   return SQLITE_ERROR;
 }
 
-/* Since we do not know in advance which database files will be
-** written by the sqlite_dbpage virtual table, start a write transaction
-** on them all.
-*/
 static int dbpageBegin(sqlite3_vtab *pVtab){
   DbpageTable *pTab = (DbpageTable *)pVtab;
-  sqlite3 *db = pTab->db;
-  int i;
-  for(i=0; i<db->nDb; i++){
-    Btree *pBt = db->aDb[i].pBt;
-    if( pBt ) (void)sqlite3BtreeBeginTrans(pBt, 1, 0);
-  }
   pTab->pgnoTrunc = 0;
   return SQLITE_OK;
 }
@@ -226381,7 +226400,7 @@ static int dbpageRollbackTo(sqlite3_vtab *pVtab, int notUsed1){
 */
 SQLITE_PRIVATE int sqlite3DbpageRegister(sqlite3 *db){
   static sqlite3_module dbpage_module = {
-    0,                            /* iVersion */
+    2,                            /* iVersion */
     dbpageConnect,                /* xCreate */
     dbpageConnect,                /* xConnect */
     dbpageBestIndex,              /* xBestIndex */
@@ -255440,7 +255459,7 @@ static void fts5SourceIdFunc(
 ){
   assert( nArg==0 );
   UNUSED_PARAM2(nArg, apUnused);
-  sqlite3_result_text(pCtx, "fts5: 2024-12-30 21:23:53 2b17bc49655c577029919c2d409de994b0d252f8efb5da1ba0913f2c96bee552", -1, SQLITE_TRANSIENT);
+  sqlite3_result_text(pCtx, "fts5: 2025-01-03 11:51:50 9ee57a30a49d9813bf2669a5d8346f7e018e3fbf1792739951311a8d3a249d45", -1, SQLITE_TRANSIENT);
 }
 
 /*
