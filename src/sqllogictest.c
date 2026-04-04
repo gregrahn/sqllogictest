@@ -625,13 +625,17 @@ int main(int argc, char **argv){
         /* Do no sorting */
       }else if( strcmp(sScript.azToken[2],"rowsort")==0 ){
         /* Row-oriented sorting */
-        nColumn = (int)strlen(sScript.azToken[1]);
-        qsort(azResult, nResult/nColumn, sizeof(azResult[0])*nColumn,
-              rowCompare);
+        if( azResult ){
+          nColumn = (int)strlen(sScript.azToken[1]);
+          qsort(azResult, nResult/nColumn, sizeof(azResult[0])*nColumn,
+                rowCompare);
+        }
       }else if( strcmp(sScript.azToken[2],"valuesort")==0 ){
         /* Sort all values independently */
-        nColumn = 1;
-        qsort(azResult, nResult, sizeof(azResult[0]), rowCompare);
+        if( azResult ){
+          nColumn = 1;
+          qsort(azResult, nResult, sizeof(azResult[0]), rowCompare);
+        }
       }else{
         fprintf(stderr, "%s:%d: unknown sort method: '%s'\n",
                 zScriptFile, sScript.startLine, sScript.azToken[2]);

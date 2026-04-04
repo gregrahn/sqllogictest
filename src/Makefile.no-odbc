@@ -37,13 +37,13 @@ OPTS += -DSQLITE_DEBUG
 OPTS += -DSQLITE_OMIT_LOAD_EXTENSION
 
 sqllogictest$(E):	sqllogictest.c sqllogictest.h $(OBJ) $(INC)
-	$(CC) -o sqllogictest$(E) sqllogictest.c $(OBJ)
+	$(CC) $(CFLAGS) -o sqllogictest$(E) sqllogictest.c $(OBJ)
 
 md5.o:	md5.c
-	$(CC) -c md5.c
+	$(CC) $(CFLAGS) -c md5.c
 
 sqlite3.o:	sqlite3.c sqlite3.h
-	$(CC) $(OPTS) -c sqlite3.c
+	$(CC) $(CFLAGS) $(OPTS) -c sqlite3.c
 
 clean:
 	rm -f $(OBJ)
